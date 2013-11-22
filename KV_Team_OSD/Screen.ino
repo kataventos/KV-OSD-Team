@@ -122,10 +122,15 @@ void displayTemperature(void)        // WILL WORK ONLY WITH V1.2
   if(xxx > temperMAX)
     temperMAX = xxx;
 
-  itoa(xxx,screenBuffer,10);
-  uint8_t xx = FindNull();   // find the NULL
-  screenBuffer[xx++]=temperatureUnitAdd[Settings[S_UNITSYSTEM]];
-  screenBuffer[xx]=0;  // Restore the NULL
+  ItoaPadded(xxx,screenBuffer,3,0);
+  //uint8_t xx = FindNull();   // find the NULL
+  //screenBuffer[xx++]=temperatureUnitAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[xx]=0;  // Restore the NULL
+  
+  screenBuffer[3]=temperatureUnitAdd[Settings[S_UNITSYSTEM]];
+  
+
+  
   MAX7456_WriteString(screenBuffer,getPosition(temperaturePosition));
 }
 
@@ -228,27 +233,27 @@ void displayHorizon(int rollAngle, int pitchAngle)
     }
   }
 
-  if(Settings[S_DISPLAY_HORIZON_BR]){
+  //if(Settings[S_DISPLAY_HORIZON_BR]){
     //Draw center screen
-    screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
-    screen[position+2*LINE+6+1] = SYM_AH_CENTER_LINE;
+    //screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
+    //screen[position+2*LINE+6+1] = SYM_AH_CENTER_LINE;
     screen[position+2*LINE+6] =   SYM_AH_CENTER;
-  }
-  if (Settings[S_WITHDECORATION]){
+  //}
+  //if (Settings[S_WITHDECORATION]){
     // Draw AH sides
-    screen[position+2*LINE+1] =   SYM_AH_LEFT;
-    screen[position+2*LINE+11] =  SYM_AH_RIGHT;
+    //screen[position+2*LINE+1] =   SYM_AH_LEFT;
+    //screen[position+2*LINE+11] =  SYM_AH_RIGHT;
     screen[position+0*LINE] =     SYM_AH_DECORATION_LEFT;
     screen[position+1*LINE] =     SYM_AH_DECORATION_LEFT;
-    screen[position+2*LINE] =     SYM_AH_DECORATION_LEFT;
+    screen[position+2*LINE] =     SYM_AH_DEC_CENTER_LEFT;
     screen[position+3*LINE] =     SYM_AH_DECORATION_LEFT;
     screen[position+4*LINE] =     SYM_AH_DECORATION_LEFT;
     screen[position+0*LINE+12] =  SYM_AH_DECORATION_RIGHT;
     screen[position+1*LINE+12] =  SYM_AH_DECORATION_RIGHT;
-    screen[position+2*LINE+12] =  SYM_AH_DECORATION_RIGHT;
+    screen[position+2*LINE+12] =  SYM_AH_DEC_CENTER_RIGHT;
     screen[position+3*LINE+12] =  SYM_AH_DECORATION_RIGHT;
     screen[position+4*LINE+12] = SYM_AH_DECORATION_RIGHT;
-  }
+  //}
 }
 
 void displayVoltage(void)
@@ -263,6 +268,8 @@ void displayVoltage(void)
   screenBuffer[4] = SYM_VOLT;
   screenBuffer[5] = 0;
   MAX7456_WriteString(screenBuffer,getPosition(voltagePosition));
+
+
 
   if (Settings[S_SHOWBATLEVELEVOLUTION]){
     // For battery evolution display
@@ -303,24 +310,60 @@ void displayCurrentThrottle(void)
 
   if (MwRcData[THROTTLESTICK] > HighT) HighT = MwRcData[THROTTLESTICK] -5;
   if (MwRcData[THROTTLESTICK] < LowT) LowT = MwRcData[THROTTLESTICK];      // Calibrate high and low throttle settings  --defaults set in GlobalVariables.h 1100-1900
-  screenBuffer[0]=SYM_THR;
-  screenBuffer[1]=0;
-  MAX7456_WriteString(screenBuffer,getPosition(CurrentThrottlePosition));
+  
+  //screenBuffer[0]=0;
+  //screenBuffer[1]=0;
+  //MAX7456_WriteString(screenBuffer,getPosition(CurrentThrottlePosition));
+  
+  
   if(!armed) {
-    screenBuffer[0]=' ';
-    screenBuffer[1]=' ';
-    screenBuffer[2]='-';
-    screenBuffer[3]='-';
-    screenBuffer[4]=0;
+    //screenBuffer[0]=' ';
+    //screenBuffer[1]=' ';
+    screenBuffer[0]='-';
+    screenBuffer[1]='-';
+    screenBuffer[2]=0;
     MAX7456_WriteString(screenBuffer,getPosition(CurrentThrottlePosition)+2);
   }
   else
   {
-    int CurThrottle = map(MwRcData[THROTTLESTICK],LowT,HighT,0,100);
-    ItoaPadded(CurThrottle,screenBuffer,3,0);
-    screenBuffer[3]='%';
-    screenBuffer[4]=0;
-    MAX7456_WriteString(screenBuffer,getPosition(CurrentThrottlePosition)+2);
+    
+    int CurThrottle = map(MwRcData[THROTTLESTICK],LowT,HighT,0,99);
+    ItoaPadded(CurThrottle,screenBuffer,2,0);
+    screenBuffer[2]='%';
+    screenBuffer[3]=0;
+    
+    MAX7456_WriteString(screenBuffer,getPosition(CurrentThrottlePosition));    
+ 
+    screenBuffer[2]=0;
+    
+    
+    if(CurThrottle > 90)      screenBuffer[0] = SYM_THR_POINTER_TOP;
+    else if(CurThrottle > 80) screenBuffer[0] = SYM_THR_POINTER;
+    else if(CurThrottle > 70) screenBuffer[0] = SYM_THR_POINTER_BOTTOM;
+    else screenBuffer[0] = ' ';
+    
+    screenBuffer[1]=SYM_THR_SCALE;
+
+    MAX7456_WriteString(screenBuffer,getPosition(ThrottleGraphPosition));
+    
+    if (CurThrottle > 70) screenBuffer[0] = ' ';
+    else if(CurThrottle > 60) screenBuffer[0] = SYM_THR_POINTER_TOP;
+    else if(CurThrottle > 50) screenBuffer[0] = SYM_THR_POINTER;
+    else if(CurThrottle > 40) screenBuffer[0] = SYM_THR_POINTER_BOTTOM;
+    
+    screenBuffer[1]=SYM_THR_SCALE;
+    
+    MAX7456_WriteString(screenBuffer,getPosition(ThrottleGraphPosition) + LINE);
+    
+    if (CurThrottle > 40) screenBuffer[0] = ' ';
+    else if(CurThrottle > 30) screenBuffer[0] = SYM_THR_POINTER_TOP;
+    else if(CurThrottle > 20) screenBuffer[0] = SYM_THR_POINTER;
+    else screenBuffer[0] = SYM_THR_POINTER_BOTTOM;
+    
+    screenBuffer[1]=SYM_THR_SCALE;
+    
+    MAX7456_WriteString(screenBuffer,getPosition(ThrottleGraphPosition) + LINE + LINE);
+    
   }
 }
 
@@ -469,7 +512,10 @@ void displayGPSPosition(void)
     }
   }
 
-  screenBuffer[0] = MwGPSAltPositionAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[0] = MwGPSAltPositionAdd[Settings[S_UNITSYSTEM]];
+  
+  screenBuffer[0] = ' ';
+  
   uint16_t xx;
   if(Settings[S_UNITSYSTEM])
     xx = GPS_altitude * 3.2808; // Mt to Feet
@@ -490,7 +536,7 @@ void displayNumberOfSat(void)
 
 void displayGPS_speed(void)
 {
-//  if(!GPS_fix)
+
   if(!GPS_fix) return;
   if(!armed) GPS_speed=0;
 
@@ -503,8 +549,10 @@ void displayGPS_speed(void)
   if(xx > speedMAX)
     speedMAX = xx;
     
-  screenBuffer[0]=speedUnitAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[0]=speedUnitAdd[Settings[S_UNITSYSTEM]];
+  screenBuffer[0]=' ';
   itoa(xx,screenBuffer+1,10);
+    
   MAX7456_WriteString(screenBuffer,getPosition(speedPosition));
 }
 
@@ -520,17 +568,27 @@ void displayGPS_speed(void)
 }*/
 
 void displayAltitude(void)
-{
+{  
   int16_t altitude;
   if(Settings[S_UNITSYSTEM])
     altitude = MwAltitude*0.032808;    // cm to feet
   else
-    altitude = MwAltitude/100;         // cm to mt
+    altitude = MwAltitude/100;         // cm to m
 
   if(armed && allSec>5 && altitude > altitudeMAX)
     altitudeMAX = altitude;
+    
+  //Limit the displayed altitude to 999 regardless of units
+  //Note that actual altitudeMax is still saved
+    
+  if (altitude > 999) altitude = 999;
+  if (altitude < -999) altitude = -999;
 
-  screenBuffer[0]=MwAltitudeAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[0]=MwAltitudeAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[0]=MwAltitudeAdd;//
+  
+  screenBuffer[0]=' ';
+  
   itoa(altitude,screenBuffer+1,10);
   MAX7456_WriteString(screenBuffer,getPosition(MwAltitudePosition));
 }
@@ -538,25 +596,54 @@ void displayAltitude(void)
 void displayClimbRate(void)
 {
 
-  if(MwVario > 70)       screenBuffer[0] = SYM_POS_CLIMB3;
-  else if(MwVario > 50)  screenBuffer[0] = SYM_POS_CLIMB2;
-  else if(MwVario > 30)  screenBuffer[0] = SYM_POS_CLIMB1;
-  else if(MwVario > 20)  screenBuffer[0] = SYM_POS_CLIMB;
-  else if(MwVario < -70) screenBuffer[0] = SYM_NEG_CLIMB3;
-  else if(MwVario < -50) screenBuffer[0] = SYM_NEG_CLIMB2;
-  else if(MwVario < -30) screenBuffer[0] = SYM_NEG_CLIMB1;
-  else if(MwVario < -20) screenBuffer[0] = SYM_NEG_CLIMB;
-  else                   screenBuffer[0] = SYM_ZERO_CLIMB;
+  //if(MwVario > 70)       screenBuffer[0] = SYM_POS_CLIMB3;
+  //else if(MwVario > 50)  screenBuffer[0] = SYM_POS_CLIMB2;
+  //else if(MwVario > 30)  screenBuffer[0] = SYM_POS_CLIMB1;
+  //else if(MwVario > 20)  screenBuffer[0] = SYM_POS_CLIMB;
+  //else if(MwVario < -70) screenBuffer[0] = SYM_NEG_CLIMB3;
+  //else if(MwVario < -50) screenBuffer[0] = SYM_NEG_CLIMB2;
+  //else if(MwVario < -30) screenBuffer[0] = SYM_NEG_CLIMB1;
+  //else if(MwVario < -20) screenBuffer[0] = SYM_NEG_CLIMB;
+  //else screenBuffer[0] = SYM_ZERO_CLIMB;
 
-  screenBuffer[1] = MwClimbRateAdd[Settings[S_UNITSYSTEM]];
+
+ if(MwVario > 70)        {climbLineOffset = -2; screenBuffer[0] = SYM_CLIMB_TOP;}
+  else if(MwVario > 60)  {climbLineOffset = -2; screenBuffer[0] = SYM_CLIMB;}
+  else if(MwVario > 50)  {climbLineOffset = -2; screenBuffer[0] = SYM_CLIMB_BOTTOM;}
+  else if(MwVario > 40)  {climbLineOffset = -1; screenBuffer[0] = SYM_CLIMB_TOP;}
+  else if(MwVario > 30)  {climbLineOffset = -1; screenBuffer[0] = SYM_CLIMB;}
+  else if(MwVario > 20)  {climbLineOffset = -1; screenBuffer[0] = SYM_CLIMB_BOTTOM;}
+  else if(MwVario > 10)  {climbLineOffset = -0; screenBuffer[0] = SYM_CLIMB_TOP;}
+  else if(MwVario < -70) {climbLineOffset = 2; screenBuffer[0] = SYM_CLIMB_BOTTOM;}
+  else if(MwVario < -60) {climbLineOffset = 2; screenBuffer[0] = SYM_CLIMB;}
+  else if(MwVario < -50) {climbLineOffset = 2; screenBuffer[0] = SYM_CLIMB_TOP;}
+  else if(MwVario < -40) {climbLineOffset = 1; screenBuffer[0] = SYM_CLIMB_BOTTOM;}
+  else if(MwVario < -30) {climbLineOffset = 1; screenBuffer[0] = SYM_CLIMB;}
+  else if(MwVario < -20) {climbLineOffset = 1; screenBuffer[0] = SYM_CLIMB_TOP;}
+  else if(MwVario < -10) {climbLineOffset = 0; screenBuffer[0] = SYM_CLIMB_BOTTOM;}
+  else {climbLineOffset = 0; screenBuffer[0] = SYM_CLIMB;}
+    
+  //screenBuffer[0] = SYM_POS_CLIMB;
+  
+  //MAX7456_WriteString(screenBuffer,getPosition(MwClimbRatePosition) + climbLineOffset * LINE);
+  
+  //screenBuffer[1] = MwClimbRateAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[1] = MwClimbRateAdd;//
+
+  //Rate of Climb is usually in 100's of Feet per Min (Which is also close to
+  //the vertical speed in knots), or Meters per Second
+  //http://en.wikipedia.org/wiki/Variometer  (First Paragraph)
+
   int16_t vario;
   if(Settings[S_UNITSYSTEM])
-    vario = MwVario * 0.032808;       // cm/sec ----> ft/sec
+    //vario = MwVario * 0.032808;       // cm/sec ----> ft/sec
+    vario = MwVario * .0196848;       // cm/sec ----> 100s of ft/min
   else
-    vario = MwVario / 100;            // cm/sec ----> mt/sec
-  itoa(vario, screenBuffer+2, 10);
+    vario = MwVario / 100;            // cm/sec ----> m/sec
+    //vario = MwVario / 1.66667;            // cm/sec ----> m/min
+  itoa(vario, screenBuffer+1, 10);
 
-  MAX7456_WriteString(screenBuffer,getPosition(MwClimbRatePosition));
+  MAX7456_WriteString(screenBuffer,getPosition(MwClimbRatePosition) + climbLineOffset * LINE);
 }
 
 void displayDistanceToHome(void)
@@ -574,6 +661,8 @@ void displayDistanceToHome(void)
     distanceMAX = dist;
 
   screenBuffer[0] = GPS_distanceToHomeAdd[Settings[S_UNITSYSTEM]];
+  //screenBuffer[0] = GPS_distanceToHomeAdd;//
+
   itoa(dist, screenBuffer+1, 10);
   MAX7456_WriteString(screenBuffer,getPosition(GPS_distanceToHomePosition));
 }

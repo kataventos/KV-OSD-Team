@@ -14,15 +14,19 @@ const uint16_t screenPosition[] PROGMEM = {
   POS(LINE02+2,  0, DISPLAY_ALWAYS), // GPS_numSatPosition
   POS(LINE03+14, 0, DISPLAY_ALWAYS), // GPS_directionToHomePosition
   POS(LINE02+24, 0, DISPLAY_ALWAYS), // GPS_distanceToHomePosition
-  POS(LINE03+24, 0, DISPLAY_ALWAYS), // speedPosition
+  //POS(LINE03+24, 0, DISPLAY_ALWAYS), // speedPosition
+  POS(LINE07+3, 0, DISPLAY_ALWAYS), // speedPosition
   POS(LINE04+12, 0, DISPLAY_ALWAYS), // GPS_angleToHomePosition
-  POS(LINE04+24, 0, DISPLAY_ALWAYS), // MwGPSAltPosition
+  POS(LINE10+19, 0, DISPLAY_ALWAYS), // MwGPSAltPosition
+  //POS(LINE03+24, 0, DISPLAY_ALWAYS), // MwGPSAltPosition
   POS(LINE03+2,  0, DISPLAY_ALWAYS), // sensorPosition
   POS(LINE02+19, 0, DISPLAY_ALWAYS), // MwHeadingPosition
   POS(LINE02+10, 0, DISPLAY_ALWAYS), // MwHeadingGraphPosition
-  POS(LINE07+2,  1, DISPLAY_ALWAYS), // MwAltitudePosition
-  POS(LINE07+24, 1, DISPLAY_ALWAYS), // MwClimbRatePosition
-  POS(LINE12+22, 2, DISPLAY_ALWAYS), // CurrentThrottlePosition
+  POS(LINE07+24,  1, DISPLAY_ALWAYS), // MwAltitudePosition
+  //POS(LINE07+22, 1, DISPLAY_ALWAYS), // MwClimbRatePosition
+  POS(LINE07+21, 1, DISPLAY_ALWAYS), // MwClimbRatePosition
+  POS(LINE12+25, 2, DISPLAY_ALWAYS), // CurrentThrottlePosition
+  POS(LINE09+26, 2, DISPLAY_ALWAYS), // ThrottleGraphPosition
   POS(LINE13+22, 2, DISPLAY_ALWAYS), // flyTimePosition
   POS(LINE13+22, 2, DISPLAY_ALWAYS), // onTimePosition
   POS(LINE12+11, 2, DISPLAY_ALWAYS), // motorArmedPosition
@@ -31,7 +35,7 @@ const uint16_t screenPosition[] PROGMEM = {
   POS(LINE12+2,  2, DISPLAY_ALWAYS), // rssiPosition
   POS(LINE11+2,  0, DISPLAY_ALWAYS), // temperaturePosition
   POS(LINE13+3,  2, DISPLAY_ALWAYS), // voltagePosition
-  POS(LINE11+3,  2, DISPLAY_ALWAYS), // vidvoltagePosition
+  POS(LINE12+3,  2, DISPLAY_ALWAYS), // vidvoltagePosition
   POS(LINE13+10, 2, DISPLAY_ALWAYS), // amperagePosition
   POS(LINE13+16, 2, DISPLAY_ALWAYS), // pMeterSumPosition
   POS(LINE05+8,  1, DISPLAY_CONDR),  // horizonPosition

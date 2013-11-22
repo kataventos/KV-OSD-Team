@@ -175,7 +175,7 @@ void MAX7456Setup(void)
   
   uint8_t x;
   for(x = 0; x < MAX_screen_rows; x++) {
-    MAX7456_Send(MAX7456ADD_RB0+x, WHITE_level_120);
+    MAX7456_Send(MAX7456ADD_RB0+x, WHITE_level_100);
   }
 
   // make sure the Max7456 is enabled
