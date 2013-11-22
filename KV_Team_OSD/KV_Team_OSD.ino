@@ -27,7 +27,7 @@ February  2013  V2.2
               /*                                                            KV_OSD_Team                                                                      */
               /*                                                                                                                                             */
               /*                                                                                                                                             */
-              /*                                             This software is the result of a team work                                                      */
+              /*                                             This software is the result of teamwork                                                      */
               /*                                                                                                                                             */
               /*                                     KATAVENTOS               ITAIN                    CARLONB                                               */
               /*                         POWER67                  LIAM2317             NEVERLANDED                                                           */
@@ -38,7 +38,11 @@ February  2013  V2.2
               /***********************************************************************************************************************************************/
 
 
-            
+//  Modified to MW_PRO_HUD_OSD by Linuxslate
+//  http://linuxslate.com
+//
+//  MW_PRO_HUD_OSD is an attempt to make KV_Team_OSD look and work more like an aircraft HUD
+//
 
 
 #include <avr/pgmspace.h>
@@ -76,6 +80,10 @@ void setup()
   Serial.flush();
   //Led output
   pinMode(7,OUTPUT);
+
+ //PWM RSSI
+  pinMode(RSSIPIN, INPUT);
+  
   checkEEPROM();
   readEEPROM();
   MAX7456Setup();
@@ -145,7 +153,7 @@ void loop()
 {
   // Process AI   
   if (Settings[S_ENABLEADC]){
-    temperature=(analogRead(temperaturePin)*1.1)/10.23; 
+    temperature=(analogRead(temperaturePin)-102)/2.048; //Revision b72a73c9c79c
     if (!Settings[S_MAINVOLTAGE_VBAT]){
       static uint8_t ind = 0;
       static uint16_t voltageRawArray[8];
@@ -159,7 +167,7 @@ void loop()
       vidvoltage = float(analogRead(vidvoltagePin)) * Settings[S_VIDDIVIDERRATIO] * (1.1/102.3/4);
     }
     if (!Settings[S_MWRSSI]) {
-      rssiADC = (analogRead(rssiPin)*1.1)/1023;
+      rssiADC = (analogRead(rssiPin)*1.1*100)/1023; // RSSI Readings, result in mV/10 (example 1.1V=1100mV=110 mV/10)
     }
     amperage = (AMPRERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
   }
@@ -167,6 +175,10 @@ void loop()
       rssiADC = MwRssi;
   }
  
+  if (Settings[S_PWMRSSI]){
+      rssiADC = ((pulseIn(RSSIPIN, HIGH,500)*100)/PWM_CAL)/3;
+      }
+
   // Blink Basic Sanity Test Led at 1hz
   if(tenthSec>10)
     digitalWrite(7,HIGH);

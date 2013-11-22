@@ -2,11 +2,14 @@
  
  /*--------------------------------------------------       configurable parameters      ----------------------------------------------------*/
 
+/********************       PWM RSSI      *********************/
+
+#define PwmRssiPin 12              // Miso Pin
 
 
 /**********************       Serial speed      ************************/
 
-//#define SERIAL_SPEED 115200
+#define SERIAL_SPEED 115200
 
 /**********    Here you can define time out for Mag calibration and EEProm write (mostly useful for mag calibration)    ***********/
 
@@ -27,6 +30,7 @@
 
 #define DECIMAL '.'                 // Decimal point character, change to what suits you best (.) (,)
 // moved to eeprom #define RSSI_ALARM 60               // This is the (%) value that will make your alarm go on (RSSI blink on screen).
+
 //#define CALL_SIGN
 //#define CALL_SIGN_TEXT "CALL_SIGN_" // Call sign must be <= 10 characteres long.
 
@@ -42,6 +46,11 @@
 #define MAGNETOMETER   4//0b00000100
 #define GPSSENSOR      8//0b00001000
 //#define SONAR         16//0b00010000
+
+/******************** PWM RSSI *********************/
+
+#define RSSIPIN 12
+#define PWM_CAL 255
 
 
 /*----------------------------------------------       End of configurable parameters      ----------------------------------------------------*/

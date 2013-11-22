@@ -4,11 +4,11 @@
 #define METRIC 0
 #define IMPERIAL 1
 //Analog input defines
-const uint8_t voltagePin=0;
-const uint8_t vidvoltagePin=2;
-const uint8_t amperagePin=1;
-const uint8_t rssiPin=3;
-const uint8_t temperaturePin=6;            // Temperature pin 6 for original Rushduino Board V1.2
+const uint16_t voltagePin=0;
+const uint16_t vidvoltagePin=2;
+const uint16_t amperagePin=1;
+const uint16_t rssiPin=3;
+const uint16_t temperaturePin=6;            // Temperature pin 6 for original Rushduino Board V1.2
 const uint8_t rssiSample=30;
 //const uint8_t lowrssiAlarm=RSSI_ALARM;     // This will make blink the Rssi if lower then this value
 
@@ -22,6 +22,8 @@ uint8_t rssiTimer=0;
 uint8_t accCalibrationTimer=0;
 uint8_t magCalibrationTimer=0;
 uint8_t eepromWriteTimer=0;
+
+int climbLineOffset=0;
 
 unsigned int allSec=0;
 
@@ -79,6 +81,7 @@ enum Setting_ {
   S_RESETSTATISTICS,
   S_ENABLEADC,
   S_MWRSSI,
+  S_PWMRSSI,
   S_USE_BOXNAMES,
   S_DISPLAY_CS,
   S_CS0,
@@ -131,6 +134,7 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 1,   // S_RESETSTATISTICS
 0,   // S_ENABLEADC
 1,   // S_MWRSSI
+0,   // S_PWMRSSI
 0,   // S_USE_BOXNAMES
 0,   // S_DISPLAY_CS,
 0,   // S_CS0,
@@ -203,8 +207,8 @@ float amperagesum = 0;
 // Rssi
 int rssi =0;
 int rssiADC=0;
-int rssiMin;
-int rssiMax;
+//int rssiMin;
+//int rssiMax;
 int rssi_Int=0;
 
 
@@ -291,7 +295,7 @@ const char armed_text[] PROGMEM = " ARMED";
 
 
 // For Intro
-const char message0[] PROGMEM = "KV_OSD_TEAM_2.2";
+const char message0[] PROGMEM = "  MW PRO HUD OSD";
 const char message1[] PROGMEM = "VIDEO SIGNAL: NTSC";
 const char message2[] PROGMEM = "VIDEO SIGNAL: PAL ";
 const char message5[] PROGMEM = "MW VERSION:";
@@ -384,12 +388,20 @@ const char MultiWiiLogoL3Add[17] PROGMEM = {
 
 const unsigned char MwAltitudeAdd[2]={
   0xa7,0xa8};
+/*const char* MwAltitudeAdd[3]={"ALT"};*/
+
 const unsigned char MwClimbRateAdd[2]={
   0x9f,0x99};
+/*const  char* MwClimbRateAdd[3]={"VSI"}*/;
+
 const unsigned char GPS_distanceToHomeAdd[2]={
   0xbb,0xb9};
+/*const  char* GPS_distanceToHomeAdd[3]={"DME"};*/
+
 const unsigned char MwGPSAltPositionAdd[2]={
   0xa7,0xa8};
+/*const  char* MwGPSAltPositionAdd[3]={"ALT"};*/
+  
 const char KVTeamVersionPosition = 35;
 
 
@@ -407,6 +419,7 @@ enum Positions {
   MwAltitudePosition,
   MwClimbRatePosition,
   CurrentThrottlePosition,
+  ThrottleGraphPosition,
   flyTimePosition,
   onTimePosition,
   motorArmedPosition,
