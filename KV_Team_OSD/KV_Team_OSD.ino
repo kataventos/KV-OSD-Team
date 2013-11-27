@@ -1,7 +1,7 @@
 /*
 KV Team OSD
 http://code.google.com/p/rush-osd-development/
-July  2013  r370
+May  2013  V2.2
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -27,7 +27,7 @@ July  2013  r370
               /*                                                            KV_OSD_Team                                                                      */
               /*                                                                                                                                             */
               /*                                                                                                                                             */
-              /*                                             This software is the result of a team work                                                      */
+              /*                                             This software is the result team work                                                      */
               /*                                                                                                                                             */
               /*                                     KATAVENTOS               ITAIN                    CARLONB                                               */
               /*                         POWER67                  LIAM2317             NEVERLANDED                                                           */
@@ -79,7 +79,7 @@ void setup()
   pinMode(PwmRssiPin, INPUT);
   
   //Led output
-  pinMode(7,OUTPUT);
+  pinMode(7,OUTPUT);  // PD7
  
   checkEEPROM();
   readEEPROM();
@@ -122,7 +122,7 @@ void setMspRequests() {
     if(MwVersion == 0)
       modeMSPRequests |= REQ_MSP_IDENT;
 
-    if(!armed || Settings[S_THROTTLEPOSITION])
+    if(!armed || Locations[L_CURRENTTHROTTLEPOSITIONDSPL])
       modeMSPRequests |= REQ_MSP_RC;
 
     if(mode_armed == 0) {
@@ -158,15 +158,18 @@ void loop()
       vidvoltage = float(analogRead(vidvoltagePin)) * Settings[S_VIDDIVIDERRATIO] * (1.1/102.3/4);
     }
     if (!Settings[S_MWRSSI]) {
-      rssiADC = (analogRead(rssiPin)*1.1*100)/1023;  // RSSI Readings, result in mV/10 (example 1.1V=1100mV=110 mV/10)
+//      rssiADC = (analogRead(rssiPin)*1.1*100)/1023;  // RSSI Readings, result in mV/10 (example 1.1V=1100mV=110 mV/10)
+      rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255)
     }
-    amperage = (AMPRERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
+    amperage = (AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
   }
   if (Settings[S_MWRSSI]) {
-      rssiADC = MwRssi;
+//      rssiADC = MwRssi;
+      rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023 / 4 (avoid a number > 255)
   } 
    if (Settings[S_PWMRSSI]){
-   rssiADC = pulseIn(PwmRssiPin, HIGH);     
+//      rssiADC = pulseIn(PwmRssiPin, HIGH);
+      rssiADC = pulseIn(PwmRssiPin, HIGH)/4;  // RSSI PWM Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255). To be verified (max value 1023 ?)
   }
  
   // Blink Basic Sanity Test Led at 1hz
@@ -184,9 +187,11 @@ void loop()
     if(!fontMode)
       blankserialRequest(MSP_ATTITUDE);
       
-    if(Settings[S_DISPLAYRSSI])
-      calculateRssi();
+    if(Locations[L_RSSIPOSITIONDSPL])
+      calculateRssi();      
   }  // End of slow Timed Service Routine (100ms loop)
+
+
 
   if((currentMillis - previous_millis_high) >= hi_speed_cycle)  // 20 Hz (Executed every 50ms)
   {
@@ -195,7 +200,7 @@ void loop()
     tenthSec++;
     halfSec++;
     Blink10hz=!Blink10hz;
-    calculateTrip();
+    calculateTrip();  // Speed integration on 50msec
     
       uint8_t MSPcmdsend;
       if(queuedMSPRequests == 0)
@@ -261,7 +266,7 @@ void loop()
         previousarmedstatus=1;
       }
       if(previousarmedstatus && !armed){
-        configPage=8;
+        configPage=9;
         ROW=10;
         COL=1;
         configMode=1;
@@ -278,20 +283,15 @@ void loop()
       {
        // CollectStatistics();      DO NOT DELETE
 
-        if(Settings[S_DISPLAYVOLTAGE]&&((voltage>Settings[S_VOLTAGEMIN])||(Blink2hz))) displayVoltage();
-        if(Settings[S_DISPLAYRSSI]&&((rssi>Settings[S_RSSI_ALARM])||(Blink2hz))) displayRSSI();
-
+        if((Locations[L_VOLTAGEPOSITIONDSPL] || Locations[L_VIDVOLTAGEPOSITIONDSPL]) && ((voltage>Settings[S_VOLTAGEMIN])||(Blink2hz))) displayVoltage();
+        if(Locations[L_RSSIPOSITIONDSPL]&&((rssi>Settings[S_RSSI_ALARM])||(Blink2hz))) displayRSSI();
         displayTime();
         displayMode();
-        
-        if(Settings[S_DISPLAYTEMPERATURE]&&((temperature<Settings[S_TEMPERATUREMAX])||(Blink2hz))) displayTemperature();
-
-        if(Settings[S_AMPERAGE]) displayAmperage();
-
-        if(Settings[S_AMPER_HOUR])  displaypMeterSum();
+        if(Locations[L_TEMPERATUREPOSDSPL]&&((temperature<Settings[S_TEMPERATUREMAX])||(Blink2hz))) displayTemperature();        
+        displayAmperage();
+        displaypMeterSum();
         displayArmed();
-        if (Settings[S_THROTTLEPOSITION])
-          displayCurrentThrottle();
+        displayCurrentThrottle();
 
         if ( (onTime > (lastCallSign+300)) || (onTime < (lastCallSign+4)))
        {
@@ -315,17 +315,18 @@ void loop()
         }
 
         if(MwSensorPresent&GPSSENSOR) 
-        if(Settings[S_DISPLAYGPS]){
-          displayNumberOfSat();
-          displayDirectionToHome();
-          displayDistanceToHome();
-          displayAngleToHome();
-          displayGPS_speed();
-          displayGPSPosition();
-        }
+          if(Settings[S_DISPLAYGPS]){
+            displayNumberOfSat();
+            displayDirectionToHome();
+            displayDistanceToHome();
+            displayAngleToHome();
+            displayGPS_speed();
+            displayGPSPosition();
+          }
       }
     }
   }  // End of fast Timed Service Routine (50ms loop)
+//---------------------  End of Timed Service Routine ---------------------------------------
 
   if(halfSec >= 10) {
     halfSec = 0;
@@ -380,9 +381,8 @@ void loop()
 
   serialMSPreceive();
 
-
 }  // End of main loop
-//---------------------  End of Timed Service Routine ---------------------------------------
+
 
 void calculateTrip(void)
 {
@@ -397,51 +397,58 @@ void calculateTrip(void)
 void calculateRssi(void)
 {
   float aa=0;
- 
- if (Settings[S_PWMRSSI]){
-     //Digital read Pin
-   aa = pulseIn(PwmRssiPin, HIGH);
-   aa = ((aa-Settings[S_RSSIMIN]) *101)/((Settings[S_RSSIMAX]*4)-Settings[S_RSSIMIN]) ;
- }
-  else { 
-      if (Settings[S_MWRSSI]) {
-        aa =  MwRssi;
-      }
-      else {
-        aa=rssiADC;  // actual RSSI analogic signal received
-      }
+  
+  aa = rssiADC;  // actual RSSI signal received  (already divided by 4)
   aa = ((aa-Settings[S_RSSIMIN]) *101)/(Settings[S_RSSIMAX]-Settings[S_RSSIMIN]) ;  // Percentage of signal strength
   rssi_Int += ( ( (signed int)((aa*rssiSample) - rssi_Int )) / rssiSample );  // Smoothing the readings
   rssi = rssi_Int / rssiSample ;
   if(rssi<0) rssi=0;
   if(rssi>100) rssi=100;
-  }
 }
+
 
 void writeEEPROM(void)
 {
+// For Settings
   for(int en=0;en<EEPROM_SETTINGS;en++){
     if (EEPROM.read(en) != Settings[en]) EEPROM.write(en,Settings[en]);
-  } 
+  }
+// For Position of items on screen       
+  for(int en=0;en<EEPROM_ITEM_LOCATION;en++){
+    if (EEPROM.read(en+256) != Locations[en]) EEPROM.write(en+256,Locations[en]);
+  }   
 }
 
 void readEEPROM(void)
 {
+// For Settings
   for(int en=0;en<EEPROM_SETTINGS;en++){
      Settings[en] = EEPROM.read(en);
   }
+// For Position of items on screen      
+  for(int en=0;en<EEPROM_ITEM_LOCATION;en++){
+     Locations[en] = EEPROM.read(en+256);
+  }    
 }
 
 
 // for first run to ini
 void checkEEPROM(void)
 {
+// For Settings
   uint8_t EEPROM_Loaded = EEPROM.read(0);
   if (!EEPROM_Loaded){
     for(uint8_t en=0;en<EEPROM_SETTINGS;en++){
       if (EEPROM.read(en) != EEPROM_DEFAULT[en])
         EEPROM.write(en,EEPROM_DEFAULT[en]);
     }
+// For Position of items on screen.
+// First run the default will be NTSC (show all data lines with NTSC systems that has only 13 lines)
+// In OSD menu' it's possible a quick default setup for PAL or NTSC
+    for(uint16_t en=0;en<(EEPROM_ITEM_LOCATION);en++){
+      if (EEPROM.read(en+256) != EEPROM_NTSC_DEFAULT[en])
+        EEPROM.write(en+256,EEPROM_NTSC_DEFAULT[en]);
+    }        
   }
 }
 
