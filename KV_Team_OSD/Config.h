@@ -5,7 +5,8 @@
  
 /********************       PWM RSSI      *********************/
 
-#define PwmRssiPin 12              // Miso Pin
+#define PwmRssiPin 3    // ATMega328# pin 1 --> PD3      // Miso Pin (not working)
+
 
 /**********************       Serial speed      ************************/
 
@@ -24,7 +25,7 @@
 
 #define AMPDIVISION 3600            // Hardware current sensor division ratio
 #define AMPERAGE_CAL 1.1            // Amperage calibration
-#define AMPRERAGE_OFFSET 512        // Amperage = AMPRERAGE_OFFSET - analogRead * AMPERAGE_CAL / 10.23
+#define AMPERAGE_OFFSET 512        // Amperage = AMPERAGE_OFFSET - analogRead * AMPERAGE_CAL / 10.23
 
 /**********************************         Display Settings         ************************/
 
@@ -65,7 +66,7 @@
 
 // DEFINE CONFIGURATION MENU PAGES
 #define MINPAGE 1
-#define MAXPAGE 8
+#define MAXPAGE 9
 
 #define PIDITEMS 10
 
