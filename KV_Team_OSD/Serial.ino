@@ -314,7 +314,7 @@ void handleRawRC() {
   {
     if((MwRcData[PITCHSTICK]>MAXSTICK)&&(MwRcData[YAWSTICK]>MAXSTICK)&&(MwRcData[THROTTLESTICK]>MINSTICK)&&!configMode&&(allSec>5)&&!armed)
     {
-      // Enter config mode using stick comvination
+      // Enter config mode using stick combination
       waitStick =  2;	// Sticks must return to center before continue!
       configMode = 1;
       setMspRequests();
@@ -335,7 +335,7 @@ void handleRawRC() {
       {
 	waitStick = 1;
 	COL++;
-	if(COL>3) COL=3;
+	if(COL>4) COL=4;
       }
       else if(configMode&&(MwRcData[ROLLSTICK]<MINSTICK)) // MOVE LEFT
       {
@@ -386,19 +386,13 @@ void handleRawRC() {
 	}
 
 	if(configPage == 3 && COL == 3) {
-	  if(ROW==1) Settings[S_DISPLAYVOLTAGE]=!Settings[S_DISPLAYVOLTAGE];
-	  if(ROW==2) Settings[S_VOLTAGEMIN]--;
-	  if(ROW==3) Settings[S_VIDVOLTAGE]=!Settings[S_VIDVOLTAGE];
-	  if(ROW==4) Settings[S_DISPLAYTEMPERATURE]=!Settings[S_DISPLAYTEMPERATURE];
-	  if(ROW==5) Settings[S_TEMPERATUREMAX]--;
-	  if(ROW==6) Settings[S_AMPER_HOUR]=!Settings[S_AMPER_HOUR];
-	  if(ROW==7) Settings[S_AMPERAGE]=!Settings[S_AMPERAGE];
-	}
+	  if(ROW==1) Settings[S_VOLTAGEMIN]--;
+	  if(ROW==2) Settings[S_TEMPERATUREMAX]--;
+	  }
 
 	if(configPage == 4 && COL == 3) {
 	  if(ROW==3) rssiTimer=15;
 	  if(ROW==4) Settings[S_RSSIMAX]=rssiADC;  // set MAX RSSI signal received (tx ON and rx near to tx)
-	  if(ROW==5) Settings[S_DISPLAYRSSI]=!Settings[S_DISPLAYRSSI];
 	}
 
 	if(configPage == 5 && COL == 3) {
@@ -410,23 +404,41 @@ void handleRawRC() {
 	if(configPage == 6 && COL == 3) {
   	  if(ROW==1) Settings[S_DISPLAYGPS]=!Settings[S_DISPLAYGPS];
   	  if(ROW==2) Settings[S_COORDINATES]=!Settings[S_COORDINATES];
-  	  if(ROW==3) Settings[S_GPSCOORDTOP]=!Settings[S_GPSCOORDTOP];  // Coord on top
-	  if(ROW==4) Settings[S_GPSALTITUDE]=!Settings[S_GPSALTITUDE];  // GPS Altitude
-	  if(ROW==5) Settings[S_ANGLETOHOME]=!Settings[S_ANGLETOHOME];  // Angle to Home
-	  if(ROW==6) Settings[S_SHOWHEADING]=!Settings[S_SHOWHEADING];
-	  if(ROW==7) Settings[S_MODEICON]=!Settings[S_MODEICON];        // Mode Icons
-	}
+	  if(ROW==3) Locations[L_CALLSIGNPOSITIONDSPL]=!Locations[L_CALLSIGNPOSITIONDSPL];
+	  }
 
 	if(configPage == 7 && COL == 3) {
-	  if(ROW==1) Settings[S_DISPLAY_CS]=!Settings[S_DISPLAY_CS];
-	  if(ROW==2) Settings[S_THROTTLEPOSITION]=!Settings[S_THROTTLEPOSITION];
-	  if(ROW==3) Settings[S_WITHDECORATION]=!Settings[S_WITHDECORATION];
-	  if(ROW==4) Settings[S_UNITSYSTEM]=!Settings[S_UNITSYSTEM];
-	  if(ROW==5) {
+          if(ROW==1) Settings[S_RESETSTATISTICS]=!Settings[S_RESETSTATISTICS];
+	  if(ROW==2) Settings[S_HEADING360]=!Settings[S_HEADING360];
+	  if(ROW==3) Settings[S_UNITSYSTEM]=!Settings[S_UNITSYSTEM];
+	  if(ROW==4) {
 	    Settings[S_VIDEOSIGNALTYPE]=!Settings[S_VIDEOSIGNALTYPE];
 	    MAX7456Setup();
 	    }
 	}
+
+//------------------------------ page for screen item change position
+	if(configPage == 8) {
+          if(ROW == 4) {
+	      if (COL==1) {
+                  screenitemselect--;  // Select previous Item
+                  screen_pos_item_pointer=screen_pos_item_pointer-3; // Point to previous item
+                  if (screenitemselect <0) {
+                      screenitemselect=MAXSCREENITEMS;
+                      screen_pos_item_pointer=EEPROM_ITEM_LOCATION-3; // Point to last item
+                      }
+         	 }
+	      if (COL==2) Locations[screen_pos_item_pointer+2]=!Locations[screen_pos_item_pointer+2];  // Display/Hide
+	      if (COL==3) {
+                  if ((Locations[screen_pos_item_pointer] > 1) && (Locations[screen_pos_item_pointer] !=255)) Locations[screen_pos_item_pointer]--;  // subtract 1 line
+                  }
+	      if (COL==4) {
+                  if ((Locations[screen_pos_item_pointer+1] > 1) && (Locations[screen_pos_item_pointer+1] !=255)) Locations[screen_pos_item_pointer+1]--;  // subtract 1 column
+                  }
+	     }                
+          if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
+	}
+//--------------------------------------------------
 
 	if((ROW==10)&&(COL==3)) configPage--;
 	if(configPage<MINPAGE) configPage = MAXPAGE;
@@ -462,19 +474,13 @@ void handleRawRC() {
 	}
 
 	if(configPage == 3 && COL == 3) {
-	  if(ROW==1) Settings[S_DISPLAYVOLTAGE]=!Settings[S_DISPLAYVOLTAGE];
-	  if(ROW==2) Settings[S_VOLTAGEMIN]++;
-	  if(ROW==3) Settings[S_VIDVOLTAGE]=!Settings[S_VIDVOLTAGE];
-	  if(ROW==4) Settings[S_DISPLAYTEMPERATURE]=!Settings[S_DISPLAYTEMPERATURE];
-	  if(ROW==5) Settings[S_TEMPERATUREMAX]++;
-	  if(ROW==6) Settings[S_AMPER_HOUR]=!Settings[S_AMPER_HOUR];
-	  if(ROW==7) Settings[S_AMPERAGE]=!Settings[S_AMPERAGE];
+	  if(ROW==1) Settings[S_VOLTAGEMIN]++;
+	  if(ROW==2) Settings[S_TEMPERATUREMAX]++;
 	}
 
 	if(configPage == 4 && COL == 3) {
 	  if(ROW==3) rssiTimer=15;
 	  if(ROW==4) Settings[S_RSSIMAX]=rssiADC;  // set MAX RSSI signal received (tx ON and rx near to tx)
-	  if(ROW==5) Settings[S_DISPLAYRSSI]=!Settings[S_DISPLAYRSSI];
 	}
 
 	if(configPage == 5 && COL == 3) {
@@ -486,23 +492,44 @@ void handleRawRC() {
 	if(configPage == 6 && COL == 3) {
   	  if(ROW==1) Settings[S_DISPLAYGPS]=!Settings[S_DISPLAYGPS];
   	  if(ROW==2) Settings[S_COORDINATES]=!Settings[S_COORDINATES];
-  	  if(ROW==3) Settings[S_GPSCOORDTOP]=!Settings[S_GPSCOORDTOP];  // Coord on top
-	  if(ROW==4) Settings[S_GPSALTITUDE]=!Settings[S_GPSALTITUDE];  // GPS Altitude
-	  if(ROW==5) Settings[S_ANGLETOHOME]=!Settings[S_ANGLETOHOME];  // Angle to Home
-	  if(ROW==6) Settings[S_SHOWHEADING]=!Settings[S_SHOWHEADING];
-	  if(ROW==7) Settings[S_MODEICON]=!Settings[S_MODEICON];        // Mode Icons
+	  if(ROW==3) Locations[L_CALLSIGNPOSITIONDSPL]=!Locations[L_CALLSIGNPOSITIONDSPL];
 	}
 
 	if(configPage == 7 && COL == 3) {
-	  if(ROW==1) Settings[S_DISPLAY_CS]=!Settings[S_DISPLAY_CS];
-	  if(ROW==2) Settings[S_THROTTLEPOSITION]=!Settings[S_THROTTLEPOSITION];
-	  if(ROW==3) Settings[S_WITHDECORATION]=!Settings[S_WITHDECORATION];
-	  if(ROW==4) Settings[S_UNITSYSTEM]=!Settings[S_UNITSYSTEM];
-	  if(ROW==5) {
+	  if(ROW==1) Settings[S_RESETSTATISTICS]=!Settings[S_RESETSTATISTICS];
+	  if(ROW==2) Settings[S_HEADING360]=!Settings[S_HEADING360];
+	  if(ROW==3) Settings[S_UNITSYSTEM]=!Settings[S_UNITSYSTEM];
+	  if(ROW==4) {
 	    Settings[S_VIDEOSIGNALTYPE]=!Settings[S_VIDEOSIGNALTYPE];
 	    MAX7456Setup();
 	    }
 	}
+
+//------------------------------  page for screen item change position
+	if(configPage == 8) {
+          if(ROW == 4) {
+	      if (COL==1) {
+                  screenitemselect++;            // Select next Item
+                  screen_pos_item_pointer=screen_pos_item_pointer+3; // Point to next item
+                  if (screenitemselect >MAXSCREENITEMS) {
+                      screenitemselect=0;
+                      screen_pos_item_pointer=0;  // Point to first item
+                      }
+                  }
+	      if (COL==2) Locations[screen_pos_item_pointer+2]=!Locations[screen_pos_item_pointer+2];  // Display/Hide
+	      if (COL==3) {
+                  if(Settings[S_VIDEOSIGNALTYPE]){
+                    if (Locations[screen_pos_item_pointer]  < 15) Locations[screen_pos_item_pointer]++; // add 1 line (Max 15 for PAL)
+                      }
+                    else if(Locations[screen_pos_item_pointer]  < 13) Locations[screen_pos_item_pointer]++; // add 1 line (Max 13 for NTSC)                     
+                  }
+	      if (COL==4) {
+                  if (Locations[screen_pos_item_pointer+1] < 25) Locations[screen_pos_item_pointer+1]++;  // add 1 column
+                  }
+              }
+          if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
+	 }
+//--------------------------------------------------
 
 	if((ROW==10)&&(COL==3)) configPage++;
 	if(configPage>MAXPAGE) configPage = MINPAGE;
@@ -586,7 +613,7 @@ void configExit()
 {
   configPage=1;
   ROW=10;
-  COL=3;
+  COL=4;
   configMode=0;
   //waitStick=3;
   previousarmedstatus = 0;
@@ -653,13 +680,35 @@ void saveExit()
     txCheckSum ^= thrExpo8;
     Serial.write(txCheckSum);
   }
-
-//  if (configPage==3 || configPage==4){
-  if (configPage==3 || configPage==4 || configPage==6 || configPage==7){
+  if (configPage==3 || configPage==4 || configPage==6 || configPage==7 || configPage==8){
     writeEEPROM();
   }
   configExit();
 }
+
+
+// back to default setting & position for PAL/NTSC
+void WriteScreenLayoutDefault(void)
+{
+  if (Settings[S_VIDEOSIGNALTYPE]){  // PAL
+    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION;en++) {
+          if (EEPROM.read(en+256) != EEPROM_PAL_DEFAULT[en]) {
+             EEPROM.write(en+256,EEPROM_PAL_DEFAULT[en]);
+          }
+    }  
+  }
+  else {
+    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION;en++) {
+          if (EEPROM.read(en+256) != EEPROM_NTSC_DEFAULT[en]) {
+             EEPROM.write(en+256,EEPROM_NTSC_DEFAULT[en]);
+          }
+    }
+  }    
+  readEEPROM();  // Refresh with default data
+  configExit();  // Exit
+}
+
+
 
 void blankserialRequest(uint8_t requestMSP)
 {
