@@ -5,7 +5,7 @@
  
 /********************       PWM RSSI      *********************/
 
-#define PwmRssiPin 3    // ATMega328# pin 1 --> PD3      // Miso Pin (not working)
+#define PwmRssiPin 3    // Pin 3 (PD3)  -  Miso Pin 12 (PB4) used for MAX communication
 
 
 /**********************       Serial speed      ************************/

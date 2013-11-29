@@ -27,7 +27,7 @@ May  2013  V2.2
               /*                                                            KV_OSD_Team                                                                      */
               /*                                                                                                                                             */
               /*                                                                                                                                             */
-              /*                                             This software is the result team work                                                      */
+              /*                                             This software is the result of a team work                                                      */
               /*                                                                                                                                             */
               /*                                     KATAVENTOS               ITAIN                    CARLONB                                               */
               /*                         POWER67                  LIAM2317             NEVERLANDED                                                           */
@@ -122,7 +122,7 @@ void setMspRequests() {
     if(MwVersion == 0)
       modeMSPRequests |= REQ_MSP_IDENT;
 
-    if(!armed || Locations[L_CURRENTTHROTTLEPOSITIONDSPL])
+    if(!armed || Settings[L_CURRENTTHROTTLEPOSITIONDSPL])
       modeMSPRequests |= REQ_MSP_RC;
 
     if(mode_armed == 0) {
@@ -187,7 +187,7 @@ void loop()
     if(!fontMode)
       blankserialRequest(MSP_ATTITUDE);
       
-    if(Locations[L_RSSIPOSITIONDSPL])
+    if(Settings[L_RSSIPOSITIONDSPL])
       calculateRssi();      
   }  // End of slow Timed Service Routine (100ms loop)
 
@@ -198,7 +198,7 @@ void loop()
     previous_millis_high = currentMillis;   
 
     tenthSec++;
-    halfSec++;
+    TempBlinkAlarm++;
     Blink10hz=!Blink10hz;
     calculateTrip();  // Speed integration on 50msec
     
@@ -256,6 +256,7 @@ void loop()
       blankserialRequest(MSPcmdsend);      
 
     MAX7456_DrawScreen();
+    
     if( allSec < 10 ){
       displayIntro();
       lastCallSign = onTime;
@@ -283,11 +284,11 @@ void loop()
       {
        // CollectStatistics();      DO NOT DELETE
 
-        if((Locations[L_VOLTAGEPOSITIONDSPL] || Locations[L_VIDVOLTAGEPOSITIONDSPL]) && ((voltage>Settings[S_VOLTAGEMIN])||(Blink2hz))) displayVoltage();
-        if(Locations[L_RSSIPOSITIONDSPL]&&((rssi>Settings[S_RSSI_ALARM])||(Blink2hz))) displayRSSI();
+        if((Settings[L_VOLTAGEPOSITIONDSPL] || Settings[L_VIDVOLTAGEPOSITIONDSPL]) && ((voltage>Settings[S_VOLTAGEMIN])||(BlinkAlarm))) displayVoltage();
+        if(Settings[L_RSSIPOSITIONDSPL]&&((rssi>Settings[S_RSSI_ALARM])||(BlinkAlarm))) displayRSSI();
         displayTime();
         displayMode();
-        if(Locations[L_TEMPERATUREPOSDSPL]&&((temperature<Settings[S_TEMPERATUREMAX])||(Blink2hz))) displayTemperature();        
+        if(Settings[L_TEMPERATUREPOSDSPL]&&((temperature<Settings[S_TEMPERATUREMAX])||(BlinkAlarm))) displayTemperature();        
         displayAmperage();
         displaypMeterSum();
         displayArmed();
@@ -328,9 +329,11 @@ void loop()
   }  // End of fast Timed Service Routine (50ms loop)
 //---------------------  End of Timed Service Routine ---------------------------------------
 
-  if(halfSec >= 10) {
-    halfSec = 0;
-    Blink2hz =! Blink2hz;
+
+//  if(halfSec >= 10) {
+  if(TempBlinkAlarm >= Settings[S_BLINKINGHZ]) {    // selectable alarm blink freq
+    TempBlinkAlarm = 0;
+    BlinkAlarm =!BlinkAlarm;     // 10=1Hz, 9=1.1Hz, 8=1.25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2.5Hz, 3=3.3Hz, 2=5Hz, 1=10Hz
   }
 
   if(tenthSec >= 20)     // this execute 1 time a second
@@ -414,9 +417,9 @@ void writeEEPROM(void)
     if (EEPROM.read(en) != Settings[en]) EEPROM.write(en,Settings[en]);
   }
 // For Position of items on screen       
-  for(int en=0;en<EEPROM_ITEM_LOCATION;en++){
-    if (EEPROM.read(en+256) != Locations[en]) EEPROM.write(en+256,Locations[en]);
-  }   
+  for(int en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++){
+    if (EEPROM.read(en+EEPROM_SETTINGS+1) != Settings[en+EEPROM_SETTINGS+1]) EEPROM.write(en+EEPROM_SETTINGS+1,Settings[en+EEPROM_SETTINGS+1]);
+  }  
 }
 
 void readEEPROM(void)
@@ -426,29 +429,27 @@ void readEEPROM(void)
      Settings[en] = EEPROM.read(en);
   }
 // For Position of items on screen      
-  for(int en=0;en<EEPROM_ITEM_LOCATION;en++){
-     Locations[en] = EEPROM.read(en+256);
-  }    
+  for(int en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++){
+     Settings[en+EEPROM_SETTINGS+1] = EEPROM.read(en+EEPROM_SETTINGS+1);
+  }  
 }
 
 
 // for first run to ini
 void checkEEPROM(void)
 {
-// For Settings
+// For H/W Settings
   uint8_t EEPROM_Loaded = EEPROM.read(0);
   if (!EEPROM_Loaded){
     for(uint8_t en=0;en<EEPROM_SETTINGS;en++){
-      if (EEPROM.read(en) != EEPROM_DEFAULT[en])
-        EEPROM.write(en,EEPROM_DEFAULT[en]);
+      if (EEPROM.read(en) != EEPROM_DEFAULT[en])  EEPROM.write(en,EEPROM_DEFAULT[en]);
     }
-// For Position of items on screen.
-// First run the default will be NTSC (show all data lines with NTSC systems that has only 13 lines)
+// For items on screen.
+// First run, the default will be NTSC (show all data lines with NTSC systems that has only 13 lines)
 // In OSD menu' it's possible a quick default setup for PAL or NTSC
-    for(uint16_t en=0;en<(EEPROM_ITEM_LOCATION);en++){
-      if (EEPROM.read(en+256) != EEPROM_NTSC_DEFAULT[en])
-        EEPROM.write(en+256,EEPROM_NTSC_DEFAULT[en]);
-    }        
+    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++) {
+      if (EEPROM.read(en+EEPROM_SETTINGS+1) != EEPROM_NTSC_DEFAULT[en]) EEPROM.write(en+EEPROM_SETTINGS+1,EEPROM_NTSC_DEFAULT[en]);
+    }
   }
 }
 

@@ -9,14 +9,14 @@ const uint16_t amperagePin=1;
 const uint16_t rssiPin=3;
 const uint16_t temperaturePin=6;            // Temperature pin 6 for original Rushduino Board V1.2
 const uint8_t rssiSample=30;
-//const uint8_t lowrssiAlarm=RSSI_ALARM;     // This will make blink the Rssi if lower then this value
+//const uint8_t lowrssiAlarm=RSSI_ALARM;    // This will make blink the Rssi if lower then this value
 
 //General use variables
 int tenthSec=0;
-int halfSec=0;
-int Blink2hz=0;                             // This is turing on and off at 2hz
-int Blink10hz=0;                            // This is turing on and off at 10hz
-int lastCallSign=0;                          //callsign_timer
+int TempBlinkAlarm=0;                       // Temporary for blink alarm 
+int BlinkAlarm=0;                           // This is turning on and off at selected freq. (alarm)
+int Blink10hz=0;                            // This is turning on and off at 10hz
+int lastCallSign=0;                         // callsign_timer
 uint8_t rssiTimer=0;
 uint8_t accCalibrationTimer=0;
 uint8_t magCalibrationTimer=0;
@@ -69,6 +69,7 @@ enum Setting_ {
   S_RESETSTATISTICS,
   S_ENABLEADC,
   S_USE_BOXNAMES,
+  S_BLINKINGHZ,    // selectable alarm blink freq
   
   S_CS0,      // 10 callsign char locations
   S_CS1,
@@ -80,57 +81,13 @@ enum Setting_ {
   S_CS7,
   S_CS8,
   S_CS9,
-  // EEPROM_SETTINGS must be last!
-  EEPROM_SETTINGS
-};
-
-uint8_t Settings[EEPROM_SETTINGS];
-
-
-// For Settings Defaults
-uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
-1,   // used for check              0
-
-0,   // S_RSSIMIN                   1
-255, // S_RSSIMAX                   2
-60,  //S_RSSI_ALARM                 3
-1,   // S_MWRSSI                    4
-0,   // S_PWMRSSI                   5
-105, // S_VOLTAGEMIN                6
-3,   // S_BATCELLS                  7
-100, // S_DIVIDERRATIO              8
-1,   // S_MAINVOLTAGE_VBAT          9
-100, // S_VIDDIVIDERRATIO           10
-0,   // S_VIDVOLTAGE_VBAT           11 
-255, // S_TEMPERATUREMAX            12
-1,   // S_BOARDTYPE                 13
-1,   // S_DISPLAYGPS                14
-0,   // S_COORDINATES               15
-1,   // S_HEADING360                16
-0,   // S_UNITSYSTEM                17
-1,   // S_VIDEOSIGNALTYPE           18
-0,   // S_RESETSTATISTICS           19
-0,   // S_ENABLEADC                 20
-0,   // S_USE_BOXNAMES              21
-
-0,   // S_CS0,                      22  // 10 callsign char locations
-0,   // S_CS1,
-0,   // S_CS2,
-0,   // S_CS3,
-0,   // S_CS4,
-0,   // S_CS5,
-0,   // S_CS6,
-0,   // S_CS7,
-0,   // S_CS8,
-0,   // S_CS9,                      31
-};
-
-
+  // EEPROM_SETTINGS must be last for H/W settings!
+  EEPROM_SETTINGS,  //33
+  
 // Screen item Locations
-enum ItemLocation_ {
 // ********* EEProm enum data position and display On/Off option for all items on screen ****************
 // Enum valid for both PAL/NTSC  
-  L_GPS_NUMSATPOSITIONROW,
+  L_GPS_NUMSATPOSITIONROW,    //34
   L_GPS_NUMSATPOSITIONCOL,
   L_GPS_NUMSATPOSITIONDSPL,
   L_GPS_DIRECTIONTOHOMEPOSROW,
@@ -216,13 +173,54 @@ enum ItemLocation_ {
   L_CALLSIGNPOSITIONROW,
   L_CALLSIGNPOSITIONCOL,
   L_CALLSIGNPOSITIONDSPL,
-  EEPROM_ITEM_LOCATION  // must be last!
+  // EEPROM_ITEM_LOCATION must be last for Items location!
+  EEPROM_ITEM_LOCATION
 };
 
-uint8_t Locations[EEPROM_ITEM_LOCATION];
+uint8_t Settings[EEPROM_ITEM_LOCATION];
+
+// For Settings Defaults
+uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
+1,   // used for check              0
+
+0,   // S_RSSIMIN                   1
+255, // S_RSSIMAX                   2
+60,  //S_RSSI_ALARM                 3
+1,   // S_MWRSSI                    4
+0,   // S_PWMRSSI                   5
+105, // S_VOLTAGEMIN                6
+3,   // S_BATCELLS                  7
+100, // S_DIVIDERRATIO              8
+1,   // S_MAINVOLTAGE_VBAT          9
+100, // S_VIDDIVIDERRATIO           10
+0,   // S_VIDVOLTAGE_VBAT           11 
+255, // S_TEMPERATUREMAX            12
+1,   // S_BOARDTYPE                 13
+1,   // S_DISPLAYGPS                14
+0,   // S_COORDINATES               15
+1,   // S_HEADING360                16
+0,   // S_UNITSYSTEM                17
+1,   // S_VIDEOSIGNALTYPE           18
+0,   // S_RESETSTATISTICS           19
+0,   // S_ENABLEADC                 20
+0,   // S_USE_BOXNAMES              21
+5,   // S_BLINKINGHZ,               22   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
+
+0,   // S_CS0,                      23  // 10 callsign char locations
+0,   // S_CS1,
+0,   // S_CS2,
+0,   // S_CS3,
+0,   // S_CS4,
+0,   // S_CS5,
+0,   // S_CS6,
+0,   // S_CS7,
+0,   // S_CS8,
+0,   // S_CS9,                      32
+};
+
 
 // PAL item position Defaults
-uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION] = {
+uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
@@ -316,7 +314,7 @@ uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION] = {
 
 
 // NTSC item position Defaults
-uint8_t EEPROM_NTSC_DEFAULT[EEPROM_ITEM_LOCATION] = {
+uint8_t EEPROM_NTSC_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
@@ -592,6 +590,7 @@ const char configMsg27[] PROGMEM = "MWI2C ERRORS";
 const char configMsg30[] PROGMEM = "3/9 SUPPLY & ALARM";
 const char configMsg31[] PROGMEM = "VOLTAGE ALARM";
 const char configMsg32[] PROGMEM = "SET TEMP ALARM";
+const char configMsg33[] PROGMEM = "BLINKING FREQ";
 //-----------------------------------------------------------Page4
 const char configMsg40[] PROGMEM = "4/9 RSSI";
 const char configMsg41[] PROGMEM = "ACTUAL RSSIADC";
@@ -622,7 +621,7 @@ const char configMsg75[] PROGMEM = "IMPERL";
 const char configMsg76[] PROGMEM = "VIDEO SYSTEM";
 //-----------------------------------------------------------Page8
 const char configMsg80[] PROGMEM = "8/9 SCREEN ITEM POS";
-const char configMsg81[] PROGMEM = "ITEM      DSP LINE COL";  // NEB
+const char configMsg81[] PROGMEM = "ITEM      DSP LINE COL";
 const char configMsg82[] PROGMEM = "DEFAULT-EXIT";
 //-----------------------------------------------------------Page9
 const char configMsg90[] PROGMEM = "9/9 STATISTICS";
@@ -638,7 +637,7 @@ const char configMsg97[] PROGMEM = "MAX TEMP";
 // Variables for items pos change on screen
 //-----------------------------------------------------------
 int8_t screenitemselect=0; // pointer for item text strings
-int8_t screen_pos_item_pointer=0; // pointer for item display/row/col positions
+int8_t screen_pos_item_pointer=EEPROM_SETTINGS+1;  // 0; // pointer for first item display/row/col positions
 #define MAXSCREENITEMS 27
 
 // Strings for item select on screen
