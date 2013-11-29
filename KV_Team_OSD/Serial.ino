@@ -388,6 +388,10 @@ void handleRawRC() {
 	if(configPage == 3 && COL == 3) {
 	  if(ROW==1) Settings[S_VOLTAGEMIN]--;
 	  if(ROW==2) Settings[S_TEMPERATUREMAX]--;
+	  if(ROW==3) {
+              Settings[S_BLINKINGHZ]--;
+              if (Settings[S_BLINKINGHZ] <1) Settings[S_BLINKINGHZ]=1; 
+  	      }
 	  }
 
 	if(configPage == 4 && COL == 3) {
@@ -404,7 +408,7 @@ void handleRawRC() {
 	if(configPage == 6 && COL == 3) {
   	  if(ROW==1) Settings[S_DISPLAYGPS]=!Settings[S_DISPLAYGPS];
   	  if(ROW==2) Settings[S_COORDINATES]=!Settings[S_COORDINATES];
-	  if(ROW==3) Locations[L_CALLSIGNPOSITIONDSPL]=!Locations[L_CALLSIGNPOSITIONDSPL];
+	  if(ROW==3) Settings[L_CALLSIGNPOSITIONDSPL]=!Settings[L_CALLSIGNPOSITIONDSPL];
 	  }
 
 	if(configPage == 7 && COL == 3) {
@@ -428,12 +432,12 @@ void handleRawRC() {
                       screen_pos_item_pointer=EEPROM_ITEM_LOCATION-3; // Point to last item
                       }
          	 }
-	      if (COL==2) Locations[screen_pos_item_pointer+2]=!Locations[screen_pos_item_pointer+2];  // Display/Hide
+	      if (COL==2) Settings[screen_pos_item_pointer+2]=!Settings[screen_pos_item_pointer+2];  // Display/Hide
 	      if (COL==3) {
-                  if ((Locations[screen_pos_item_pointer] > 1) && (Locations[screen_pos_item_pointer] !=255)) Locations[screen_pos_item_pointer]--;  // subtract 1 line
+                  if ((Settings[screen_pos_item_pointer] > 1) && (Settings[screen_pos_item_pointer] !=255)) Settings[screen_pos_item_pointer]--;  // subtract 1 line
                   }
 	      if (COL==4) {
-                  if ((Locations[screen_pos_item_pointer+1] > 1) && (Locations[screen_pos_item_pointer+1] !=255)) Locations[screen_pos_item_pointer+1]--;  // subtract 1 column
+                  if ((Settings[screen_pos_item_pointer+1] > 1) && (Settings[screen_pos_item_pointer+1] !=255)) Settings[screen_pos_item_pointer+1]--;  // subtract 1 column
                   }
 	     }                
           if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
@@ -476,6 +480,10 @@ void handleRawRC() {
 	if(configPage == 3 && COL == 3) {
 	  if(ROW==1) Settings[S_VOLTAGEMIN]++;
 	  if(ROW==2) Settings[S_TEMPERATUREMAX]++;
+	  if(ROW==3) {
+              Settings[S_BLINKINGHZ]++;
+              if (Settings[S_BLINKINGHZ] >10) Settings[S_BLINKINGHZ]=10;
+  	      }
 	}
 
 	if(configPage == 4 && COL == 3) {
@@ -492,7 +500,7 @@ void handleRawRC() {
 	if(configPage == 6 && COL == 3) {
   	  if(ROW==1) Settings[S_DISPLAYGPS]=!Settings[S_DISPLAYGPS];
   	  if(ROW==2) Settings[S_COORDINATES]=!Settings[S_COORDINATES];
-	  if(ROW==3) Locations[L_CALLSIGNPOSITIONDSPL]=!Locations[L_CALLSIGNPOSITIONDSPL];
+	  if(ROW==3) Settings[L_CALLSIGNPOSITIONDSPL]=!Settings[L_CALLSIGNPOSITIONDSPL];
 	}
 
 	if(configPage == 7 && COL == 3) {
@@ -513,18 +521,18 @@ void handleRawRC() {
                   screen_pos_item_pointer=screen_pos_item_pointer+3; // Point to next item
                   if (screenitemselect >MAXSCREENITEMS) {
                       screenitemselect=0;
-                      screen_pos_item_pointer=0;  // Point to first item
+                      screen_pos_item_pointer=EEPROM_SETTINGS+1;  // Point to first item in enum
                       }
                   }
-	      if (COL==2) Locations[screen_pos_item_pointer+2]=!Locations[screen_pos_item_pointer+2];  // Display/Hide
+	      if (COL==2) Settings[screen_pos_item_pointer+2]=!Settings[screen_pos_item_pointer+2];  // Display/Hide
 	      if (COL==3) {
                   if(Settings[S_VIDEOSIGNALTYPE]){
-                    if (Locations[screen_pos_item_pointer]  < 15) Locations[screen_pos_item_pointer]++; // add 1 line (Max 15 for PAL)
+                    if (Settings[screen_pos_item_pointer]  < 15) Settings[screen_pos_item_pointer]++; // add 1 line (Max 15 for PAL)
                       }
-                    else if(Locations[screen_pos_item_pointer]  < 13) Locations[screen_pos_item_pointer]++; // add 1 line (Max 13 for NTSC)                     
+                    else if(Settings[screen_pos_item_pointer]  < 13) Settings[screen_pos_item_pointer]++; // add 1 line (Max 13 for NTSC)                     
                   }
 	      if (COL==4) {
-                  if (Locations[screen_pos_item_pointer+1] < 25) Locations[screen_pos_item_pointer+1]++;  // add 1 column
+                  if (Settings[screen_pos_item_pointer+1] < 25) Settings[screen_pos_item_pointer+1]++;  // add 1 column
                   }
               }
           if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
@@ -691,17 +699,13 @@ void saveExit()
 void WriteScreenLayoutDefault(void)
 {
   if (Settings[S_VIDEOSIGNALTYPE]){  // PAL
-    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION;en++) {
-          if (EEPROM.read(en+256) != EEPROM_PAL_DEFAULT[en]) {
-             EEPROM.write(en+256,EEPROM_PAL_DEFAULT[en]);
-          }
+    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++) {
+        if (EEPROM.read(en+EEPROM_SETTINGS+1) != EEPROM_PAL_DEFAULT[en]) EEPROM.write(en+EEPROM_SETTINGS+1,EEPROM_PAL_DEFAULT[en]);
     }  
   }
   else {
-    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION;en++) {
-          if (EEPROM.read(en+256) != EEPROM_NTSC_DEFAULT[en]) {
-             EEPROM.write(en+256,EEPROM_NTSC_DEFAULT[en]);
-          }
+    for(uint16_t en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++) {
+        if (EEPROM.read(en+EEPROM_SETTINGS+1) != EEPROM_NTSC_DEFAULT[en]) EEPROM.write(en+EEPROM_SETTINGS+1,EEPROM_NTSC_DEFAULT[en]);
     }
   }    
   readEEPROM();  // Refresh with default data
