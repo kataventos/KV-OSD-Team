@@ -207,8 +207,8 @@ float amperagesum = 0;
 // Rssi
 int rssi =0;
 int rssiADC=0;
-//int rssiMin;
-//int rssiMax;
+int rssiMin;
+int rssiMax;
 int rssi_Int=0;
 
 

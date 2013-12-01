@@ -200,15 +200,16 @@ void displayCallsign(void)
 {
   //if(armed){
   uint16_t position = getPosition(callSignPosition);
-  if(Settings[S_DISPLAY_CS]){
+    if(Settings[S_DISPLAY_CS]){
       for(int X=0; X<10; X++) {
           screenBuffer[X] = char(Settings[S_CS0 + X]);
-     }   
+      }   
        screenBuffer[10] = 0;
        MAX7456_WriteString(screenBuffer, getPosition(callSignPosition)); 
-    //}
-  }
+    }
+  //}
 }
+
 void displayHorizon(int rollAngle, int pitchAngle)
 {
   if(!fieldIsVisible(horizonPosition))
@@ -687,16 +688,16 @@ void displayDirectionToHome(void)
   if(GPS_distanceToHome <= 2 && Blink2hz)
     return;
 
-  int16_t d = MwHeading + 180 + 360 - GPS_directionToHome;
+  int16_t d = MwHeading + 22 + 180 + 360 - GPS_directionToHome;  // Revision: 8370bd56cef9 
   d *= 4;
   d += 45;
   d = (d/90)%16;
 
   screenBuffer[0] = SYM_ARROW_SOUTH + d;
-  //screenBuffer[1] = 0x81 + d;
-  screenBuffer[1]=0;                //2
+  screenBuffer[1]=0;
   MAX7456_WriteString(screenBuffer,getPosition(GPS_directionToHomePosition));
 }
+
 void displayCursor(void)
 {
   int cursorpos;
