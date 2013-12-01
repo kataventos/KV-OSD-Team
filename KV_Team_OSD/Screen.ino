@@ -128,7 +128,7 @@ void displayTemperature(void)        // WILL WORK ONLY WITH V1.2
   //screenBuffer[xx]=0;  // Restore the NULL
   
   screenBuffer[3]=temperatureUnitAdd[Settings[S_UNITSYSTEM]];
-  
+  screenBuffer[4] = 0;
 
   
   MAX7456_WriteString(screenBuffer,getPosition(temperaturePosition));
@@ -198,16 +198,14 @@ void displayArmed(void)
 
 void displayCallsign(void)
 {
-  //if(armed){
-  uint16_t position = getPosition(callSignPosition);
-    if(Settings[S_DISPLAY_CS]){
-      for(int X=0; X<10; X++) {
+    if(Settings[S_DISPLAY_CS]){    
+	for(int X=0; X<10; X++) {
           screenBuffer[X] = char(Settings[S_CS0 + X]);
       }   
        screenBuffer[10] = 0;
        MAX7456_WriteString(screenBuffer, getPosition(callSignPosition)); 
     }
-  //}
+
 }
 
 void displayHorizon(int rollAngle, int pitchAngle)

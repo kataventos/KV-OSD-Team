@@ -48,6 +48,7 @@
 
 #define RSSIPIN 12
 #define PWM_CAL 255
+#define PWMRSSI 0
 
 
 /*----------------------------------------------       End of configurable parameters      ----------------------------------------------------*/

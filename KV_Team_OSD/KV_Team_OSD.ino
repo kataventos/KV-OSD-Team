@@ -175,7 +175,7 @@ void loop()
       rssiADC = MwRssi;
   }
  
-  if (Settings[S_PWMRSSI]){
+  if (PWMRSSI){
       rssiADC = ((pulseIn(RSSIPIN, HIGH,500)*100)/PWM_CAL)/3;
       }
 
