@@ -1,5 +1,5 @@
 /*
-KV Team OSD
+KV_Team_OSD
 http://code.google.com/p/rush-osd-development/
 February  2013  V2.2
  This program is free software: you can redistribute it and/or modify
@@ -334,7 +334,7 @@ void loop()
         }
       }
     }
-  }  // End of fast Timed Service Routine (20ms loop)
+  }  // End of fast Timed Service Routine (50ms loop)
 
   if(halfSec >= 10) {
     halfSec = 0;
