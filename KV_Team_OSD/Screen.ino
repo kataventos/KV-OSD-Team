@@ -497,7 +497,7 @@ void displayGPSPosition(void)
   if(!GPS_fix)
     return;
 
-  if(Settings[S_COORDINATES]){
+  if(Settings[S_COORDINATES] || (!armed && GPS_COORDS_WHEN_NOT_ARMED)){
     if(fieldIsVisible(MwGPSLatPosition)) {
       screenBuffer[0] = SYM_LAT;
       FormatGPSCoord(GPS_latitude,screenBuffer+1,3,'N','S');

@@ -31,6 +31,9 @@
 //#define CALL_SIGN
 //#define CALL_SIGN_TEXT "CALL_SIGN_" // Call sign must be <= 10 characteres long.
 
+#define GPS_COORDS_WHEN_NOT_ARMED  1    //Show GPS Coords anytime vehicle is not armed. 1 = Show  0 = Only Show if S_COORDINATES is set.
+										//This is to aid in finding a downed vehicle.  1 is recommended.
+
 
 /**********************************   MSP Options and compatibility **********************/
 //#define USE_BOXNAMES              // Comment this line to use BOXIDS
