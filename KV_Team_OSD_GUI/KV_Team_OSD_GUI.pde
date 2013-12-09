@@ -49,7 +49,7 @@ import java.text.DecimalFormat;
 
 
 
-String KV_OSD_GUI_Version = "r370";
+String KV_OSD_GUI_Version = "2.2";
 
 
 PImage img_Clear,OSDBackground,RadioPot;
@@ -169,7 +169,7 @@ Textlabel MessageText;
 // Int variables
 String OSname = System.getProperty("os.name");
 String LoadPercent = "";
-String CallSign = "";
+//String CallSign = "";
 
 int init_com = 0;
 int commListMax = 0;
@@ -182,7 +182,7 @@ int serialCount = 0;                 // A count of how many bytes we receive
 int ConfigEEPROM = -1;
 int ConfigVALUE = -1;
 
-int windowsX    = 1041;       int windowsY    =544;        //995; //573;
+int windowsX    = 855;       int windowsY    =440;        //995; //573;
 int xGraph      = 10;         int yGraph      = 325;
 int xObj        = 520;        int yObj        = 293; //900,450
 int xCompass    = 920;        int yCompass    = 341; //760,336
@@ -197,21 +197,22 @@ int XSim        = DisplayWindowX+WindowAdjX;        int YSim        = 288-Window
 
 //DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 360-WindowShrinkX, 288-WindowShrinkY);
 // Box locations -------------------------------------------------------------------------
-int Col1Width = 180;        int Col2Width = 200;
+int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 360;
 
 int XEEPROM    = 120;        int YEEPROM    = 5;  //hidden do not remove
 int XBoard     = 120;        int YBoard   = 5;
-int XRSSI      = 120;        int YRSSI    = 46;
-int XVolts      = 120;       int YVolts    = 172;
-int XAmps       = 120;       int YAmps    = 281;
-int XVVolts    = 120;        int YVVolts  = 339;
-int XTemp      = 120;        int YTemp    = 415;
+int XRSSI      = 120;        int YRSSI    = 45;
+int XVolts      = 120;       int YVolts    = 152;
+//int XAmps       = 120;       int YAmps    = 281;
+int XVVolts    = 305;        int YVVolts  = 152;
+int XTemp      = 305;        int YTemp    = 5;
+int XGPS       = 305;        int YGPS    = 45;
 int XCS      = 120;          int YCS    = 472;
-int XGPS       = 305;        int YGPS    = 5;
 
-int XOther     = 305;        int YOther   = 149; //48;
-int XPortStat  = 5;            int YPortStat = 350;
-int XControlBox     = 5;        int YControlBox   = 416;  //389
+//int XUV = 490;        int XUV   = 5; //48;
+int XOther     = 490;        int YOther   = 5; //48;
+int XPortStat  = 5;            int YPortStat = 272;
+int XControlBox     = 5;        int YControlBox   = 310;  //389
 int XRCSim    =   XSim;      int YRCSim = 430;
 
 
@@ -246,46 +247,51 @@ String[] ConfigNames = {
   "RSSI Min",
   "RSSI Max",
   "RSSI Alarm",
-  "Display RSSI",
-  "RSSI Over MW",
-  "PWM RSSI",
+  "Input Type", //MW ADC
+  "PWM",
   
-  "Display Voltage",
+  //"Display Voltage",
   "Voltage Min",
   "Battery Cells",
-  "Main Voltage Devider",
-  "Main Voltage MW",
+  "Voltage Devider",
+  "Input Type", //MW ADC
   
-  "Display Amperage",
-  "Diplay Amperage Used",
+  //"Display Amperage",
+  //"Diplay Amperage Used",
   
-  "Display Video Voltage",
-  "Video Voltage Devider",
-  "Video Voltage MW",
+  //"Display Video Voltage",
+  "Voltage Devider",
+  "Input Type", //Mw ADC
   
-  "Display Temperature",
+  //"Display Temperature",
   "Temperature Max",
   
   "", // for Board type do not remove
   
-  "Display GPS",
-  "Display GPS Coords",
-  "Display Coords on Top",
-  "Display GPS Altitude",
-  "Display Angle to Home",
-  "Display Heading",
-  "Display Heading 360",
+  "GPS",
+  "Coords",
+  //"Display Coords on Top",
+  //"Display GPS Altitude",
+  //"Display Angle to Home",
+  //"Display Heading",
+  "Heading",
   
-  "Units",
-  "Video Signal",
-  "Display Throttle Position",
-  "Display Horizon Bar",
-  "Display Horizon Side Bars",
-  "Display Battery Evo",
-  "Reset Stats After Arm",
-  "Enable OSD Read ADC",
-  "Use BoxNames",
-  "Display Flight Mode Icons",
+  "Unit", //unit
+  "Video",// signal
+  //"Display Throttle Position",
+  //"Display Horizon Bar",
+  //"Display Horizon Side Bars",
+  //"Display Battery Evo",
+  "Stats",
+  "OSD ADC",
+  " ",
+  //"Display Flight Mode Icons",
+  "Blink Frequency",
+  
+  //"Horizon_",
+  //"Decoration",
+  //"RSSI",
+  //"VOLTAGE",
   
   "Display CallSign",
   "S_CS0",
@@ -301,51 +307,42 @@ String[] ConfigNames = {
 };
 
 String[] ConfigHelp = {
-  "EEPROM Loaded:",
+  "EEPROM Loaded",
   
-  "RSSI Min:",
-  "RSSI Max:",
+  "RSSI Min",
+  "RSSI Max",
   "RSSI Alarm",
-  "Display RSSI:",
-  "RSSI Over MW",
+  "RSSI",
   "PWM RSSI",
   
-  "Display Voltage:",
-  "Voltage Min:",
+  "Voltage Min",
   "Battery Cells",
-  "Main Voltage Devider:",
-  "Main Voltage MW:",
+  "Main Voltage Devider",
+  "Main Voltage MW",
   
-  "Display Amperage:",
-  "Diplay Amperage Used:",
+  "Video Voltage Devider",
+  "Video Voltage MW",
   
-  "Display Video Voltage:",
-  "Video Voltage Devider:",
-  "Video Voltage MW:",
+  "Temperature Max",
   
-  "Display Temperature:",
-  "Temperature Max:",
+  "", // for Board type do not remove
   
-  "Board Type:",
+  "GPS",
+  "Coords",
+  "Display Heading 360",
   
-  "Display GPS:",
-  "Display GPS Coords:",
-  "Display Coords on Top",
-  "Display GPS Altitude",
-  "Display Angle to Home",
-  "Display Heading:",
-  "Display Heading 360:",
+  "Units",
+  "Video Signal",
   
-  "Unit System:",
-  "Screen Type NTSC / PAL:",
-  "Display Throttle Position",
-  "Display Horizon Bar",
-  "Display Horizon Side Bars",
-  "Display Battery Evo",
   "Reset Stats After Arm",
-  "Enable OSD Read ADC",
-  "Use BoxNames",
-  "Display Flight Mode Icons",
+  "ADC",
+  " ",
+  "Blink Frequency",
+  
+  //"Horizon_",
+  //"Decoration",
+  //"RSSI",
+  //"VOLTAGE",
   
   "Display CallSign",
   "S_CS0",
@@ -371,49 +368,33 @@ static int SIMITEMS=6;
 int[] ConfigRanges = {
 1,   // used for check             0
 
-255,   // S_RSSIMIN                1
-255,   // S_RSSIMAX                2
-100,   // S_RSSI_ALARM             3
-1,     // S_DISPLAYRSSI            4
-1,     // S_MWRSSI                 5
-1,     // S_PWMRSSI                6
+255,   // S_RSSIMIN                   1
+255, // S_RSSIMAX                   2
+60,  //S_RSSI_ALARM                 3
+1,   // S_MWRSSI                    4
+1,   // S_PWMRSSI                   5
+105, // S_VOLTAGEMIN                6
+4,   // S_BATCELLS                  7
+100, // S_DIVIDERRATIO              8
+1,   // S_MAINVOLTAGE_VBAT          9
+100, // S_VIDDIVIDERRATIO           10
+1,   // S_VIDVOLTAGE_VBAT           11 
+255, // S_TEMPERATUREMAX            12
+1,   // S_BOARDTYPE                 13
+1,   // S_DISPLAYGPS                14
+1,   // S_COORDINATES               15
+1,   // S_HEADING360                16
+1,   // S_UNITSYSTEM                17
+1,   // S_VIDEOSIGNALTYPE           18
+1,   // S_RESETSTATISTICS           19
+1,   // S_ENABLEADC                 20
+1,   // S_USE_BOXNAMES              21
+10,   // S_BLINKINGHZ,               22
 
-1,     // S_DISPLAYVOLTAGE         7
-255,   // S_VOLTAGEMIN             8
-6,     // S_BATCELLS               9
-255,   // S_DIVIDERRATIO           10
-1,     // S_MAINVOLTAGE_VBAT       11
-
-1,     // S_AMPERAGE,              12
-1,     // S_AMPER_HOUR,            13
-
-1,     // S_VIDVOLTAGE             14
-255,   // S_VIDDIVIDERRATIO        15    
-1,     // S_VIDVOLTAGE_VBAT        16
-
-1,     // S_DISPLAYTEMPERATURE     17
-255,   // S_TEMPERATUREMAX         18
-
-1,     // S_BOARDTYPE              19
-
-1,     // S_DISPLAYGPS             20
-1,     // S_COORDINATES            21
-1,     // S_GPSCOORDTOP            22
-1,     // S_GPSALTITUDE            23
-1,     // S_ANGLETOHOME            24
-1,     // S_SHOWHEADING            25
-1,     // S_HEADING360             26
-
-1,     // S_UNITSYSTEM             27
-1,     // S_SCREENTYPE             28
-1,     // S_THROTTLEPOSITION       29
-1,     // S_DISPLAY_HORIZON_BR     30
-1,     // S_WITHDECORATION         31
-1,     // S_SHOWBATLEVELEVOLUTION  32
-1,     // S_RESETSTATISTICS        33
-1,     // S_ENABLEADC              34
-1,     // S_USE_BOXNAMES           35
-1,     // S_MODEICON               36
+//1,   //S_DISPLAY_HORIZON_BR
+//1,   //S_WITHDECORATION
+//1,   //S_DISPLAYRSSI
+//1,   //S_DISPLAYVOLTAGE
 
 1,     // call sign                37
 255,
@@ -428,6 +409,188 @@ int[] ConfigRanges = {
  255,
 
 };
+
+int[] ItemLocationPAL = {
+  // ROW= Row position on screen (255= no action)
+// COL= Column position on screen (255= no action)
+// DSPL= Display item on screen
+2,   // L_GPS_NUMSATPOSITIONROW LINE02+2
+2,   // L_GPS_NUMSATPOSITIONCOL
+1,   // L_GPS_NUMSATPOSITIONDSPL
+3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
+14,  // L_GPS_DIRECTIONTOHOMEPOSCOL
+1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
+2,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
+24,  // L_GPS_DISTANCETOHOMEPOSCOL
+1,   // L_GPS_DISTANCETOHOMEPOSDSPL
+3,   // L_SPEEDPOSITIONROW LINE03+24
+24,  // L_SPEEDPOSITIONCOL
+1,   // L_SPEEDPOSITIONDSPL
+4,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
+12,  // L_GPS_ANGLETOHOMEPOSCOL
+1,   // L_GPS_ANGLETOHOMEPOSDSPL
+4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
+24,  // L_MW_GPS_ALTPOSITIONCOL
+1,   // L_MW_GPS_ALTPOSITIONDSPL
+3,   // L_SENSORPOSITIONROW LINE03+2
+2,   // L_SENSORPOSITIONCOL
+1,   // L_SENSORPOSITIONDSPL
+2,   // L_MW_HEADINGPOSITIONROW LINE02+19
+19,  // L_MW_HEADINGPOSITIONCOL
+1,   // L_MW_HEADINGPOSITIONDSPL
+2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
+10,  // L_MW_HEADINGGRAPHPOSCOL
+1,   // L_MW_HEADINGGRAPHPOSDSPL
+11,  // L_TEMPERATUREPOSROW LINE11+2
+2,   // L_TEMPERATUREPOSCOL
+0,   // L_TEMPERATUREPOSDSPL
+
+8,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
+2,   // L_MW_ALTITUDEPOSITIONCOL
+1,   // L_MW_ALTITUDEPOSITIONDSPL
+8,   // L_CLIMBRATEPOSITIONROW LINE08+24
+24,  // L_CLIMBRATEPOSITIONCOL
+1,   // L_CLIMBRATEPOSITIONDSPL
+6,   // L_HORIZONPOSITIONROW LINE06+8
+8,   // L_HORIZONPOSITIONCOL
+1,   // L_HORIZONPOSITIONDSPL
+255, // L_HORIZONSIDEREFROW,
+255, // L_HORIZONSIDEREFCOL,
+1,   // L_HORIZONSIDEREFDSPL,
+255, // L_HORIZONCENTERREFROW,
+255, // L_HORIZONCENTERREFCOL,
+1,   // L_HORIZONCENTERREFDSPL,  
+  
+14,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
+22,   // L_CURRENTTHROTTLEPOSITIONCOL
+1,    // L_CURRENTTHROTTLEPOSITIONDSPL
+15,   // L_FLYTIMEPOSITIONROW LINE15+22
+22,   // L_FLYTIMEPOSITIONCOL
+1,    // L_FLYTIMEPOSITIONDSPL
+15,   // L_ONTIMEPOSITIONROW LINE15+22
+22,   // L_ONTIMEPOSITIONCOL
+1,    // L_ONTIMEPOSITIONDSPL
+14,   // L_MOTORARMEDPOSITIONROW LINE14+11
+11,   // L_MOTORARMEDPOSITIONCOL
+1,    // L_MOTORARMEDPOSITIONDSPL
+12,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
+2,    // L_MW_GPS_LATPOSITIONCOL
+1,    // L_MW_GPS_LATPOSITIONDSPL
+12,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
+15,   // L_MW_GPS_LONPOSITIONCOL
+1,    // L_MW_GPS_LONPOSITIONDSPL
+14,   // L_RSSIPOSITIONROW LINE14+2
+2,    // L_RSSIPOSITIONCOL
+1,    // L_RSSIPOSITIONDSPL
+15,   // L_VOLTAGEPOSITIONROW LINE15+3
+3,    // L_VOLTAGEPOSITIONCOL
+1,    // L_VOLTAGEPOSITIONDSPL
+255,  // L_MAINBATLEVEVOLUTIONROW,
+255,  // L_MAINBATLEVEVOLUTIONCOL,
+1,    // L_MAINBATLEVEVOLUTIONDSPL,  
+13,   // L_VIDVOLTAGEPOSITIONROW LINE13+3
+3,    // L_VIDVOLTAGEPOSITIONCOL
+0,    // L_VIDVOLTAGEPOSITIONDSPL
+15,   // L_AMPERAGEPOSITIONROW LINE15+10
+10,   // L_AMPERAGEPOSITIONCOL
+0,    // L_AMPERAGEPOSITIONDSPL
+15,   // L_PMETERSUMPOSITIONROW LINE15+16
+16,   // L_PMETERSUMPOSITIONCOL
+0,    // L_PMETERSUMPOSITIONDSPL
+14,   // L_CALLSIGNPOSITIONROW LINE14+10
+10,   // L_CALLSIGNPOSITIONCOL
+0,    // L_CALLSIGNPOSITIONDSPL
+};
+
+int[] ItemLocationNTSC = {
+2,   // L_GPS_NUMSATPOSITIONROW LINE02+2
+2,   // L_GPS_NUMSATPOSITIONCOL
+1,   // L_GPS_NUMSATPOSITIONDSPL
+3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
+14,  // L_GPS_DIRECTIONTOHOMEPOSCOL
+1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
+2,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
+24,  // L_GPS_DISTANCETOHOMEPOSCOL
+1,   // L_GPS_DISTANCETOHOMEPOSDSPL
+3,   // L_SPEEDPOSITIONROW LINE03+24
+24,  // L_SPEEDPOSITIONCOL
+1,   // L_SPEEDPOSITIONDSPL
+4,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
+12,  // L_GPS_ANGLETOHOMEPOSCOL
+1,   // L_GPS_ANGLETOHOMEPOSDSPL
+4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
+24,  // L_MW_GPS_ALTPOSITIONCOL
+1,   // L_MW_GPS_ALTPOSITIONDSPL
+3,   // L_SENSORPOSITIONROW LINE03+2
+2,   // L_SENSORPOSITIONCOL
+1,   // L_SENSORPOSITIONDSPL
+2,   // L_MW_HEADINGPOSITIONROW LINE02+19
+19,  // L_MW_HEADINGPOSITIONCOL
+1,   // L_MW_HEADINGPOSITIONDSPL
+2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
+10,  // L_MW_HEADINGGRAPHPOSCOL
+1,   // L_MW_HEADINGGRAPHPOSDSPL
+9,   // L_TEMPERATUREPOSROW LINE11+2
+2,   // L_TEMPERATUREPOSCOL
+0,   // L_TEMPERATUREPOSDSPL
+
+7,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
+2,   // L_MW_ALTITUDEPOSITIONCOL
+1,   // L_MW_ALTITUDEPOSITIONDSPL
+7,   // L_CLIMBRATEPOSITIONROW LINE08+24
+24,  // L_CLIMBRATEPOSITIONCOL
+1,   // L_CLIMBRATEPOSITIONDSPL
+5,   // L_HORIZONPOSITIONROW LINE06+8
+8,   // L_HORIZONPOSITIONCOL
+1,   // L_HORIZONPOSITIONDSPL
+255, // L_HORIZONSIDEREFROW,
+255, // L_HORIZONSIDEREFCOL,
+1,   // L_HORIZONSIDEREFDSPL,
+255, // L_HORIZONCENTERREFROW,
+255, // L_HORIZONCENTERREFCOL,
+1,   // L_HORIZONCENTERREFDSPL,  
+  
+12,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
+22,   // L_CURRENTTHROTTLEPOSITIONCOL
+1,    // L_CURRENTTHROTTLEPOSITIONDSPL
+13,   // L_FLYTIMEPOSITIONROW LINE15+22
+22,   // L_FLYTIMEPOSITIONCOL
+1,    // L_FLYTIMEPOSITIONDSPL
+13,   // L_ONTIMEPOSITIONROW LINE15+22
+22,   // L_ONTIMEPOSITIONCOL
+1,    // L_ONTIMEPOSITIONDSPL
+12,   // L_MOTORARMEDPOSITIONROW LINE14+11
+11,   // L_MOTORARMEDPOSITIONCOL
+1,    // L_MOTORARMEDPOSITIONDSPL
+10,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
+2,    // L_MW_GPS_LATPOSITIONCOL
+1,    // L_MW_GPS_LATPOSITIONDSPL
+10,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
+15,   // L_MW_GPS_LONPOSITIONCOL
+1,    // L_MW_GPS_LONPOSITIONDSPL
+12,   // L_RSSIPOSITIONROW LINE14+2
+2,    // L_RSSIPOSITIONCOL
+1,    // L_RSSIPOSITIONDSPL
+13,   // L_VOLTAGEPOSITIONROW LINE15+3
+3,    // L_VOLTAGEPOSITIONCOL
+1,    // L_VOLTAGEPOSITIONDSPL
+255,  // L_MAINBATLEVEVOLUTIONROW,
+255,  // L_MAINBATLEVEVOLUTIONCOL,
+1,    // L_MAINBATLEVEVOLUTIONDSPL,  
+11,   // L_VIDVOLTAGEPOSITIONROW LINE13+3
+3,    // L_VIDVOLTAGEPOSITIONCOL
+0,    // L_VIDVOLTAGEPOSITIONDSPL
+13,   // L_AMPERAGEPOSITIONROW LINE15+10
+10,   // L_AMPERAGEPOSITIONCOL
+0,    // L_AMPERAGEPOSITIONDSPL
+13,   // L_PMETERSUMPOSITIONROW LINE15+16
+16,   // L_PMETERSUMPOSITIONCOL
+0,    // L_PMETERSUMPOSITIONDSPL
+12,   // L_CALLSIGNPOSITIONROW LINE14+10
+10,   // L_CALLSIGNPOSITIONCOL
+
+};
+  
 String[] SimNames= {
   "Armed:",
   "Acro/Stable:",
@@ -501,6 +664,7 @@ Group MGUploadF,
   G_Temperature,
   G_Board,
   G_GPS,
+  G_UV,
   G_Other,
   G_CallSign,
   G_PortStatus
@@ -608,30 +772,30 @@ CreateItem(GetSetting("S_CHECK_"), 5, 0, G_EEPROM);
 CreateItem(GetSetting("S_RSSIMIN"), 5, 0, G_RSSI);
 CreateItem(GetSetting("S_RSSIMAX"), 5,1*17, G_RSSI);
 CreateItem(GetSetting("S_RSSI_ALARM"), 5,2*17, G_RSSI);
-CreateItem(GetSetting("S_DISPLAYRSSI"), 5, 3*17, G_RSSI);
-CreateItem(GetSetting("S_MWRSSI"),  5,4*17, G_RSSI);
-CreateItem(GetSetting("S_PWMRSSI"),  5,5*17, G_RSSI);
+CreateItem(GetSetting("S_MWRSSI"),  5,3*17, G_RSSI);
+BuildRadioButton(GetSetting("S_MWRSSI"),  5,3*17, G_RSSI, "ADC","MWii");
+CreateItem(GetSetting("S_PWMRSSI"),  5,4*17, G_RSSI);
+BuildRadioButton(GetSetting("S_PWMRSSI"),  5,4*17, G_RSSI, "Off","On");
 
 // Voltage  ------------------------------------------------------------------------
 
-CreateItem(GetSetting("S_DISPLAYVOLTAGE"), 5,0, G_Voltage);
-CreateItem(GetSetting("S_VOLTAGEMIN"), 5,1*17, G_Voltage);
-CreateItem(GetSetting("S_BATCELLS"), 5,2*17, G_Voltage);
-CreateItem(GetSetting("S_DIVIDERRATIO"), 5,3*17, G_Voltage);
-CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,4*17, G_Voltage);
+CreateItem(GetSetting("S_VOLTAGEMIN"), 5,0*17, G_Voltage);
+CreateItem(GetSetting("S_BATCELLS"), 5,1*17, G_Voltage);
+CreateItem(GetSetting("S_DIVIDERRATIO"), 5,2*17, G_Voltage);
+CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,3*17, G_Voltage);
+BuildRadioButton(GetSetting("S_MAINVOLTAGE_VBAT"),  5,3*17, G_Voltage, "ADC","MWii");
 
 // Amperage  ------------------------------------------------------------------------
-CreateItem(GetSetting("S_AMPERAGE"),  5,0, G_Amperage);
-CreateItem(GetSetting("S_AMPER_HOUR"),  5,1*17, G_Amperage);
+//CreateItem(GetSetting("S_AMPERAGE"),  5,0, G_Amperage);
+//CreateItem(GetSetting("S_AMPER_HOUR"),  5,1*17, G_Amperage);
 
 // Video Voltage  ------------------------------------------------------------------------
-CreateItem(GetSetting("S_VIDVOLTAGE"),  5,0, G_VVoltage);
 CreateItem(GetSetting("S_VIDDIVIDERRATIO"),  5,1*17, G_VVoltage);
 CreateItem(GetSetting("S_VIDVOLTAGE_VBAT"),  5,2*17, G_VVoltage);
+BuildRadioButton(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0, G_VVoltage, "ADC","MWii");
 
 //  Temperature  --------------------------------------------------------------------
-CreateItem(GetSetting("S_DISPLAYTEMPERATURE"),  5,0, G_Temperature);
-CreateItem(GetSetting("S_TEMPERATUREMAX"),  5,1*17, G_Temperature);
+CreateItem(GetSetting("S_TEMPERATUREMAX"),  5,0*17, G_Temperature);
 
 //  Board ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_BOARDTYPE"),  5,0, G_Board);
@@ -640,28 +804,27 @@ BuildRadioButton(GetSetting("S_BOARDTYPE"),  5,0, G_Board, "Rush","Minim");
 
 //  GPS  ----------------------------------------------------------------------------
 CreateItem(GetSetting("S_DISPLAYGPS"), 5,0, G_GPS);
+BuildRadioButton(GetSetting("S_DISPLAYGPS"),  5,0, G_GPS, "Off","On");
 CreateItem(GetSetting("S_COORDINATES"),  5,1*17, G_GPS);
-CreateItem(GetSetting("S_GPSCOORDTOP"),  5,2*17, G_GPS);
-CreateItem(GetSetting("S_GPSALTITUDE"),  5,3*17, G_GPS);
-CreateItem(GetSetting("S_ANGLETOHOME"),  5,4*17, G_GPS);
-CreateItem(GetSetting("S_SHOWHEADING"),  5,5*17, G_GPS);
-CreateItem(GetSetting("S_HEADING360"),  5,6*17, G_GPS);
+BuildRadioButton(GetSetting("S_COORDINATES"),  5,1*17, G_GPS, "Off","On");
+CreateItem(GetSetting("S_HEADING360"),  5,2*17, G_GPS);
+BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
 
 
 
-//  Other ---------------------------------------------------------------------------
+//  Unit and Video ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_UNITSYSTEM"),  5,0, G_Other);
 BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial");
 CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
 BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other, "NTSC","PAL");
-CreateItem(GetSetting("S_THROTTLEPOSITION"),  5,2*17, G_Other);
-CreateItem(GetSetting("S_DISPLAY_HORIZON_BR"),  5,3*17, G_Other);
-CreateItem(GetSetting("S_WITHDECORATION"),  5,4*17, G_Other);
-CreateItem(GetSetting("S_SHOWBATLEVELEVOLUTION"),  5,5*17, G_Other);
-CreateItem(GetSetting("S_RESETSTATISTICS"),  5,6*17, G_Other);
-CreateItem(GetSetting("S_ENABLEADC"),  5,7*17, G_Other);
-CreateItem(GetSetting("S_USE_BOXNAMES"),  5,8*17, G_Other);
-CreateItem(GetSetting("S_MODEICON"),  5,9*17, G_Other);
+
+CreateItem(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other);
+BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Reset","Maintain");
+CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
+BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
+CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
+BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other, "BoxIDs","BoxNames");
+CreateItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
 
 
 //  Call Sign ---------------------------------------------------------------------------
@@ -692,13 +855,13 @@ controlP5.addTextfield("CallSign")
 
        
   // CheckBox "Hide Background"
-  ShowSimBackground = controlP5.addCheckBox("ShowSimBackground",XSim,YSim+1);
+  /*ShowSimBackground = controlP5.addCheckBox("ShowSimBackground",XSim,YSim+1);
   ShowSimBackground.setColorActive(color(255));
   ShowSimBackground.setColorBackground(color(120));
   ShowSimBackground.setItemsPerRow(1);
   ShowSimBackground.setSpacingColumn(10);
   ShowSimBackground.setLabel("Hide Background");
-  ShowSimBackground.addItem("Hide Background",1);
+  ShowSimBackground.addItem("Hide Background",1);*/
 
   for(int i=0;i<CONFIGITEMS;i++) {
     if (ConfigRanges[i] == 0) {
@@ -922,13 +1085,13 @@ void draw() {
   // ------------------------------------------------------------------------
 
   // Coltrol Box
-  fill(100); strokeWeight(3);stroke(200); rectMode(CORNERS); rect(XControlBox,YControlBox, XControlBox+108, YControlBox+123); //108//130
+  fill(80); strokeWeight(2);stroke(100); rectMode(CORNERS); rect(XControlBox,YControlBox, XControlBox+108, YControlBox+123); //108//130
   textFont(font12); fill(255, 255, 255); text("OSD Controls",XControlBox + 15,YControlBox + 15);
   if (activeTab == 1) {
   
   }
   
-  fill(40, 40, 40);
+  fill(60, 40, 40);
   strokeWeight(3);stroke(0);
   rectMode(CORNERS);
   rect(5,5,113,40);
@@ -941,32 +1104,32 @@ void draw() {
   fill(0, 0, 0);
   strokeWeight(3);stroke(0);
   rectMode(CORNERS);
-  if (int(ShowSimBackground.arrayValue()[0]) < 1){
-    image(OSDBackground,DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 529-WindowShrinkX, 360-WindowShrinkY); //529-WindowShrinkX, 360-WindowShrinkY);
-  }
+  //if (int(ShowSimBackground.arrayValue()[0]) < 1){
+//image(OSDBackground,DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 529-WindowShrinkX, 360-WindowShrinkY); //529-WindowShrinkX, 360-WindowShrinkY);
+  /*}
   else{
     fill(80, 80,80); strokeWeight(3);stroke(1); rectMode(CORNER); rect(DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 529-WindowShrinkX, 360-WindowShrinkY);  //335-WindowShrinkX, 288-WindowShrinkY);
   }
-
+*/
 
  
 
-  displayHorizon(int(MW_Pitch_Roll.arrayValue()[0])*10,int(MW_Pitch_Roll.arrayValue()[1])*10*-1);
-  SimulateTimer();
-  ShowCurrentThrottlePosition();
-  if (int(confItem[GetSetting("S_DISPLAYRSSI")].value()) > 0)
-    ShowRSSI(); 
-  if (int(confItem[GetSetting("S_DISPLAYVOLTAGE")].value()) > 0) {
-     ShowVolts(sVBat);
-  }
+ //displayHorizon(int(MW_Pitch_Roll.arrayValue()[0])*10,int(MW_Pitch_Roll.arrayValue()[1])*10*-1);
+  //SimulateTimer();
+  //ShowCurrentThrottlePosition();
+  //if (int(confItem[GetSetting("S_DISPLAYRSSI")].value()) > 0)
+    //ShowRSSI(); 
+  //if (int(confItem[GetSetting("S_DISPLAYVOLTAGE")].value()) > 0) {
+    // ShowVolts(sVBat);
+ // }
     
  
-  CalcAlt_Vario(); 
-  displaySensors();
-  displayMode();
-  ShowAmperage();
-  displayHeadingGraph();
-  displayHeading();
+  //CalcAlt_Vario(); 
+  //displaySensors();
+  //displayMode();
+  //ShowAmperage();
+  //displayHeadingGraph();
+  //displayHeading();
  
   MatchConfigs();
   MakePorts();
@@ -1295,7 +1458,7 @@ public class MwiFileFilter extends FileFilter {
   } 
 
   public String getDescription() {
-    return "*.osd Rush_OSD configuration file";
+    return "*.osd KVT_OSD configuration file";
   }   
 }
 

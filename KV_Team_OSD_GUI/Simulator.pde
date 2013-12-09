@@ -58,7 +58,7 @@ void SimSetup(){
  
 
   SG = ScontrolP5.addGroup("SG")
-    .setPosition(305,YSim + 33)
+    .setPosition(120,YSim + -72)
     .setWidth(733)
     .setBarHeight(13)
     .activateEvent(true)
@@ -79,6 +79,7 @@ void SimSetup(){
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight((boxnames.length*17) + 9)
                 .setLabel("Modes")
+                .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 .disableCollapse() 
                 //.close() 
@@ -93,6 +94,7 @@ void SimSetup(){
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(162)
                 .setLabel("Angle/Heading")
+                .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
                ;
@@ -106,6 +108,7 @@ void SimSetup(){
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(62)
                 .setLabel("Radio")
+                .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
                ; 
@@ -118,7 +121,8 @@ SGSensors1 = ScontrolP5.addGroup("SGSensors1")
                 .disableCollapse()
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(110)
-                .setLabel("Sensors 1")
+                .setLabel("Sensors")
+                .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
                ;                                  
@@ -131,6 +135,7 @@ SGGPS = ScontrolP5.addGroup("SGGPS")
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(111)
                 .setLabel("GPS")
+                .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
                ;
@@ -144,6 +149,7 @@ SGControlBox = ScontrolP5.addGroup("SGControlBox")
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(33)
                 .setLabel("Simulator Control")
+                .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
                ;   
@@ -189,7 +195,7 @@ SGPS_altitude = ScontrolP5.addNumberbox("SGPS_altitude",0,5,40,40,14);
  
  SGPS_speed = ScontrolP5.addNumberbox("SGPS_speed",0,5,60,40,14);
     SGPS_speed.setLabel("Speed-cm/s");
-    //SGPS_numSat.setColorBackground(red_);
+    //SGPS_speed.setColorBackground(blue_);
     SGPS_speed.setMin(0);
     SGPS_speed.setDirection(Controller.HORIZONTAL);
     SGPS_speed.setMax(10000);
@@ -345,7 +351,7 @@ s_VBat = ScontrolP5.addSlider("sVBat")
 s_MRSSI = ScontrolP5.addSlider("sMRSSI")
   .setPosition(130,10)
   .setSize(8,75)
-  .setRange(0,255)
+  .setRange(0,1023)
   .setValue(0)
   .setLabel("RSSI")
   .setDecimalPrecision(0)
@@ -457,17 +463,17 @@ void ShowCurrentThrottlePosition(){
   //makeText(" 40%", CurrentThrottlePosition[ScreenType]+1);
 }
 
-void ShowRSSI(){
+/*void ShowRSSI(){
   mapchar(0xba, rssiPosition[ScreenType]);
   makeText("85%", rssiPosition[ScreenType]+1);
 }
-
-void ShowAmperage(){
+*/
+/*void ShowAmperage(){
   mapchar(0xa4, amperagePosition[ScreenType]);
   makeText("1221", amperagePosition[ScreenType]+1);
 }
-
-void SimulateTimer(){
+*/
+/*void SimulateTimer(){
   String OnTimerString ="";
   String FlyTimerString ="";
   int seconds = (millis() - OnTimer) / 1000;
@@ -505,7 +511,7 @@ void SimulateTimer(){
   } 
    ShowFlyTime(FlyTimerString);
 }
-
+*/
 
 void displayMode()
 {
@@ -524,7 +530,7 @@ void displayMode()
     armed = false;
   }
     
-    if((SimModebits&mode_stable) >0)
+    /*if((SimModebits&mode_stable) >0)
       mapchar(0xbe,sensorPosition[0]+LINE);
 
     if((SimModebits&mode_baro) >0)
@@ -538,7 +544,7 @@ void displayMode()
 
     if((SimModebits&mode_gpshold) >0)
       mapchar(0xbe,sensorPosition[0]+3+LINE);
-
+*/
 }
 
 
@@ -550,20 +556,20 @@ void displayHorizon(int rollAngle, int pitchAngle)
   if(rollAngle>400) rollAngle=400;
   if(rollAngle<-400) rollAngle=-400;
 
-  for(int X=0; X<=8; X++) {
+ for(int X=0; X<=8; X++) {
     int Y = (rollAngle * (4-X)) / 64;
     Y += pitchAngle / 8;
     Y += 41;
     if(Y >= 0 && Y <= 81) {
       int pos = 30*(2+Y/9) + 10 + X;
-      if(X < 3 || X >5 || (Y/9) != 4 || confItem[GetSetting("S_DISPLAY_HORIZON_BR")].value() == 0)
+      //if(X < 3 || X >5 || (Y/9) != 4 || confItem[GetSetting("S_DISPLAY_HORIZON_BR")].value() == 0)
       	mapchar(0x80+(Y%9), pos);
       if(Y>=9 && (Y%9) == 0)
         mapchar(0x89, pos-30);
     }
   }
 
-  if(confItem[GetSetting("S_DISPLAY_HORIZON_BR")].value() > 0) {
+  /*if(confItem[GetSetting("S_DISPLAY_HORIZON_BR")].value() > 0) {
     //Draw center screen
     mapchar(0x01, 224-30);
     mapchar(0x00, 224-30-1);
@@ -584,7 +590,7 @@ void displayHorizon(int rollAngle, int pitchAngle)
     mapchar(0xC6,128+12+120);
     mapchar(0x02, 229-30);
     mapchar(0x03, 219-30);
-  }
+  }*/
 }
 
 
@@ -652,7 +658,7 @@ void GetModes(){
   mode_mag = 0;
   mode_gpshome = 0;
   mode_gpshold = 0;
-  mode_llights = 0;
+  //mode_llights = 0;
   mode_osd_switch = 0;
   for (int c = 0; c < boxnames.length; c++) {
     if (boxnames[c] == "ARM;") mode_armed |= bit;
@@ -667,6 +673,6 @@ void GetModes(){
     bit <<= 1L;
   }
   
-   
+ 
  
 }
