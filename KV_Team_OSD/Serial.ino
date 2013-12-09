@@ -188,7 +188,6 @@ if (Settings[S_USE_BOXNAMES]){
     mode_mag = 0;
     mode_gpshome = 0;
     mode_gpshold = 0;
-    mode_llights = 0;
     mode_osd_switch = 0;
 
     while(remaining > 0) {
@@ -210,28 +209,21 @@ if (Settings[S_USE_BOXNAMES]){
            mode_mag |= bit;
         if(firstc == 'B' && lastc == 'O') // "BARO;"
           mode_baro |= bit;
-        if(firstc == 'L' && lastc == 'S') // "LLIGHTS;"
-          mode_llights |= bit;
         if(firstc == 'G') {
           if(lastc == 'E') // "GPS HOME;"
             mode_gpshome |= bit;
           if(lastc == 'D') // "GPS HOLD;"
             mode_gpshold |= bit;
-        }
-        #ifdef BOX_OSD_SWITCH
-        if(firstc == 'O' && lastc == 'W') // "OSD SW;"
-          mode_osd_switch |= bit;
-        #endif
-
-        len = 0;
-        bit <<= 1L;
+            }
+          if(firstc == 'O' && lastc == 'W') // "OSD SW;"
+            mode_osd_switch |= bit;
+            
+            len = 0;
+             bit <<= 1L;
       }
       lastc = c;
       --remaining;
     }
-    #ifndef BOX_OSD_SWITCH
-      mode_osd_switch = mode_llights;
-    #endif
     modeMSPRequests &=~ REQ_MSP_BOX;
   }
 }else{ // use MSP_BOXIDS
@@ -245,7 +237,6 @@ if (Settings[S_USE_BOXNAMES]){
     mode_mag = 0;
     mode_gpshome = 0;
     mode_gpshold = 0;
-    mode_llights = 0;
     mode_osd_switch = 0;
 
     while(remaining > 0) {
@@ -273,18 +264,13 @@ if (Settings[S_USE_BOXNAMES]){
       case 16:
         mode_llights |= bit;
         break;
-#ifdef BOX_OSD_SWITCH
       case 19:
         mode_osd_switch |= bit;
         break;
-#endif
       }
       bit <<= 1;
       --remaining;
     }
-#ifndef BOX_OSD_SWITCH
-    mode_osd_switch = mode_llights;
-#endif
     modeMSPRequests &=~ REQ_MSP_BOX;
   }
 }

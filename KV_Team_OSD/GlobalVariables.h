@@ -706,7 +706,9 @@ screen_item_27,
 
 // POSITION OF EACH CHARACTER OR LOGO IN THE MAX7456
 const unsigned char speedUnitAdd[2] ={
-  0xa5,0xa6} ; // [0][0] and [0][1] = Km/h   [1][0] and [1][1] = Mph
+  0x8c,0x8e} ;                               // [0][0] and [0][1] = Km/h   [1][0] and [1][1] = Mph
+const unsigned char speedUnitAdd1[2] ={
+  0x8d,0x8f} ;
 const unsigned char temperatureUnitAdd[2] = {
   0x0e,0x0d};
 
@@ -722,9 +724,13 @@ const unsigned char MwAltitudeAdd[2]={
 const unsigned char MwClimbRateAdd[2]={
   0x9f,0x99};
 const unsigned char GPS_distanceToHomeAdd[2]={
-  0xbb,0xb9};
+  0x8a,0x72,};
+  const unsigned char GPS_distanceToHomeAdd1[2]={
+  0x8b,0x8b};
 const unsigned char MwGPSAltPositionAdd[2]={
   0xa7,0xa8};
+const unsigned char MwGPSAltPositionAdd1[2]={
+  0xa3,0xa3};
 const char KVTeamVersionPosition = 35;
 
 
