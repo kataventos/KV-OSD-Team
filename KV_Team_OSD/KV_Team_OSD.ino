@@ -161,8 +161,14 @@ void loop()
 //      rssiADC = (analogRead(rssiPin)*1.1*100)/1023;  // RSSI Readings, result in mV/10 (example 1.1V=1100mV=110 mV/10)
       rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255)
     }
-    amperage = (AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
+    if (Settings[S_MWAMPERAGE]) {
+    amperage = ((AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23)/100;
   }
+    if (!Settings[S_MWAMPERAGE]) {
+    amperage = (AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
+    }
+}
+    
   if (Settings[S_MWRSSI]) {
 //      rssiADC = MwRssi;
       rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023 / 4 (avoid a number > 255)
