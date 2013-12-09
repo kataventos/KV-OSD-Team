@@ -287,11 +287,7 @@ String[] ConfigNames = {
   " ",
   //"Display Flight Mode Icons",
   "Blink Frequency",
-  
-  //"Horizon_",
-  //"Decoration",
-  //"RSSI",
-  //"VOLTAGE",
+  "Amps",
   
   "Display CallSign",
   "S_CS0",
@@ -338,11 +334,7 @@ String[] ConfigHelp = {
   "ADC",
   " ",
   "Blink Frequency",
-  
-  //"Horizon_",
-  //"Decoration",
-  //"RSSI",
-  //"VOLTAGE",
+  "Amps",
   
   "Display CallSign",
   "S_CS0",
@@ -389,12 +381,9 @@ int[] ConfigRanges = {
 1,   // S_RESETSTATISTICS           19
 1,   // S_ENABLEADC                 20
 1,   // S_USE_BOXNAMES              21
-10,   // S_BLINKINGHZ,               22
+10,  // S_BLINKINGHZ,               22
+1,   // S_MWAMPERAGE,               23
 
-//1,   //S_DISPLAY_HORIZON_BR
-//1,   //S_WITHDECORATION
-//1,   //S_DISPLAYRSSI
-//1,   //S_DISPLAYVOLTAGE
 
 1,     // call sign                37
 255,
@@ -812,7 +801,7 @@ BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
 
 
 
-//  Unit and Video ---------------------------------------------------------------------------
+//  OTHER  ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_UNITSYSTEM"),  5,0, G_Other);
 BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial");
 CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
@@ -825,6 +814,8 @@ BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
 CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
 BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other, "BoxIDs","BoxNames");
 CreateItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
+CreateItem(GetSetting("S_MWAMPERAGE"),  5,6*17, G_Other);
+BuildRadioButton(GetSetting("S_MWAMPERAGE"),  5,6*17, G_Other, "OSD","MWii");
 
 
 //  Call Sign ---------------------------------------------------------------------------
