@@ -22,11 +22,8 @@ enum Settings {
   S_ENABLEADC,
   S_USE_BOXNAMES,
   S_BLINKINGHZ,    // selectable alarm blink freq
+  S_MWAMPERAGE,
   
-  //S_DISPLAY_HORIZON_BR,
-  //S_WITHDECORATION,
-  //S_DISPLAYRSSI,
-  //S_DISPLAYVOLTAGE,
   
   S_DISPLAY_CS,
   S_CS0,
