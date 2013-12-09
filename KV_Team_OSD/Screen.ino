@@ -33,8 +33,8 @@ char *FormatGPSCoord(int32_t val, char *str, uint8_t p, char pos, char neg) {
   }
 
 //  uint8_t bytes = p+8;
-  uint8_t bytes = p+7;  // NEB mod for 6 decimals instead of 7 after dot
-  val = val / 10;  // NEB added for 6 decimals instead of 7 after dot
+  uint8_t bytes = p+5;  
+  val = val / 1000;  //  4 decimals instead of 6 after dot
   
   str[bytes] = 0;
   str[--bytes] = pos;
