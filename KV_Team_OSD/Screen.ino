@@ -194,14 +194,15 @@ void displayHorizon(int rollAngle, int pitchAngle)
   
     if(Settings[L_HORIZONCENTERREFDSPL]){  
       //Draw center screen
-      screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
-      screen[position+2*LINE+6+1] = SYM_AH_CENTER_LINE;
+      //screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
+      //screen[position+2*LINE+6+1] = SYM_AH_CENTER_LINE;
       screen[position+2*LINE+6] =   SYM_AH_CENTER;
+      screen[position+2*LINE+1] =   SYM_AH_LEFT;
+      screen[position+2*LINE+11] =  SYM_AH_RIGHT;
     }
     if(Settings[L_HORIZONSIDEREFDSPL]){
       // Draw AH sides
-      screen[position+2*LINE+1] =   SYM_AH_LEFT;
-      screen[position+2*LINE+11] =  SYM_AH_RIGHT;
+      
       screen[position+0*LINE] =     SYM_AH_DECORATION_LEFT;
       screen[position+1*LINE] =     SYM_AH_DECORATION_LEFT;
       screen[position+2*LINE] =     SYM_AH_DECORATION_LEFT;
@@ -211,7 +212,7 @@ void displayHorizon(int rollAngle, int pitchAngle)
       screen[position+1*LINE+12] =  SYM_AH_DECORATION_RIGHT;
       screen[position+2*LINE+12] =  SYM_AH_DECORATION_RIGHT;
       screen[position+3*LINE+12] =  SYM_AH_DECORATION_RIGHT;
-      screen[position+4*LINE+12] = SYM_AH_DECORATION_RIGHT;
+      screen[position+4*LINE+12] =  SYM_AH_DECORATION_RIGHT;
      }
    }
 }
@@ -272,7 +273,8 @@ void displayCurrentThrottle(void)
     if (MwRcData[THROTTLESTICK] > HighT) HighT = MwRcData[THROTTLESTICK] -5;
     if (MwRcData[THROTTLESTICK] < LowT) LowT = MwRcData[THROTTLESTICK];      // Calibrate high and low throttle settings  --defaults set in GlobalVariables.h 1100-1900
     screenBuffer[0]=SYM_THR;
-    screenBuffer[1]=0;
+    screenBuffer[1]=SYM_THR1;
+    screenBuffer[2]=0;
     MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]);
     if(!armed) {
       screenBuffer[0]=' ';
@@ -448,13 +450,14 @@ void displayGPSPosition(void)
     }
   
   if(Settings[L_MW_GPS_ALTPOSITIONDSPL]){
-      screenBuffer[0] = MwGPSAltPositionAdd[Settings[S_UNITSYSTEM]];
+      screenBuffer[0] = MwGPSAltPositionAdd1[Settings[S_UNITSYSTEM]];
+      screenBuffer[1] = MwGPSAltPositionAdd[Settings[S_UNITSYSTEM]];
       uint16_t xx;
       if(Settings[S_UNITSYSTEM])
         xx = GPS_altitude * 3.2808; // Mt to Feet
       else
         xx = GPS_altitude;          // Mt
-      itoa(xx,screenBuffer+1,10);
+      itoa(xx,screenBuffer+2,10);
       MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_ALTPOSITIONROW]-1)*30) + Settings[L_MW_GPS_ALTPOSITIONCOL]);
       }
 }
@@ -486,7 +489,8 @@ void displayGPS_speed(void)
       speedMAX = xx;
       
     screenBuffer[0]=speedUnitAdd[Settings[S_UNITSYSTEM]];
-    itoa(xx,screenBuffer+1,10);
+    screenBuffer[1]=speedUnitAdd1[Settings[S_UNITSYSTEM]];
+    itoa(xx,screenBuffer+2,10);
     MAX7456_WriteString(screenBuffer,((Settings[L_SPEEDPOSITIONROW]-1)*30) + Settings[L_SPEEDPOSITIONCOL]);
    }
 }
@@ -550,8 +554,10 @@ void displayDistanceToHome(void)
       distanceMAX = dist;
 
     screenBuffer[0] = GPS_distanceToHomeAdd[Settings[S_UNITSYSTEM]];
-    itoa(dist, screenBuffer+1, 10);
+    screenBuffer[1] = GPS_distanceToHomeAdd1[Settings[S_UNITSYSTEM]];
+    itoa(dist, screenBuffer+2, 10);
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_DISTANCETOHOMEPOSROW]-1)*30) + Settings[L_GPS_DISTANCETOHOMEPOSCOL]);
+    
     }
 }
 
