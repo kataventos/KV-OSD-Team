@@ -151,6 +151,7 @@ void serialMSPCheck()
     MwVBat=read8();
     pMeterSum=read16();
     MwRssi = read16();
+    amperage = read16();       //Haydent mod. Calculations should not be in serial sketch (/ 100)
   }
 
   if (cmdMSP==MSP_RC_TUNING)
