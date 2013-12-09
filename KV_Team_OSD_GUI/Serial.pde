@@ -36,13 +36,13 @@ int CloseMode = 0;
 String boxnames[] = { // names for dynamic generation of config GUI
     "ARM;",
     "ANGLE;",
-    "HORIZON;",
+    //"HORIZON;",
     "BARO;",
     "MAG;",
-    "LLIGHTS;",
+    //"LLIGHTS;",
     "GPS HOME;",
     "GPS HOLD;",
-    "OSD SW;"
+    //"OSD SW;"
     
   };
 String strBoxNames = join(boxnames,""); 
