@@ -1,7 +1,7 @@
 
 //   KV Team OSD GUI
 //   http://code.google.com/p/rush-osd-development/
-//   July  2013  V_r370
+//   December  2013  V_2.2
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
@@ -249,43 +249,29 @@ String[] ConfigNames = {
   "RSSI Alarm",
   "Input Type", //MW ADC
   "PWM",
-  
-  //"Display Voltage",
+
   "Voltage Min",
   "Battery Cells",
   "Voltage Devider",
   "Input Type", //MW ADC
   
-  //"Display Amperage",
-  //"Diplay Amperage Used",
-  
-  //"Display Video Voltage",
   "Voltage Devider",
   "Input Type", //Mw ADC
   
-  //"Display Temperature",
+
   "Temperature Max",
   
   "", // for Board type do not remove
   
   "GPS",
   "Coords",
-  //"Display Coords on Top",
-  //"Display GPS Altitude",
-  //"Display Angle to Home",
-  //"Display Heading",
   "Heading",
   
   "Unit", //unit
   "Video",// signal
-  //"Display Throttle Position",
-  //"Display Horizon Bar",
-  //"Display Horizon Side Bars",
-  //"Display Battery Evo",
   "Stats",
   "OSD ADC",
   " ",
-  //"Display Flight Mode Icons",
   "Blink Frequency",
   "Amps",
   
@@ -367,9 +353,9 @@ int[] ConfigRanges = {
 1,   // S_PWMRSSI                   5
 105, // S_VOLTAGEMIN                6
 4,   // S_BATCELLS                  7
-100, // S_DIVIDERRATIO              8
+110, // S_DIVIDERRATIO              8
 1,   // S_MAINVOLTAGE_VBAT          9
-100, // S_VIDDIVIDERRATIO           10
+110, // S_VIDDIVIDERRATIO           10
 1,   // S_VIDVOLTAGE_VBAT           11 
 255, // S_TEMPERATUREMAX            12
 1,   // S_BOARDTYPE                 13
@@ -950,7 +936,7 @@ void CreateCS(int ItemIndex, int XLoction, int YLocation, Group inGroup){
 
 void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+/*"ItemLocationPAL"+"ItemLocationNTSC"+*/ ItemIndex,0,XLoction,YLocation,35,14));
   confItem[ItemIndex].setColorBackground(red_);
   confItem[ItemIndex].setMin(0);
   confItem[ItemIndex].setDirection(Controller.VERTICAL);

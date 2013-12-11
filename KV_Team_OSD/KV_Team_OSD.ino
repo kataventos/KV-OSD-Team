@@ -161,7 +161,7 @@ void loop()
       uint16_t voltageRaw = 0;
       for (uint16_t i=0;i<8;i++)
         voltageRaw += voltageRawArray[i];
-      vidvoltage = float(voltageRaw) * Settings[S_DIVIDERRATIO] /1023;
+      vidvoltage = float(voltageRaw) * Settings[S_VIDDIVIDERRATIO] /1023;
     }
     if (!Settings[S_MWRSSI]) {
       rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255)
