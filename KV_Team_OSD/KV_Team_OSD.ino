@@ -85,7 +85,7 @@ void setup()
   readEEPROM();
   MAX7456Setup();
   
-  analogReference(INTERNAL);
+  analogReference(DEFAULT);
 
   setMspRequests();
 
@@ -152,17 +152,22 @@ void loop()
       uint16_t voltageRaw = 0;
       for (uint16_t i=0;i<8;i++)
         voltageRaw += voltageRawArray[i];
-      voltage = float(voltageRaw) * Settings[S_DIVIDERRATIO] * (1.1/102.3/4/8);  
+      voltage = float(voltageRaw) * Settings[S_DIVIDERRATIO] /1023; 
     }
-    if (!Settings[S_VIDVOLTAGE_VBAT]) {
-      vidvoltage = float(analogRead(vidvoltagePin)) * Settings[S_VIDDIVIDERRATIO] * (1.1/102.3/4);
+    if (!Settings[S_VIDVOLTAGE_VBAT]) {     
+      static uint16_t ind = 0;
+      static uint32_t voltageRawArray[8];
+      voltageRawArray[(ind++)%8] = analogRead(vidvoltagePin);                  
+      uint16_t voltageRaw = 0;
+      for (uint16_t i=0;i<8;i++)
+        voltageRaw += voltageRawArray[i];
+      vidvoltage = float(voltageRaw) * Settings[S_DIVIDERRATIO] /1023;
     }
     if (!Settings[S_MWRSSI]) {
-//      rssiADC = (analogRead(rssiPin)*1.1*100)/1023;  // RSSI Readings, result in mV/10 (example 1.1V=1100mV=110 mV/10)
       rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255)
     }
     if (Settings[S_MWAMPERAGE]) {
-    amperage = ((AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23)/100;
+    amperage = MWAmperage /100;
   }
     if (!Settings[S_MWAMPERAGE]) {
     amperage = (AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
@@ -170,7 +175,6 @@ void loop()
 }
     
   if (Settings[S_MWRSSI]) {
-//      rssiADC = MwRssi;
       rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023 / 4 (avoid a number > 255)
   } 
    if (Settings[S_PWMRSSI]){
