@@ -142,6 +142,8 @@
 // Throttle Position (%)
 #define SYM_THR 0XC8
 #define SYM_THR1 0XC9
+#define SYM_THR_STALL 0X9D
+#define SYM_THR_STALL1 0X9E
 
 // RSSI
 #define SYM_RSSI 0XBA

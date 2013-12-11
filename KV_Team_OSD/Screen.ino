@@ -272,25 +272,35 @@ void displayCurrentThrottle(void)
   if(Settings[L_CURRENTTHROTTLEPOSITIONDSPL]){
     if (MwRcData[THROTTLESTICK] > HighT) HighT = MwRcData[THROTTLESTICK] -5;
     if (MwRcData[THROTTLESTICK] < LowT) LowT = MwRcData[THROTTLESTICK];      // Calibrate high and low throttle settings  --defaults set in GlobalVariables.h 1100-1900
+    
     screenBuffer[0]=SYM_THR;
     screenBuffer[1]=SYM_THR1;
     screenBuffer[2]=0;
     MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]);
     if(!armed) {
       screenBuffer[0]=' ';
-      screenBuffer[1]=' ';
-      screenBuffer[2]='-';
-      screenBuffer[3]='-';
-      screenBuffer[4]=0;
+      screenBuffer[1]= SYM_THR_STALL;
+      screenBuffer[2]= SYM_THR_STALL1;
+      screenBuffer[3]=0;
       MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]+2);
+     
+    
     }
     else
     {
       int CurThrottle = map(MwRcData[THROTTLESTICK],LowT,HighT,0,100);
+      if(CurThrottle <=15 && !BlinkAlarm){
+      screenBuffer[0]=SYM_THR_STALL;
+      screenBuffer[1]=SYM_THR_STALL1;
+      screenBuffer[2]=0;
+      MAX7456_WriteString(screenBuffer,((Settings[L_MW_ALTITUDEPOSITIONROW]-1)*30) + Settings[L_MW_ALTITUDEPOSITIONCOL]+ LINE);
+      return;
+      }
       ItoaPadded(CurThrottle,screenBuffer,3,0);
       screenBuffer[3]='%';
       screenBuffer[4]=0;
       MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]+2);
+      
     }
   }
 }
@@ -533,6 +543,8 @@ void displayClimbRate(void)
     else
       vario = MwVario / 100;            // cm/sec ----> mt/sec
     itoa(vario, screenBuffer+2, 10);
+    if(MwVario <= -200 && !BlinkAlarm)
+      return;
   
     MAX7456_WriteString(screenBuffer,((Settings[L_CLIMBRATEPOSITIONROW]-1)*30) + Settings[L_CLIMBRATEPOSITIONCOL]);
    }
