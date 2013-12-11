@@ -446,6 +446,7 @@ int16_t I2CError=0;
 uint16_t cycleTime=0;
 uint16_t pMeterSum=0;
 uint16_t MwRssi=0;
+uint16_t MWAmperage=0;
 
 //For Current Throttle
 int LowT = 1100;
