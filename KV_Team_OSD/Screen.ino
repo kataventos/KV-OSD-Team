@@ -454,7 +454,7 @@ void displayGPSPosition(void)
       }
     if(Settings[L_MW_GPS_LONPOSITIONDSPL]){
         screenBuffer[0] = SYM_LON;
-        FormatGPSCoord(GPS_longitude,screenBuffer+1,4,'E','W');
+        FormatGPSCoord(GPS_longitude,screenBuffer+1,3,'E','W');
         MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_LONPOSITIONROW]-1)*30) + Settings[L_MW_GPS_LONPOSITIONCOL]);
       }
     }
