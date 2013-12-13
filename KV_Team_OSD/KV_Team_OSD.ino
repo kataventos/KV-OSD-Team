@@ -8,37 +8,17 @@ December  2013  V2.2
  any later version. see http://www.gnu.org/licenses/
 */
 
-// This Team work is based on the earlier work developed by Jean Gabriel Maurice known as Rushduino. http://code.google.com/p/rushduino-osd/
+// This Teamwork is based on the earlier work developed by Jean Gabriel Maurice known as Rushduino. http://code.google.com/p/rushduino-osd/
 // Rushduino OSD <Multiwii forum>  http://www.multiwii.com/forum/viewtopic.php?f=8&t=922
 // Minim OSD <Multiwii forum>  http://www.multiwii.com/forum/viewtopic.php?f=8&t=2918
-// Thanks to all developers that coded this software before us, and all users that also help us to improve.
 // This team wish you great flights.
 
-
-              // This software communicates using MSP via the serial protocol. Therefore Multiwii develop-dependent.
-              // Changes the values of pid and rc-tuning, writes in eeprom of Multiwii FC.
-              // In config mode, can do acc and mag calibration.
-              // In addition, it works by collecting information analogue inputs. Such as voltage, amperage, rssi and temperature.
-              // At the end of the flight may be useful to look at the statistics.
-
-
-
-              /***********************************************************************************************************************************************/
-              /*                                                            KV_OSD_Team                                                                      */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                             This software is the result of a team work                                                      */
-              /*                                                                                                                                             */
-              /*                                     KATAVENTOS               ITAIN                    CARLONB                                               */
-              /*                         POWER67                  LIAM2317             NEVERLANDED                                                           */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /***********************************************************************************************************************************************/
-
-
-            
+              /*********************************************************************/
+              /*                           KV_OSD_Team                             */
+              /*                                                                   */
+              /*    KATAVENTOS                ITAIN                 CARLONB        */
+              /*     POWER67                 LIAM2317             NEVERLANDED      */
+              /*********************************************************************/
 
 
 #include <avr/pgmspace.h>
@@ -178,15 +158,15 @@ void loop()
       rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023 / 4 (avoid a number > 255)
   } 
    if (Settings[S_PWMRSSI]){
-//      rssiADC = pulseIn(PwmRssiPin, HIGH);
       rssiADC = pulseIn(PwmRssiPin, HIGH)/4;  // RSSI PWM Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255). To be verified (max value 1023 ?)
   }
- 
+  
   // Blink Basic Sanity Test Led at 1hz
   if(tenthSec>10)
     digitalWrite(7,HIGH);
   else
     digitalWrite(7,LOW);
+
 
   //---------------  Start Timed Service Routines  ---------------------------------------
   unsigned long currentMillis = millis();
@@ -292,7 +272,7 @@ void loop()
       }
       else
       {
-       // CollectStatistics();      DO NOT DELETE
+       // CollectStatistics(); 
 
         if((Settings[L_VOLTAGEPOSITIONDSPL] || Settings[L_VIDVOLTAGEPOSITIONDSPL]) && ((voltage>Settings[S_VOLTAGEMIN])||(BlinkAlarm))) displayVoltage();
         if(Settings[L_RSSIPOSITIONDSPL]&&((rssi>Settings[S_RSSI_ALARM])||(BlinkAlarm))) displayRSSI();

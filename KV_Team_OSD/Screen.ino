@@ -352,7 +352,7 @@ void displaypMeterSum(void)
   }
   if(Settings[L_PMETERSUMPOSITIONDSPL]){
     screenBuffer[0]=SYM_MAH;
-    int xx = pMeterSum / EST_PMSum;
+    int xx = pMeterSum;
     itoa(xx,screenBuffer+1,10);
     MAX7456_WriteString(screenBuffer,((Settings[L_PMETERSUMPOSITIONROW]-1)*30) + Settings[L_PMETERSUMPOSITIONCOL]);
   }
@@ -954,7 +954,7 @@ void displayConfigScreen(void)
     MAX7456_WriteString(screenBuffer,VELD-4);
 
     MAX7456_WriteString_P(configMsg96, LEVT);
-    xx= pMeterSum / EST_PMSum;
+    xx= pMeterSum;
     MAX7456_WriteString(itoa(xx,screenBuffer,10),LEVD-3);
 
     MAX7456_WriteString_P(configMsg97, MAGT);

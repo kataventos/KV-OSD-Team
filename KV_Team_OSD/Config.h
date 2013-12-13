@@ -1,50 +1,33 @@
  
  
- /*--------------------------------------------------       configurable parameters      ----------------------------------------------------*/
+ /*--------------------------------------------------       Configurable parameters      ----------------------------------------------------*/
  
  
 /********************       PWM RSSI      *********************/
 
-#define PwmRssiPin 3    // Pin 3 (PD3)  -  Miso Pin 12 (PB4) used for MAX communication
-
-
-/**********************       Serial speed      ************************/
-
-//#define SERIAL_SPEED 115200
+#define PwmRssiPin 3    // Pin 3 (PD3) 
 
 /**********    Here you can define time out for Mag calibration and EEProm write (mostly useful for mag calibration)    ***********/
+#define CALIBRATION_DELAY 6
+#define EEPROM_WRITE_DELAY 3
 
-#define CALIBRATION_DELAY 10
-#define EEPROM_WRITE_DELAY 5
-
-/***************************************         Amperage        ********************************************/
-
-#define EST_PMSum 1                 /****  NOTE  **** If you use hardware CURRENT sensor on OSD use (#define EST_PMSum 1) BEFORE ANY ADJUSTMENT OR CALIBRATION
-                                                        this value is empirical and is for fine tunning your consumption using the same instructions as for POWERMETER adjustment
-                                                        on Mwc (first you have to MWC fine tune your voltage (VBat)).                                                       ****/
+/*****************************         Amperage        ***************************/
 
 #define AMPDIVISION 3600            // Hardware current sensor division ratio
 #define AMPERAGE_CAL 1.1            // Amperage calibration
-#define AMPERAGE_OFFSET 512        // Amperage = AMPERAGE_OFFSET - analogRead * AMPERAGE_CAL / 10.23
+#define AMPERAGE_OFFSET 512        // Amperage = AMPERAGE_OFFSET - analogRead * AMPERAGE_CAL
 
-/**********************************         Display Settings         ************************/
+/***********************         Display Settings         ************************/
 
 #define DECIMAL '.'                 // Decimal point character, change to what suits you best (.) (,)
 
-/**********************************   MSP Options and compatibility **********************/
-
-#define BOX_OSD_SWITCH              // Comment to use LLIGHT switch instead. ( OSD switch will be default and only option after MW 2.2 release. It is used to hide your AH, side bars, and coordinates).
-
-/********************       For Sensors presence      *********************/
+/*----------------------------------------------       End of configurable parameters      ----------------------------------------------------*/
 
 #define ACCELEROMETER  1//0b00000001
 #define BAROMETER      2//0b00000010
 #define MAGNETOMETER   4//0b00000100
 #define GPSSENSOR      8//0b00001000
 //#define SONAR         16//0b00010000
-
-
-/*----------------------------------------------       End of configurable parameters      ----------------------------------------------------*/
 
 #define LINE      30
 #define LINE01    0

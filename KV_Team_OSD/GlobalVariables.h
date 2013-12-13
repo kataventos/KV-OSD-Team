@@ -42,7 +42,6 @@ uint32_t mode_baro;
 uint32_t mode_mag;
 uint32_t mode_gpshome;
 uint32_t mode_gpshold;
-uint32_t mode_llights;
 uint32_t mode_osd_switch;
 
 // Settings Locations

@@ -453,7 +453,7 @@ void SendCommand(int cmd){
         serialize8(int(SGPS_FIX.arrayValue()[0]));
         serialize8(int(SGPS_numSat.value()));
         serialize32(384627000);
-        serialize32(90803000);
+        serialize32(-90803000);
         serialize16(int(SGPS_altitude.value()/100));
         serialize16(int(SGPS_speed.value()));
         serialize16(355);     
