@@ -23,6 +23,7 @@ enum Settings {
   S_USE_BOXNAMES,
   S_BLINKINGHZ,    // selectable alarm blink freq
   S_MWAMPERAGE,
+  S_AMPOFFSET,
   
   
   S_DISPLAY_CS,

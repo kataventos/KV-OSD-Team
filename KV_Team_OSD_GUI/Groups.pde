@@ -241,7 +241,7 @@ G_Other = GroupcontrolP5.addGroup("G_Other")
                 .setBackgroundColor(color(30,255))
                 .setColorActive(red_)
                 //.setBackgroundHeight((10*10) +5)
-                .setBackgroundHeight((10*21) +6)
+                .setBackgroundHeight((10*12) +8)
                 .setLabel("Other")
                 //.setGroup(SG)
                 .disableCollapse() 
@@ -249,7 +249,26 @@ G_Other = GroupcontrolP5.addGroup("G_Other")
                 G_Other.captionLabel()
                 .toUpperCase(false)
                 .align(controlP5.CENTER,controlP5.CENTER)
-                ;                                          
+                ;  
+G_Amperage = GroupcontrolP5.addGroup("G_Amperage")
+                .setPosition(XAmps,YAmps+15)
+                .setWidth(Col3Width)
+                .setBarHeight(15)
+                .setColorForeground(color(30,255))
+                .setColorBackground(color(30,255))
+                .setColorLabel(color(0, 300, 320))
+                .setBarHeight(15)
+                .setBackgroundColor(color(30,255))
+                .setColorActive(red_)
+                .setBackgroundHeight((5*13) +5)
+                .setLabel("Amperage")
+                //.setGroup(SG)
+                .disableCollapse() 
+                ; 
+                G_Amperage.captionLabel()
+                .toUpperCase(false)
+                .align(controlP5.CENTER,controlP5.CENTER)
+                ;                 
 
   
 }
