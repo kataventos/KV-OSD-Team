@@ -65,16 +65,6 @@
 #define SYM_AH_DECORATION_RIGHT 0XC6
 #define SYM_AH_DECORATION_LEFT 0XC7
 
-// AH Steps
-//#define SYM_AH_STEP_7 0X10 
-//#define SYM_AH_STEP_6 0X11
-//#define SYM_AH_STEP_5 0X12
-//#define SYM_AH_STEP_4 0X13
-//#define SYM_AH_STEP_3 0X14
-//#define SYM_AH_STEP_2 0X15
-//#define SYM_AH_STEP_1 0X16
-//#define SYM_AH_STEP_0 0X17
-
 // AH Bars
 #define SYM_AH_BAR9_0 0x80
 #define SYM_AH_BAR9_9 0x89
@@ -142,6 +132,8 @@
 // Throttle Position (%)
 #define SYM_THR 0XC8
 #define SYM_THR1 0XC9
+
+// Stall Warning
 #define SYM_THR_STALL 0X9D
 #define SYM_THR_STALL1 0X9E
 

@@ -262,9 +262,6 @@ if (Settings[S_USE_BOXNAMES]){
       case 11:
         mode_gpshold |= bit;
         break;
-      case 16:
-        mode_llights |= bit;
-        break;
       case 19:
         mode_osd_switch |= bit;
         break;

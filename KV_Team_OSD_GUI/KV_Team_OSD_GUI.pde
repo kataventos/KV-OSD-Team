@@ -7,23 +7,12 @@
 //   the Free Software Foundation, either version 3 of the License, or
 //   any later version. see http://www.gnu.org/licenses/
 
-              /***********************************************************************************************************************************************/
-              /*                                                            KV_OSD_Team_GUI                                                                  */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                             This software is the result of a team work                                                      */
-              /*                                                                                                                                             */
-              /*                           POWER67             KATAVENTOS               ITAIN                    CARLONB                                     */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /*                                                                                                                                             */
-              /***********************************************************************************************************************************************/
-
-
- 
-
+              /*********************************************************************/
+              /*                           KV_OSD_Team                             */
+              /*                                                                   */
+              /*    KATAVENTOS                ITAIN                 CARLONB        */
+              /*     POWER67                 LIAM2317             NEVERLANDED      */
+              /*********************************************************************/
 
 
 import processing.serial.Serial; // serial library
