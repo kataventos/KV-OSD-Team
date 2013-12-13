@@ -150,7 +150,8 @@ void loop()
     amperage = MWAmperage /100;
   }
     if (!Settings[S_MWAMPERAGE]) {
-    amperage = (AMPERAGE_OFFSET - (analogRead(amperagePin)*AMPERAGE_CAL))/10.23;
+    amperage = analogRead(amperagePin)- Settings[S_AMPOFFSET] /2;
+    if (amperage >=999) amperage=999;
     }
 }
     
@@ -326,13 +327,13 @@ void loop()
     BlinkAlarm =!BlinkAlarm;     // 10=1Hz, 9=1.1Hz, 8=1.25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2.5Hz, 3=3.3Hz, 2=5Hz, 1=10Hz
   }
 
+ 
   if(tenthSec >= 20)     // this execute 1 time a second
   {
     onTime++;
 
-    // XXX
-    amperagesum += amperage / AMPDIVISION; //(mAh)
-
+    amperagesum += amperage *100 /3600; //(mAh)
+    
     tenthSec=0;
 
     if(!armed) {
@@ -345,6 +346,8 @@ void loop()
       setMspRequests();
     }
     allSec++;
+    
+    
 
     if((accCalibrationTimer==1)&&(configMode)) {
       blankserialRequest(MSP_ACC_CALIBRATION);
@@ -371,7 +374,7 @@ void loop()
     }
     if(rssiTimer>0) rssiTimer--;
   }
-
+  
   serialMSPreceive();
 
 }  // End of main loop

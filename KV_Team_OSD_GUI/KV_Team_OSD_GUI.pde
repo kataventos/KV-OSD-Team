@@ -192,7 +192,7 @@ int XEEPROM    = 120;        int YEEPROM    = 5;  //hidden do not remove
 int XBoard     = 120;        int YBoard   = 5;
 int XRSSI      = 120;        int YRSSI    = 45;
 int XVolts      = 120;       int YVolts    = 152;
-//int XAmps       = 120;       int YAmps    = 281;
+int XAmps       = 490;       int YAmps    = 152;
 int XVVolts    = 305;        int YVVolts  = 152;
 int XTemp      = 305;        int YTemp    = 5;
 int XGPS       = 305;        int YGPS    = 45;
@@ -236,16 +236,16 @@ String[] ConfigNames = {
   "RSSI Min",
   "RSSI Max",
   "RSSI Alarm",
-  "Input Type", //MW ADC
+  "Input", //MW ADC
   "PWM",
 
-  "Voltage Min",
+  "Voltage Alarm",
   "Battery Cells",
-  "Voltage Devider",
-  "Input Type", //MW ADC
+  "Divider Ratio",
+  "Input", //MW ADC
   
-  "Voltage Devider",
-  "Input Type", //Mw ADC
+  "Divider Ratio",
+  "Input", //Mw ADC
   
 
   "Temperature Max",
@@ -262,7 +262,8 @@ String[] ConfigNames = {
   "OSD ADC",
   " ",
   "Blink Frequency",
-  "Amps",
+  "Input",
+  "Offset",
   
   "Display CallSign",
   "S_CS0",
@@ -310,6 +311,7 @@ String[] ConfigHelp = {
   " ",
   "Blink Frequency",
   "Amps",
+  "Amp Offset",
   
   "Display CallSign",
   "S_CS0",
@@ -358,6 +360,7 @@ int[] ConfigRanges = {
 1,   // S_USE_BOXNAMES              21
 10,  // S_BLINKINGHZ,               22
 1,   // S_MWAMPERAGE,               23
+255, // S_AMPOFFSET,                24
 
 
 1,     // call sign                37
@@ -732,31 +735,30 @@ OSDBackground = loadImage("Background3.jpg");
 CreateItem(GetSetting("S_CHECK_"), 5, 0, G_EEPROM);
 
 // RSSI  ---------------------------------------------------------------------------
+CreateItem(GetSetting("S_MWRSSI"),  5,0*17, G_RSSI);
+BuildRadioButton(GetSetting("S_MWRSSI"),  5,0*17, G_RSSI, "ADC","MWii");
+CreateItem(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI);
+BuildRadioButton(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI, "Off","On");
+CreateItem(GetSetting("S_RSSIMIN"), 5, 2*17, G_RSSI);
+CreateItem(GetSetting("S_RSSIMAX"), 5,3*17, G_RSSI);
+CreateItem(GetSetting("S_RSSI_ALARM"), 5,4*17, G_RSSI);
 
-CreateItem(GetSetting("S_RSSIMIN"), 5, 0, G_RSSI);
-CreateItem(GetSetting("S_RSSIMAX"), 5,1*17, G_RSSI);
-CreateItem(GetSetting("S_RSSI_ALARM"), 5,2*17, G_RSSI);
-CreateItem(GetSetting("S_MWRSSI"),  5,3*17, G_RSSI);
-BuildRadioButton(GetSetting("S_MWRSSI"),  5,3*17, G_RSSI, "ADC","MWii");
-CreateItem(GetSetting("S_PWMRSSI"),  5,4*17, G_RSSI);
-BuildRadioButton(GetSetting("S_PWMRSSI"),  5,4*17, G_RSSI, "Off","On");
+
 
 // Voltage  ------------------------------------------------------------------------
-
-CreateItem(GetSetting("S_VOLTAGEMIN"), 5,0*17, G_Voltage);
+CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,0*17, G_Voltage);
+BuildRadioButton(GetSetting("S_MAINVOLTAGE_VBAT"),  5,0*17, G_Voltage, "ADC","MWii");
 CreateItem(GetSetting("S_BATCELLS"), 5,1*17, G_Voltage);
-CreateItem(GetSetting("S_DIVIDERRATIO"), 5,2*17, G_Voltage);
-CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,3*17, G_Voltage);
-BuildRadioButton(GetSetting("S_MAINVOLTAGE_VBAT"),  5,3*17, G_Voltage, "ADC","MWii");
+CreateItem(GetSetting("S_VOLTAGEMIN"), 5,2*17, G_Voltage);
+CreateItem(GetSetting("S_DIVIDERRATIO"), 5,3*17, G_Voltage);
 
-// Amperage  ------------------------------------------------------------------------
-//CreateItem(GetSetting("S_AMPERAGE"),  5,0, G_Amperage);
-//CreateItem(GetSetting("S_AMPER_HOUR"),  5,1*17, G_Amperage);
+
+
 
 // Video Voltage  ------------------------------------------------------------------------
-CreateItem(GetSetting("S_VIDDIVIDERRATIO"),  5,1*17, G_VVoltage);
-CreateItem(GetSetting("S_VIDVOLTAGE_VBAT"),  5,2*17, G_VVoltage);
+CreateItem(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0*17, G_VVoltage);
 BuildRadioButton(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0, G_VVoltage, "ADC","MWii");
+CreateItem(GetSetting("S_VIDDIVIDERRATIO"),  5,2*17, G_VVoltage);
 
 //  Temperature  --------------------------------------------------------------------
 CreateItem(GetSetting("S_TEMPERATUREMAX"),  5,0*17, G_Temperature);
@@ -771,8 +773,8 @@ CreateItem(GetSetting("S_DISPLAYGPS"), 5,0, G_GPS);
 BuildRadioButton(GetSetting("S_DISPLAYGPS"),  5,0, G_GPS, "Off","On");
 CreateItem(GetSetting("S_COORDINATES"),  5,1*17, G_GPS);
 BuildRadioButton(GetSetting("S_COORDINATES"),  5,1*17, G_GPS, "Off","On");
-CreateItem(GetSetting("S_HEADING360"),  5,2*17, G_GPS);
-BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
+CreateItem(GetSetting("S_HEADING360"),  5,3*17, G_GPS);
+BuildRadioButton(GetSetting("S_HEADING360"),  5,3*17, G_GPS, "180°","360°");
 
 
 
@@ -782,15 +784,19 @@ BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial")
 CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
 BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other, "NTSC","PAL");
 
-CreateItem(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other);
-BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Reset","Maintain");
-CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
-BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
-CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
-BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other, "BoxIDs","BoxNames");
-CreateItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
-CreateItem(GetSetting("S_MWAMPERAGE"),  5,6*17, G_Other);
-BuildRadioButton(GetSetting("S_MWAMPERAGE"),  5,6*17, G_Other, "OSD","MWii");
+CreateItem(GetSetting("S_RESETSTATISTICS"),  5,3*17, G_Other);
+BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,3*17, G_Other, "Reset","Maintain");
+CreateItem(GetSetting("S_ENABLEADC"),  5,4*17, G_Other);
+BuildRadioButton(GetSetting("S_ENABLEADC"),  5,4*17, G_Other, "Off","On");
+CreateItem(GetSetting("S_USE_BOXNAMES"),  5,5*17, G_Other);
+BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,5*17, G_Other, "BoxIDs","BoxNames");
+CreateItem(GetSetting("S_BLINKINGHZ"),  5,6*17, G_Other);
+
+
+// Amperage  ------------------------------------------------------------------------
+CreateItem(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage);
+BuildRadioButton(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage, "ADC","MWii");
+CreateItem(GetSetting("S_AMPOFFSET"),  5,2*17, G_Amperage);
 
 
 //  Call Sign ---------------------------------------------------------------------------

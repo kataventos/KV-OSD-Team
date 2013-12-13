@@ -9,13 +9,7 @@
 
 /**********    Here you can define time out for Mag calibration and EEProm write (mostly useful for mag calibration)    ***********/
 #define CALIBRATION_DELAY 6
-#define EEPROM_WRITE_DELAY 3
-
-/*****************************         Amperage        ***************************/
-
-#define AMPDIVISION 3600            // Hardware current sensor division ratio
-#define AMPERAGE_CAL 1.1            // Amperage calibration
-#define AMPERAGE_OFFSET 512        // Amperage = AMPERAGE_OFFSET - analogRead * AMPERAGE_CAL
+#define EEPROM_WRITE_DELAY 3      
 
 /***********************         Display Settings         ************************/
 
