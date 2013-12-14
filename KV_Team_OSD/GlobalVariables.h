@@ -71,6 +71,7 @@ enum Setting_ {
   S_BLINKINGHZ,    // selectable alarm blink freq
   S_MWAMPERAGE,
   S_AMPOFFSET,
+  S_CLIMB_RATE_ALARM,
   
   S_CS0,      // 10 callsign char locations
   S_CS1,
@@ -208,8 +209,10 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 5,   // S_BLINKINGHZ,               22   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
 0,   //S_MWAMPERAGE                 23
 100, //S_AMPOFFSET,                 24
+2,   //S_CLIMB_RATE_ALARM           25
 
-0,   // S_CS0,                      25  // 10 callsign char locations
+
+0,   // S_CS0,                      26  // 10 callsign char locations
 0,   // S_CS1,
 0,   // S_CS2,
 0,   // S_CS3,
@@ -218,7 +221,7 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 0,   // S_CS6,
 0,   // S_CS7,
 0,   // S_CS8,
-0,   // S_CS9,                      33
+0,   // S_CS9,                      35
 };
 
 

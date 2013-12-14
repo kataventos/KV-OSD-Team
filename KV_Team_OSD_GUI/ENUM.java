@@ -24,6 +24,8 @@ enum Settings {
   S_BLINKINGHZ,    // selectable alarm blink freq
   S_MWAMPERAGE,
   S_AMPOFFSET,
+  S_CLIMB_RATE_ALARM,
+  
   
   
   S_DISPLAY_CS,

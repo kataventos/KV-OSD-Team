@@ -558,7 +558,7 @@ void displayClimbRate(void)
     else
       vario = MwVario / 100;            // cm/sec ----> mt/sec
     itoa(vario, screenBuffer+2, 10);
-    if(MwVario <= -200 && !BlinkAlarm)
+    if(MwVario <= -Settings[S_CLIMB_RATE_ALARM]*100 && !BlinkAlarm)  
       return;
   
     MAX7456_WriteString(screenBuffer,((Settings[L_CLIMBRATEPOSITIONROW]-1)*30) + Settings[L_CLIMBRATEPOSITIONCOL]);

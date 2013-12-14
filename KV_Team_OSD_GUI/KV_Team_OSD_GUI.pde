@@ -130,6 +130,7 @@ int currentRow = 0;
 //Boolean SimulateMW = true;
 
 
+
 ControlP5 controlP5;
 ControlP5 SmallcontrolP5;
 ControlP5 ScontrolP5;
@@ -264,6 +265,7 @@ String[] ConfigNames = {
   "Blink Frequency",
   "Input",
   "Offset",
+  "Descend Alarm",
   
   "Display CallSign",
   "S_CS0",
@@ -312,6 +314,7 @@ String[] ConfigHelp = {
   "Blink Frequency",
   "Amps",
   "Amp Offset",
+  "CLimb Rate Alarm",
   
   "Display CallSign",
   "S_CS0",
@@ -337,7 +340,7 @@ static int SIMITEMS=6;
 int[] ConfigRanges = {
 1,   // used for check             0
 
-255,   // S_RSSIMIN                   1
+255, // S_RSSIMIN                   1
 255, // S_RSSIMAX                   2
 70,  //S_RSSI_ALARM                 3
 1,   // S_MWRSSI                    4
@@ -361,6 +364,7 @@ int[] ConfigRanges = {
 10,  // S_BLINKINGHZ,               22
 1,   // S_MWAMPERAGE,               23
 255, // S_AMPOFFSET,                24
+8,   //S_CLIMB_RATE_ALARM           25  // Descend Alarm
 
 
 1,     // call sign                37
@@ -727,6 +731,7 @@ OSDBackground = loadImage("Background3.jpg");
   buttonRESET = controlP5.addButton("RESET",1,XControlBox+30,YControlBox+50,45,16);buttonRESET.setColorBackground(red_);
   buttonWRITE = controlP5.addButton("WRITE",1,XControlBox+30,YControlBox+75,45,16);buttonWRITE.setColorBackground(red_);
   buttonRESTART = controlP5.addButton("RESTART",1,XControlBox+25,YControlBox+100,55,16);buttonRESTART.setColorBackground(red_);
+  
     
     
 
@@ -784,13 +789,14 @@ BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial")
 CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
 BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other, "NTSC","PAL");
 
-CreateItem(GetSetting("S_RESETSTATISTICS"),  5,3*17, G_Other);
-BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,3*17, G_Other, "Reset","Maintain");
-CreateItem(GetSetting("S_ENABLEADC"),  5,4*17, G_Other);
-BuildRadioButton(GetSetting("S_ENABLEADC"),  5,4*17, G_Other, "Off","On");
-CreateItem(GetSetting("S_USE_BOXNAMES"),  5,5*17, G_Other);
-BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,5*17, G_Other, "BoxIDs","BoxNames");
-CreateItem(GetSetting("S_BLINKINGHZ"),  5,6*17, G_Other);
+CreateItem(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other);
+BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Reset","Maintain");
+CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
+BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
+CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
+BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other, "BoxIDs","BoxNames");
+CreateItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
+CreateItem(GetSetting("S_CLIMB_RATE_ALARM"),  5,6*17, G_Other);
 
 
 // Amperage  ------------------------------------------------------------------------
