@@ -1,6 +1,3 @@
-
-
-
 float sAltitude = 0;
 float sVario = 0;
 float sVBat = 0;
@@ -320,7 +317,7 @@ s_Altitude = ScontrolP5.addSlider("sAltitude")
 s_Vario = ScontrolP5.addSlider("sVario")
   .setPosition(47,10)
   .setSize(8,75)
-  .setRange(-20,20)
+  .setRange(-30,30)
   .setNumberOfTickMarks(41)
   .showTickMarks(false)
   .setValue(0)
