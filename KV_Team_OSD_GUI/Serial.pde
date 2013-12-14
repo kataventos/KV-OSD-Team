@@ -394,7 +394,7 @@ void SendCommand(int cmd){
       case MSP_IDENT:
         PortIsWriting = true;
         headSerialReply(MSP_IDENT, 7);
-        serialize8(101);   // multiwii version
+        serialize8(202);   // multiwii version
         serialize8(0); // type of multicopter
         serialize8(0);         // MultiWii Serial Protocol Version
         serialize32(0);        // "capability"
