@@ -248,7 +248,7 @@ void loop()
 
     MAX7456_DrawScreen();
     
-    if( allSec < 10 ){
+    if( allSec < 6 ){
       displayIntro();
       lastCallSign = onTime;
     }  
@@ -273,10 +273,10 @@ void loop()
       }
       else
       {
-       // CollectStatistics(); 
-
-        if((Settings[L_VOLTAGEPOSITIONDSPL] || Settings[L_VIDVOLTAGEPOSITIONDSPL]) && ((voltage>Settings[S_VOLTAGEMIN])||(BlinkAlarm))) displayVoltage();
-        if(Settings[L_RSSIPOSITIONDSPL]&&((rssi>Settings[S_RSSI_ALARM])||(BlinkAlarm))) displayRSSI();
+        
+        displayVoltage();
+        displayVidVoltage();
+        displayRSSI();
         displayTime();
         displayMode();
         if(Settings[L_TEMPERATUREPOSDSPL]&&((temperature<Settings[S_TEMPERATUREMAX])||(BlinkAlarm))) displayTemperature();        
@@ -321,7 +321,6 @@ void loop()
 //---------------------  End of Timed Service Routine ---------------------------------------
 
 
-//  if(halfSec >= 10) {
   if(TempBlinkAlarm >= Settings[S_BLINKINGHZ]) {    // selectable alarm blink freq
     TempBlinkAlarm = 0;
     BlinkAlarm =!BlinkAlarm;     // 10=1Hz, 9=1.1Hz, 8=1.25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2.5Hz, 3=3.3Hz, 2=5Hz, 1=10Hz

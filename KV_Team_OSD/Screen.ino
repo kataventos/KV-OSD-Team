@@ -89,7 +89,7 @@ uint8_t FindNull(void)
   return xx;
 }
 
-void displayTemperature(void)        // WILL WORK ONLY WITH V1.2
+void displayTemperature(void)        // WILL WORK ONLY WITH Rushduino V1.2
 {
   int xxx;
   if (Settings[S_UNITSYSTEM])
@@ -220,18 +220,18 @@ void displayHorizon(int rollAngle, int pitchAngle)
 void displayVoltage(void)
 {
 if(Settings[L_VOLTAGEPOSITIONDSPL]){
-  
-  if (Settings[S_VIDVOLTAGE_VBAT]){
-    vidvoltage=MwVBat;
-  }
   if (Settings[S_MAINVOLTAGE_VBAT]){
     voltage=MwVBat;
   }
+    if (voltage <=(Settings[S_VOLTAGEMIN]) && !BlinkAlarm){  
+    ItoaPadded(voltage, screenBuffer, 4, 3);
+    return;
+ }
     ItoaPadded(voltage, screenBuffer, 4, 3);
     screenBuffer[4] = SYM_VOLT;
     screenBuffer[5] = 0;
     MAX7456_WriteString(screenBuffer,((Settings[L_VOLTAGEPOSITIONROW]-1)*30) + Settings[L_VOLTAGEPOSITIONCOL]);
-  
+    
   if(Settings[L_MAINBATLEVEVOLUTIONDSPL]){
     // For battery evolution display
     int BATTEV1 =Settings[S_BATCELLS] * 35;
@@ -254,9 +254,19 @@ if(Settings[L_VOLTAGEPOSITIONDSPL]){
     }
     screenBuffer[1]=0;
     MAX7456_WriteString(screenBuffer,((Settings[L_VOLTAGEPOSITIONROW]-1)*30) + Settings[L_VOLTAGEPOSITIONCOL]-1);
+ }
+}
+
+void displayVidVoltage(void)
+{  
+    if(Settings[L_VIDVOLTAGEPOSITIONDSPL]){    
+    if (Settings[S_VIDVOLTAGE_VBAT]){
+    vidvoltage=MwVBat;
   }
-  
-  if(Settings[L_VIDVOLTAGEPOSITIONDSPL]){
+    if (vidvoltage <=(Settings[S_VOLTAGEMIN]) && !BlinkAlarm){
+    ItoaPadded(vidvoltage, screenBuffer, 4, 3);
+    return;
+ }
     ItoaPadded(vidvoltage, screenBuffer, 4, 3);
     screenBuffer[4]=SYM_VOLT;
     screenBuffer[5]=0;
@@ -265,7 +275,8 @@ if(Settings[L_VOLTAGEPOSITIONDSPL]){
     screenBuffer[1]=0;
     MAX7456_WriteString(screenBuffer,((Settings[L_VIDVOLTAGEPOSITIONROW]-1)*30) + Settings[L_VIDVOLTAGEPOSITIONCOL]-1);
   }
-}
+ }
+
 
 void displayCurrentThrottle(void)
 {
@@ -359,18 +370,11 @@ void displaypMeterSum(void)
   }
 }
 
-/*void displayamperagesum(void)
-
-  if(Settings[L_PMETERSUMPOSITIONDSPL]){
-    screenBuffer[0]=SYM_MAH;
-    int xx = amperagesum;
-    itoa(xx,screenBuffer+1,10);
-    MAX7456_WriteString(screenBuffer,((Settings[L_PMETERSUMPOSITIONROW]-1)*30) + Settings[L_PMETERSUMPOSITIONCOL]);
+void displayRSSI(void){
+  if (rssi <=(Settings[S_RSSI_ALARM]) && !BlinkAlarm){
+  screenBuffer[0] = SYM_RSSI;
+  return;
   }
-}*/
-
-void displayRSSI(void)
-{
   screenBuffer[0] = SYM_RSSI;
   // Calcul et affichage du Rssi
   itoa(rssi,screenBuffer+1,10);
@@ -460,12 +464,12 @@ void displayGPSPosition(void)
   if(Settings[S_COORDINATES]){
     if(Settings[L_MW_GPS_LATPOSITIONDSPL]){
         screenBuffer[0] = SYM_LAT;
-        FormatGPSCoord(GPS_latitude,screenBuffer+1,3,'N','S');
+        FormatGPSCoord(GPS_latitude,screenBuffer+1,4,'N','S');
         MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_LATPOSITIONROW]-1)*30) + Settings[L_MW_GPS_LATPOSITIONCOL]);
       }
     if(Settings[L_MW_GPS_LONPOSITIONDSPL]){
         screenBuffer[0] = SYM_LON;
-        FormatGPSCoord(GPS_longitude,screenBuffer+1,3,'E','W');
+        FormatGPSCoord(GPS_longitude,screenBuffer+1,4,'E','W');
         MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_LONPOSITIONROW]-1)*30) + Settings[L_MW_GPS_LONPOSITIONCOL]);
       }
     }
