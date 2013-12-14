@@ -339,10 +339,10 @@ int[] ConfigRanges = {
 
 255,   // S_RSSIMIN                   1
 255, // S_RSSIMAX                   2
-60,  //S_RSSI_ALARM                 3
+70,  //S_RSSI_ALARM                 3
 1,   // S_MWRSSI                    4
 1,   // S_PWMRSSI                   5
-105, // S_VOLTAGEMIN                6
+110, // S_VOLTAGEMIN                6
 4,   // S_BATCELLS                  7
 110, // S_DIVIDERRATIO              8
 1,   // S_MAINVOLTAGE_VBAT          9
