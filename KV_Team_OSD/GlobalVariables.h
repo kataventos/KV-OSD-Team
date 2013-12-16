@@ -9,7 +9,6 @@ const uint16_t amperagePin=1;
 const uint16_t rssiPin=3;
 const uint16_t temperaturePin=6;            // Temperature pin 6 for original Rushduino Board V1.2
 const uint8_t rssiSample=30;
-//const uint8_t lowrssiAlarm=RSSI_ALARM;    // This will make blink the Rssi if lower then this value
 
 //General use variables
 int tenthSec=0;
@@ -38,6 +37,7 @@ uint8_t retransmitQueue;
 // Mode bits
 uint32_t mode_armed;
 uint32_t mode_stable;
+uint32_t mode_lock;
 uint32_t mode_baro;
 uint32_t mode_mag;
 uint32_t mode_gpshome;
@@ -208,7 +208,7 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 0,   // S_USE_BOXNAMES              21
 5,   // S_BLINKINGHZ,               22   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
 0,   //S_MWAMPERAGE                 23
-100, //S_AMPOFFSET,                 24
+0,   //S_AMPOFFSET,                 24
 2,   //S_CLIMB_RATE_ALARM           25
 
 

@@ -141,7 +141,7 @@ void loop()
       uint16_t voltageRaw = 0;
       for (uint16_t i=0;i<8;i++)
         voltageRaw += voltageRawArray[i];
-      vidvoltage = float(voltageRaw) * Settings[S_VIDDIVIDERRATIO] /1023;
+      vidvoltage = float(voltageRaw) * Settings[S_VIDDIVIDERRATIO] /1023;  
     }
     if (!Settings[S_MWRSSI]) {
       rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255)
@@ -292,6 +292,7 @@ void loop()
         displayCallsign(); 
        
        }
+       //if (!(MwSensorActive&mode_osd_switch)
 
         if(MwSensorPresent&ACCELEROMETER)
            displayHorizon(MwAngle[0],MwAngle[1]);
@@ -314,6 +315,7 @@ void loop()
             displayAngleToHome();
             displayGPS_speed();
             displayGPSPosition();
+            displayGPS_altitude();
           }
       }
     }

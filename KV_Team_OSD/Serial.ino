@@ -204,8 +204,10 @@ if (Settings[S_USE_BOXNAMES]){
           if(lastc == 'E') // "ANGLE;"
             mode_stable |= bit;
         }
+        //if(firstc == 'H' && lastc == 'N') // "HORIZON;"
+          //mode_stable |= bit;
         if(firstc == 'H' && lastc == 'N') // "HORIZON;"
-          mode_stable |= bit;
+          mode_lock |= bit;
         if(firstc == 'M' && lastc == 'G') // "MAG;"
            mode_mag |= bit;
         if(firstc == 'B' && lastc == 'O') // "BARO;"
