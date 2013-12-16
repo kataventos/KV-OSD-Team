@@ -139,7 +139,6 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
     .setPosition(FGCharEdit.getWidth() / 2 -6, PreviewY)
     .setSize(12, 18)
     .setLabel("")
-    //.setId(i)
     .setImages(PreviewChar, PreviewChar, PreviewChar, PreviewChar) 
     .setGroup(FGCharEdit);
   ;
@@ -149,7 +148,6 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
     .toUpperCase(false)
     .setText("SAVE");
   buttonFSave.setGroup(FGCharEdit); 
- 
  
  
   buttonFClose = FontGroupcontrolP5.addButton("FCLOSE",1,680- 55 ,10,45,18);buttonFClose.setColorBackground(red_);
@@ -168,7 +166,6 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
                 .setBackgroundHeight(100)
                 .setLabel("Font Tools")
                 .disableCollapse();
-                //.close() 
                ; 
 
 FileUploadText = controlP5.addTextlabel("FileUploadText","",10,5)
@@ -196,9 +193,7 @@ buttonSendFile.getCaptionLabel()
 }
 
 public void Send(){
-  //sendFontFile();
-  //g_serial.clear();
-  //CreateFontFile();
+
 }
 
 void MakePreviewChar(){
@@ -208,15 +203,14 @@ void MakePreviewChar(){
     switch(int(CharPixelsBang[byteNo].value())) {
       case 0:
         PreviewChar.pixels[byteNo] = gray;
-        //CharImages[charNo].pixels[CharIndex] = gray;
       break;     
       case 1:
         PreviewChar.pixels[byteNo] = black;
-        //CharImages[charNo].pixels[CharIndex] = black;
+
       break; 
       case 2:
         PreviewChar.pixels[byteNo] = white;
-        //CharImages[charNo].pixels[CharIndex] = white;
+
       break; 
     }
   }
@@ -236,7 +230,6 @@ void FCLOSE(){
 
 void EditFont(){
   Lock_All_Controls(true);
- //setLock(ScontrolP5.getController("MwHeading"),true);
   FG.show();
   Lock_All_Controls(true);
 }
@@ -251,7 +244,7 @@ void changePixel(int id){
      CharPixelsBang[id].setColorForeground(black);
      CharPixelsBang[id].setValue(1);
      FontChanged = true;
-     //println("0");
+
     
     break; 
     
@@ -259,7 +252,6 @@ void changePixel(int id){
      CharPixelsBang[id].setColorForeground(white);
      CharPixelsBang[id].setValue(2);
      FontChanged = true;
-     //println("1");
     
     break; 
     
@@ -267,7 +259,6 @@ void changePixel(int id){
      CharPixelsBang[id].setColorForeground(gray);
      CharPixelsBang[id].setValue(0);
      FontChanged = true;
-     //println("2");
     
     break; 
    }
@@ -305,8 +296,7 @@ void GetChar(int id){
     LabelCurChar.setValue(str(id));
     LabelCurChar.setColorBackground(0);
     MakePreviewChar();
-    editChar = id;
-    //LabelCurChar.update(); 
+    editChar = id; 
     curChar = -1;
   }
  
@@ -322,15 +312,12 @@ void UpdateChar(){
     switch(int(CharPixelsBang[byteNo].value())) {
       case 0:
        CharImages[changechar].pixels[byteNo] = gray;
-        //CharImages[charNo].pixels[CharIndex] = gray;
       break;     
       case 1:
        CharImages[changechar].pixels[byteNo] = black;
-        //CharImages[charNo].pixels[CharIndex] = black;
       break; 
       case 2:
        CharImages[changechar].pixels[byteNo] = white;
-        //CharImages[charNo].pixels[CharIndex] = white;
       break; 
     }
   }
@@ -350,7 +337,7 @@ void setLock(Controller theController, boolean theValue) {
 
 void Lock_All_Controls(boolean theLock){
 
- //System.out.println(controlP5.getControllerList());
+
 ControllerInterface[] sctrl = ScontrolP5.getControllerList();
    for(int i=0; i<sctrl.length; ++i)
    {

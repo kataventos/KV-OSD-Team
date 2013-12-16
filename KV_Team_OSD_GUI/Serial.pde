@@ -19,30 +19,17 @@ int FontCounter = 0;
 int CloseMode = 0;
 
 /******************************* Multiwii Serial Protocol **********************/
-//String boxnames[] = { // names for dynamic generation of config GUI
-    //"ANGLE;",
-    //"HORIZON;",
-    //"BARO;",
-    //"MAG;",
-    //"ARM;",
-    //"LLIGHTS;",
-    //"GPS HOME;",
-   // "GPS HOLD;",
-   // "OSD SW;",
-    
-  //};
 
 
 String boxnames[] = { // names for dynamic generation of config GUI
     "ARM;",
     "ANGLE;",
-    //"HORIZON;",
+    "HORIZON;",
     "BARO;",
     "MAG;",
-    //"LLIGHTS;",
     "GPS HOME;",
     "GPS HOLD;",
-    //"OSD SW;"
+    "OSD SW;"
     
   };
 String strBoxNames = join(boxnames,""); 
@@ -132,14 +119,12 @@ void InitSerial(float portValue) {
         loop();
         System.out.println("OpenPort error " + e);
      }
-      //+((int)(cmd&0xFF))+": "+(checksum&0xFF)+" expected, got "+(int)(c&0xFF));
-    }
-  }
+   }
+ }
   else {
     if(init_com == 1){
      System.out.println("Begin Port Down " ); 
       txtlblWhichcom.setValue("Comm Closed");
-      //g_serial.clear();
       toggleMSP_Data = false;
       ClosePort = true;
       init_com=0;
@@ -152,8 +137,6 @@ void ClosePort(){
   init_com=0;
   g_serial.clear();
   g_serial.stop();
-  
-  //System.out.println("Port Turned Off " );
   init_com=0;
   commListbox.setColorBackground(red_);
   buttonREAD.setColorBackground(red_);
@@ -253,7 +236,6 @@ public void WRITE(){
   toggleMSP_Data = true;
   p = 0;
   inBuf[0] = OSD_WRITE_CMD;
-  //evaluateCommand((byte)MSP_OSD, 1);
   for (int txTimes = 0; txTimes<2; txTimes++) {
     headSerialReply(MSP_OSD, CONFIGITEMS+1);
     serialize8(OSD_WRITE_CMD);
@@ -521,17 +503,14 @@ int outChecksum;
 
 void serialize8(int val) {
  if (init_com==1)  {
-     //if(str(val)!=null){
        try{
        g_serial.write(val);
        outChecksum ^= val;
        } catch(java.lang.Throwable t) {
          System.out.println( t.getClass().getName() ); //this'll tell you what class has been thrown
          t.printStackTrace(); //get a stack trace
-       }
-     //}
- }
-
+    }
+  }
 }
 
 void serialize16(int a) {
@@ -552,16 +531,12 @@ void serialize32(int a) {
 }
 
 void serializeNames(int s) {
-  //for (PGM_P c = s; pgm_read_byte(c); c++) {
-   // serialize8(pgm_read_byte(c));
-  //}
   for (int c = 0; c < strBoxNames.length(); c++) {
     serialize8(strBoxNames.charAt(c));
   }
 }
 
 void headSerialResponse(int requestMSP, Boolean err, int s) {
-  //if (FontMode)DelayTimer(1);
   serialize8('$');
   serialize8('M');
   serialize8(err ? '!' : '>');
@@ -576,10 +551,6 @@ void headSerialReply(int requestMSP, int s) {
   }
 }
 
-//void headSerialError(int requestMSP, int s) {
-// headSerialResponse(requestMSP, true, s);
-//}
-
 void tailSerialReply() {
   if (outChecksum > 0) serialize8(outChecksum);
 }
@@ -591,39 +562,26 @@ public void DelayTimer(int ms){
 
 public void evaluateCommand(byte cmd, int size) {
   if ((init_com==0)  || (toggleMSP_Data == false)) return;
-  //PortRead = true;
   MakePorts(); 
   int icmd = int(cmd&0xFF);
-  if (icmd !=MSP_OSD)return;  //System.out.println("Not Valid Command");
- 
-  //System.out.println("evaluateCommand");
+  if (icmd !=MSP_OSD)return;
 
     time2=time;
-    //int[] requests = {MSP_STATUS, MSP_RAW_IMU, MSP_SERVO, MSP_MOTOR, MSP_RC, MSP_RAW_GPS, MSP_COMP_GPS, MSP_ALTITUDE, MSP_BAT, MSP_DEBUGMSG, MSP_DEBUG};
     switch(icmd) {
-    
       case MSP_OSD:
         int cmd_internal = read8();
         
         if(cmd_internal == OSD_NULL) {
-          //headSerialReply(MSP_OSD, 1);
-          //serialize8(OSD_NULL);
         }
 
         if(cmd_internal == OSD_READ_CMD) {
           if(size == 1) {
-            // Send a NULL reply
-            //headSerialReply(MSP_OSD, 1);
-            //serialize8(OSD_READ_CMD);
           }
           else {
             // Returned result from OSD.
             for(int i = 0; i < CONFIGITEMS; i++){
               SetConfigItem(i, read8());
             }
-            // Send a NULL reply
-            //headSerialReply(MSP_OSD, 1);
-            //serialize8(OSD_NULL);
             if (FontMode == false){
               toggleMSP_Data = false;
               g_serial.clear();
@@ -645,55 +603,8 @@ public void evaluateCommand(byte cmd, int size) {
            // tailSerialReply();
           }
           if(size == 3) {
-           
-            //FileUploadText.setText("  Please Wait");
-           // PortRead = true;
-            //PortWrite = true; 
-            //int cindex = read16();
-            //if((cindex&0xffff) == 0xffff) { // End!
-              //FontCounter = 255;
-             // headSerialReply(MSP_OSD, 1);
-             // serialize8(OSD_NULL);
-             // tailSerialReply();
-             // toggleMSP_Data = false;
-             // g_serial.clear();
-             // PortRead = false;
-             // PortWrite = false;
-              //FontMode = false;      
-             // System.out.println("End marker "+cindex);
-             // buttonSendFile.getCaptionLabel().setText("  Upload");
-             // FileUploadText.setText("");
-              //InitSerial(200.00);
-             // RESTART();
-             // g_serial.clear();
-             // g_serial.stop();
-             // g_serial = new Serial(this, Serial.list()[int(LastPort)], 115200);
-             // READ();
-              
-            //}
-            //else {
-              //PortWrite = true;
-              //MakePorts();
-              //headSerialReply(MSP_OSD, 56);
-              //serialize8(OSD_GET_FONT);
-             // for(int i = 0; i < 54; i++){
-                //serialize8(int(raw_font[cindex][i]));
-              //}
-              //serialize8(cindex);
-              //tailSerialReply(); 
-              
-//     // XXX Fake errors to force retransmission
-//        if(int(random(3)) == 0) {
-//          System.out.println("Messed char "+cindex);
-//          outChecksum ^= int(random(1,256));
-//        }
-//        else
-//     // End fake errors code
-          //System.out.println("Sent Char "+cindex);
-          //buttonSendFile.getCaptionLabel().setText("  " +nf(cindex, 3)+"/256");
-        //}
-      }
-    }
+       }
+     }
     break;
   }
 }
@@ -703,9 +614,6 @@ void MWData_Com() {
   int i,aa;
   float val,inter,a,b,h;
   int c = 0;
-  
-  //System.out.println("MWData_Com");  
-    
     while (g_serial.available()>0 && (toggleMSP_Data == true)) {
     try{
       c = (g_serial.read());
@@ -753,7 +661,6 @@ void MWData_Com() {
         /* compare calculated and transferred checksum */
         if ((checksum&0xFF) == (c&0xFF)) {
           if (err_rcvd) {
-            //System.err.println("Copter did not understand request type "+c);
           } else {
             /* we got a valid response packet, evaluate it */
             try{

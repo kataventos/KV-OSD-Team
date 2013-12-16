@@ -36,23 +36,14 @@ Textlabel SimControlText;
 Knob HeadingKnob,SGPSHeadHome;
 
 Numberbox SGPS_numSat, SGPS_altitude, SGPS_speed, SGPS_ground_course,SGPS_distanceToHome,SGPS_directionToHome,SGPS_update;
-//GPS_distanceToHome=read16();
-    //GPS_directionToHome=read16();
-    //GPS_update=read8();
-
-    
-//ControlWindow  Throttle_YawWindow;    
-
-//CheckBox checkboxModeItems[] = new CheckBox[boxnames.length] ;
 DecimalFormat OnePlaceDecimal = new DecimalFormat("0.0");
 
-
+//**************************************************************//
 
  
 void SimSetup(){
 
   
- 
 
   SG = ScontrolP5.addGroup("SG")
     .setPosition(120,YSim + -72)
@@ -226,7 +217,7 @@ SGPS_altitude = ScontrolP5.addNumberbox("SGPS_altitude",0,5,40,40,14);
                  
                
                
-  MW_Pitch_Roll = ScontrolP5.addSlider2D("MWPitch/Roll")
+ MW_Pitch_Roll = ScontrolP5.addSlider2D("MWPitch/Roll")
     .setPosition(25,5)
     .setSize(50,50)
     .setArrayValue(new float[] {50, 50})
@@ -292,13 +283,6 @@ UnlockControls =  ScontrolP5.addCheckBox("UnlockControls",60,25);
          .setGroup(SGRadio)
          ;
   ScontrolP5.getController("Pitch/Roll").getValueLabel().hide();
-
-
- 
- 
-
- 
-
                
 s_Altitude = ScontrolP5.addSlider("sAltitude")
   .setPosition(5,10)
@@ -370,9 +354,7 @@ s_MRSSI = ScontrolP5.addSlider("sMRSSI")
     toggleModeItems[i].setGroup(SGModes);
     txtlblModeItems[i] = controlP5.addTextlabel("ModeItems"+i,boxnames[i].substring(0, boxnames[i].length()-1) ,20,i*17);
     txtlblModeItems[i].setGroup(SGModes);
-  }
-      
-GetModes();  
+  } 
 } 
 
 boolean checkKey(int k)
@@ -382,8 +364,6 @@ boolean checkKey(int k)
   }
   return false;
 }
-
-
 
 void keyPressed()
 { 
@@ -402,15 +382,6 @@ void keyReleased()
   
 }
 
-
-
-void CalcAlt_Vario(){
-  if (time2 < time - 1000){
-    sAltitude += sVario /10;
-    time2 = time;
-  }
-}
-
 String RightPadd(int inInt,int Places){
   String OutString = nf(inInt,Places).replaceFirst("^0+(?!$)",  " ");
   for(int X=0; X<=3; X++) {
@@ -420,217 +391,6 @@ String RightPadd(int inInt,int Places){
   
 }
 
-
-
-
-
-
-void ShowVolts(float voltage){
-  
-String output = OnePlaceDecimal.format(voltage);
-  mapchar(0x97, voltagePosition[ScreenType]);
-  makeText(output, voltagePosition[ScreenType]+2);
-}
-
-void ShowFlyTime(String FMinutes_Seconds){
-  mapchar(0x9c, flyTimePosition[ScreenType]);
-  makeText(FMinutes_Seconds, flyTimePosition[ScreenType]+1);
-}
-
-//void ShowOnTime(String Minutes_Seconds){
-  //mapchar(0x9b, onTimePosition[ScreenType]);
-  //makeText(Minutes_Seconds, onTimePosition[ScreenType]+1);
-//}
-
-void ShowCurrentThrottlePosition(){
-  mapchar(0xc8, CurrentThrottlePosition[ScreenType]);
-  
-  if(armed){
-    int CurThrottle = int(map(Throttle_Yaw.arrayValue()[1],1000,2000,0,100));
-    makeText(RightPadd(CurThrottle,3) + "%", CurrentThrottlePosition[ScreenType]+1);   
-  }
-  else
-  {
-    makeText(" --", CurrentThrottlePosition[ScreenType]+1);
-  }
-
-  
-  
-  
-  //makeText(" 40%", CurrentThrottlePosition[ScreenType]+1);
-}
-
-/*void ShowRSSI(){
-  mapchar(0xba, rssiPosition[ScreenType]);
-  makeText("85%", rssiPosition[ScreenType]+1);
-}
-*/
-/*void ShowAmperage(){
-  mapchar(0xa4, amperagePosition[ScreenType]);
-  makeText("1221", amperagePosition[ScreenType]+1);
-}
-*/
-/*void SimulateTimer(){
-  String OnTimerString ="";
-  String FlyTimerString ="";
-  int seconds = (millis() - OnTimer) / 1000;
-  int minutes = seconds / 60;
-  int hours = minutes / 60;
-  seconds -= minutes * 60;
-  minutes -= hours * 60;
-  if (seconds < 10){
-    OnTimerString = str(minutes) + ":0" + str(seconds);
-  }
-  else
-  {
-    OnTimerString = str(minutes) + ":" + str(seconds);
-  }
-  
-  //ShowOnTime(OnTimerString);
-
-  if (FlyTimer >0) {
-    seconds = (millis() - FlyTimer) / 1000;
-    minutes = seconds / 60;
-    hours = minutes / 60;
-    seconds -= minutes * 60;
-    minutes -= hours * 60;
-    if (seconds < 10){
-      FlyTimerString = str(minutes) + ":0" + str(seconds);
-    }
-    else
-    {
-      FlyTimerString = str(minutes) + ":" + str(seconds);
-    }
-  }
-  else
-  {
-    FlyTimerString = "0:00";
-  } 
-   ShowFlyTime(FlyTimerString);
-}
-*/
-
-void displayMode()
-{
-  int SimModebits = 0;
-  int SimBitCounter = 1;
-    for (int i=0; i<boxnames.length; i++) {
-      if(toggleModeItems[i].getValue() > 0) SimModebits |= SimBitCounter;
-      SimBitCounter += SimBitCounter;
-}
-    if((SimModebits&mode_armed) >0){
-    makeText("ARMED", motorArmedPosition[0]);
-    armed = true;
-  }
-    else{
-    makeText("DISARMED", motorArmedPosition[0]);
-    armed = false;
-  }
-    
-    /*if((SimModebits&mode_stable) >0)
-      mapchar(0xbe,sensorPosition[0]+LINE);
-
-    if((SimModebits&mode_baro) >0)
-      mapchar(0xbe,sensorPosition[0]+1+LINE);
-
-    if((SimModebits&mode_mag) >0)
-      mapchar(0xbe,sensorPosition[0]+2+LINE);
-
-    if((SimModebits&mode_gpshome) >0)
-      mapchar(0xbe,sensorPosition[0]+3+LINE);
-
-    if((SimModebits&mode_gpshold) >0)
-      mapchar(0xbe,sensorPosition[0]+3+LINE);
-*/
-}
-
-
-
-void displayHorizon(int rollAngle, int pitchAngle)
-{
-  if(pitchAngle>250) pitchAngle=250;                //250
-  if(pitchAngle<-200) pitchAngle=-200;
-  if(rollAngle>400) rollAngle=400;
-  if(rollAngle<-400) rollAngle=-400;
-
- for(int X=0; X<=8; X++) {
-    int Y = (rollAngle * (4-X)) / 64;
-    Y += pitchAngle / 8;
-    Y += 41;
-    if(Y >= 0 && Y <= 81) {
-      int pos = 30*(2+Y/9) + 10 + X;
-      //if(X < 3 || X >5 || (Y/9) != 4 || confItem[GetSetting("S_DISPLAY_HORIZON_BR")].value() == 0)
-      	mapchar(0x80+(Y%9), pos);
-      if(Y>=9 && (Y%9) == 0)
-        mapchar(0x89, pos-30);
-    }
-  }
-
-  /*if(confItem[GetSetting("S_DISPLAY_HORIZON_BR")].value() > 0) {
-    //Draw center screen
-    mapchar(0x01, 224-30);
-    mapchar(0x00, 224-30-1);
-    mapchar(0x00, 224-30+1);
-  }
-  
-  //if (WITHDECORATION){
-  if(confItem[GetSetting("S_WITHDECORATION")].value() > 0) {
-    mapchar(0xC7,128);
-    mapchar(0xC7,128+30);
-    mapchar(0xC7,128+60);
-    mapchar(0xC7,128+90);
-    mapchar(0xC7,128+120);
-    mapchar(0xC6,128+12);
-    mapchar(0xC6,128+12+30);
-    mapchar(0xC6,128+12+60);
-    mapchar(0xC6,128+12+90);
-    mapchar(0xC6,128+12+120);
-    mapchar(0x02, 229-30);
-    mapchar(0x03, 219-30);
-  }*/
-}
-
-
-void displayHeadingGraph()
-{
-  int xx;
-  
-  xx = MwHeading * 4;
-  xx = xx + 720 + 45;
-  xx = xx / 90;
- //for (int i = 0; i < 9; i++){
- 
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+1);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+2);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+3);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+4);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+5);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+6);
-  mapchar(headGraph[xx++],MwHeadingGraphPosition[0]+7);
-  mapchar(headGraph[xx],MwHeadingGraphPosition[0]+8);  
-
-}
-
-void displayHeading()
-{
-  int heading = MwHeading;
-  if(heading < 0)
-    heading += 360;
-    
-  switch (str(heading).length())
-  {
-  case 1:
-    makeText(str(heading), MwHeadingPosition[0]+2);
-    break;
-  case 2:
-    makeText(str(heading), MwHeadingPosition[0]+1);
-    break;
-  case 3:
-    makeText(str(heading), MwHeadingPosition[0]);
-  }
-  mapchar(MwHeadingUnitAdd,MwHeadingPosition[0]+3);  
-}
 
 void ControlLock(){
   Pitch_Roll.setArrayValue(new float[] {500, -500});
@@ -644,32 +404,4 @@ void ControlLock(){
   }    
 }
 
-void GetModes(){
-  int bit = 1;
-  int remaining = strBoxNames.length();
-  int len = 0;
- 
-  mode_armed = 0;
-  mode_stable = 0;
-  mode_baro = 0;
-  mode_mag = 0;
-  mode_gpshome = 0;
-  mode_gpshold = 0;
-  //mode_llights = 0;
-  mode_osd_switch = 0;
-  for (int c = 0; c < boxnames.length; c++) {
-    if (boxnames[c] == "ARM;") mode_armed |= bit;
-    if (boxnames[c] == "ANGLE;") mode_stable |= bit;
-    if (boxnames[c] == "HORIZON;") mode_stable |= bit;
-    if (boxnames[c] == "MAG;") mode_mag |= bit;
-    if (boxnames[c] == "BARO;") mode_baro |= bit;
-    if (boxnames[c] == "LLIGHTS;") mode_llights |= bit;
-    if (boxnames[c] == "GPS HOME;") mode_gpshome |= bit;
-    if (boxnames[c] == "GPS HOLD;") mode_gpshold |= bit;
-    
-    bit <<= 1L;
-  }
-  
- 
- 
-}
+

@@ -1,21 +1,7 @@
 
 
 void SetupGroups(){
- //G_EEPROM,
-  //G_RSSI,
- // G_Voltage,
-  //G_Amperage,
- // G_VVoltage,
- // G_Temperature,
- // G_Board,
- // G_GPS,
-//  G_Other
  
-  //.setColorForeground(color(30,255))
-  //.setColorBackground(color(30,255))
-  //.setColorLabel(color(0, 110, 220))
-  //.setColorValue(0xffff88ff)
-  //.setColorActive(color(30,255))
   G_PortStatus = FontGroupcontrolP5.addGroup("G_PortStatus")
     .setPosition(XPortStat,YPortStat)
     .setWidth(110)
@@ -40,7 +26,7 @@ void SetupGroups(){
     
  
  
-   G_EEPROM = GroupcontrolP5.addGroup("G_EEPROM")
+G_EEPROM = GroupcontrolP5.addGroup("G_EEPROM")
                 .setPosition(XEEPROM,YEEPROM+15)
                 .setWidth(Col1Width)
                 .setBarHeight(15)
@@ -49,7 +35,6 @@ void SetupGroups(){
                 .setColorActive(red_)
                 .setBackgroundHeight((1*17) +5)
                 .setLabel("EEPROM")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_EEPROM.captionLabel()
@@ -57,6 +42,7 @@ void SetupGroups(){
                 .align(controlP5.CENTER,controlP5.CENTER)
                 ;
                 G_EEPROM.hide();
+                
 G_RSSI = GroupcontrolP5.addGroup("G_RSSI")
                 
                 .setPosition(XRSSI,YRSSI+15)
@@ -69,7 +55,6 @@ G_RSSI = GroupcontrolP5.addGroup("G_RSSI")
                 .setColorActive(red_)
                 .setBackgroundHeight((6*14) +5)
                 .setLabel("RSSI")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_RSSI.captionLabel()
@@ -77,7 +62,6 @@ G_RSSI = GroupcontrolP5.addGroup("G_RSSI")
                 .toUpperCase(false)
                 .align(controlP5.CENTER,controlP5.CENTER)
                 ; 
-              // G_RSSI.setColorBackground(color(30,255));
 G_Voltage = GroupcontrolP5.addGroup("G_Voltage")
                 .setPosition(XVolts,YVolts+15)
                 .setWidth(Col1Width)
@@ -89,14 +73,12 @@ G_Voltage = GroupcontrolP5.addGroup("G_Voltage")
                 .setColorActive(red_)
                 .setBackgroundHeight((5*13) +5)
                 .setLabel("Main Voltage")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_Voltage.captionLabel()
                 .toUpperCase(false)
                 .align(controlP5.CENTER,controlP5.CENTER)
-                ; 
- 
+              ; 
  /*G_Amperage = GroupcontrolP5.addGroup("G_Amperage")
                 .setPosition(XAmps,YAmps+15)
                 .setWidth(Col1Width)
@@ -109,7 +91,6 @@ G_Voltage = GroupcontrolP5.addGroup("G_Voltage")
                 .setColorActive(red_)
                 .setBackgroundHeight((2*17) +5)
                 .setLabel("Amperage")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_Amperage.captionLabel()
@@ -128,7 +109,6 @@ G_Voltage = GroupcontrolP5.addGroup("G_Voltage")
                 .setColorActive(red_)
                 .setBackgroundHeight((3*22) +4)
                 .setLabel("Video Voltage")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_VVoltage.captionLabel()
@@ -147,7 +127,6 @@ G_Voltage = GroupcontrolP5.addGroup("G_Voltage")
                 .setColorActive(red_)
                 .setBackgroundHeight((2*8) +5)
                 .setLabel("Temperature")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_Temperature.captionLabel()
@@ -166,7 +145,6 @@ G_GPS = GroupcontrolP5.addGroup("G_GPS")
                 .setColorActive(red_)
                 .setBackgroundHeight((7*12) +5)
                 .setLabel("GPS Settings")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_GPS.captionLabel()
@@ -185,7 +163,6 @@ G_Board = GroupcontrolP5.addGroup("G_Board")
                 .setColorActive(red_)
                 .setBackgroundHeight((1*17) +5)
                 .setLabel("Board Type")
-                //.setGroup(SG)
                 .disableCollapse(); 
                 G_Board.captionLabel()
                 .toUpperCase(false)
@@ -204,34 +181,12 @@ G_Board = GroupcontrolP5.addGroup("G_Board")
                 .setColorActive(red_)
                 .setBackgroundHeight((3*17) +5)
                 .setLabel("Call Sign")
-                //.setGroup(SG)
                 .disableCollapse(); 
                 G_CallSign.captionLabel()
                 .toUpperCase(false)
                 .align(controlP5.CENTER,controlP5.CENTER)
-                ;      */    
-       
-/*G_UV = GroupcontrolP5.addGroup("G_Other")
-                .setPosition(XOther,YOther+15)
-                .setWidth(Col1Width)
-                .setBarHeight(15)
-                .setColorForeground(color(30,255))
-                .setColorBackground(color(30,255))
-                .setColorLabel(color(0, 110, 220))
-                .setBarHeight(15)
-                .setBackgroundColor(color(30,255))
-                .setColorActive(red_)
-                .setBackgroundHeight((10*10) +5)
-                .setLabel("Other")
-                //.setGroup(SG)
-                .disableCollapse() 
-                ; 
-                G_Other.captionLabel()
-                .toUpperCase(false)
-                .align(controlP5.CENTER,controlP5.CENTER)
-                ;  */                                        
+                ;      */                                     
          
-
 G_Other = GroupcontrolP5.addGroup("G_Other")
                 .setPosition(XOther,YOther+15)
                 .setWidth(Col3Width)
@@ -242,10 +197,8 @@ G_Other = GroupcontrolP5.addGroup("G_Other")
                 .setBarHeight(15)
                 .setBackgroundColor(color(30,255))
                 .setColorActive(red_)
-                //.setBackgroundHeight((10*10) +5)
                 .setBackgroundHeight((10*12) +8)
                 .setLabel("Other")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_Other.captionLabel()
@@ -264,7 +217,6 @@ G_Amperage = GroupcontrolP5.addGroup("G_Amperage")
                 .setColorActive(red_)
                 .setBackgroundHeight((5*13) +5)
                 .setLabel("Amperage")
-                //.setGroup(SG)
                 .disableCollapse() 
                 ; 
                 G_Amperage.captionLabel()

@@ -48,7 +48,6 @@ byte[][] LoadRawFont(String filename) {
             continue; 
           if (bitNo == 8) {
             if (byteNo < 54) {
-              //System.out.println("*charNo="+charNo+" byteNo="+byteNo);//+" value="+(int)raw[charNo][byteNo]);
               raw[charNo][byteNo] = (byte)curByte;
             }
             bitNo = 0;
@@ -56,7 +55,6 @@ byte[][] LoadRawFont(String filename) {
             curByte = 0;
             ++byteNo;
             if(byteNo == 64) {
-              //System.out.println("Loaded char "+charNo);
               byteNo = 0;
               ++charNo;
             }
@@ -107,12 +105,10 @@ PImage RawFontToImage(byte[][] raw) {
 
   for(int charNo = 0; charNo < 256; charNo++) {
     CharImages[charNo].loadPixels();
-   // CharImages[charNo] = createImage(12, 18, ARGB);
     for(int byteNo = 0; byteNo < 54; byteNo++) {
       for(int i = 0; i < 4; i++) {
 	int index = (charNo*12*18) + (byteNo*4) + (3-i);
         int CharIndex = (byteNo*4) + (3-i);
-        //System.out.println("charNo="+charNo+" byteNo="+byteNo+" index="+index+" CharIndex="+CharIndex+" Charlimit="+CharImages[charNo].pixels.length + " limit="+img.pixels.length); 
         int curByte = (int)raw[charNo][byteNo];
 	switch((curByte >> (2*i)) & 0x03) {
 	case 0x00:
@@ -129,8 +125,6 @@ PImage RawFontToImage(byte[][] raw) {
 	   break; 
 	case 0x03:
 	   img.pixels[index] = transparent;
-            //CharImages[charNo].pixels[CharIndex] = gray;
-
 	   break; 
 	}
       }
