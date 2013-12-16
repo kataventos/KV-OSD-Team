@@ -23,7 +23,6 @@ import javax.swing.SwingUtilities; // required for swing and EDT
 import javax.swing.JFileChooser;// Saving dialogue
 import javax.swing.filechooser.FileFilter; // for our configuration file filter "*.mwi"
 import javax.swing.JOptionPane; // for message dialogue
-//import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.InputStream;
 import java.io.OutputStream; 
@@ -33,103 +32,20 @@ import java.util.*;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 
-
-//added new imports to support proccessing 2.0b7
-
-
-
 String KV_OSD_GUI_Version = "2.2";
 
 
-PImage img_Clear,OSDBackground,RadioPot;
-
-// ScreenType---------- NTSC = 0, PAL = 1 ---------------------------------
-int ScreenType = 0;
-
-int TIMEBASE_X1 =  50;
-int TIMEBASE = TIMEBASE_X1;
-int LINE  =    30;
-int LINE01 =   0;
-int LINE02  =  30;
-int LINE03  =  60;
-int LINE04  =  90;
-int LINE05  =  120;
-int LINE06  =  150;
-int LINE07  =  180;
-int LINE08  =  210;
-int LINE09  =  240;
-int LINE10  =  270;
-int LINE11  =  300;
-int LINE12  =  330;
-int LINE13  =  360;
-int LINE14  =  390;
-int LINE15  =  420;
-int LINE16  =  450;
-int TestLine = 300;
-
-// TOP OF THE SCREEN
-int[] GPS_numSatPosition = {
- LINE02+2,LINE02+2};
-int[] GPS_directionToHomePosition=    {
-  LINE03+13 ,LINE03+13};
-
-int[] GPS_distanceToHomePosition=  {
-  LINE02+22  ,LINE02+24 };
-int[] speedPosition = {     
-  LINE03+22 ,LINE03+24};  // [0] En Km/h   [1] En Mph
-int[] GPS_angleToHomePosition=  {
-  LINE04+14 ,LINE04+14};
-int[] MwGPSAltPosition =        {
-  LINE04+22,LINE04+24};
-int[] sensorPosition=           {
-  LINE03+2 ,LINE03+2};
-int[] MwHeadingPosition =       {
-  LINE02+19 ,LINE02+19};
-int[] MwHeadingGraphPosition =  {
-  LINE02+10 ,LINE02+10};
-
-// MIDDLE OF THE SCREEN
-int[] MwAltitudePosition=  {
-  LINE07+2,LINE07+2 };
-int[] MwClimbRatePosition=  {
-  LINE07+27 ,LINE07+28 };
-int[] CurrentThrottlePosition = {
-  LINE12+23,LINE12+24+60};
-int[] flyTimePosition=                {
-  LINE13+23,LINE13+24+60};
-//int[] onTimePosition=                 {
- // LINE13+23,LINE13+24+60};
-int[] motorArmedPosition=            {
-  LINE12+11,LINE11+11+60};
-int[] MwGPSLatPosition =              {
-  LINE10+2,LINE10+2+60};
-int[] MwGPSLonPosition =              {
-  LINE10+13+2,LINE10+2+13+60};
-int[]  rssiPosition = {
-  LINE12+2 ,LINE12+2+60};
-int[] temperaturePosition= {
-  LINE11+2   ,LINE11+2};
-int[] voltagePosition =                {
-  LINE13+2  ,LINE13+2+60 };
-int[] vidvoltagePosition =   {
-  LINE11+3  ,LINE11+3+60};
-int[] amperagePosition =     {
-  LINE13+17,LINE13+19+60};
-int[] pMeterSumPosition =       {
-  LINE15+30,LINE15+30+60};
+PImage img_Clear,RadioPot;
   
-int DisplayWindowX = 598; //500;
-int DisplayWindowY = 40; //5;
-int WindowAdjX = -84; //15
+int DisplayWindowX = 598;
+int DisplayWindowY = 40; 
+int WindowAdjX = -84; 
 int WindowAdjY = -31;
 int WindowShrinkX = 8;
 int WindowShrinkY = 48;
 
 int currentCol = 0;
 int currentRow = 0;  
-//Boolean SimulateMW = true;
-
-
 
 ControlP5 controlP5;
 ControlP5 SmallcontrolP5;
@@ -139,22 +55,11 @@ ControlP5 GroupcontrolP5;
 Textlabel txtlblWhichcom; 
 ListBox commListbox;
 
-//char serialBuffer[] = new char[128]; // this hold the imcoming string from serial O string
-//String TestString = "";
-///String SendCommand = "";
-
-
-
 
 boolean PortRead = false;
 boolean PortWrite = false;
-
-
 ControlGroup messageBox;
 Textlabel MessageText;
-
-
-
 
 // Int variables
 String OSname = System.getProperty("os.name");
@@ -172,20 +77,19 @@ int serialCount = 0;                 // A count of how many bytes we receive
 int ConfigEEPROM = -1;
 int ConfigVALUE = -1;
 
-int windowsX    = 855;       int windowsY    =440;        //995; //573;
+int windowsX    = 855;       int windowsY    =440;
 int xGraph      = 10;         int yGraph      = 325;
-int xObj        = 520;        int yObj        = 293; //900,450
-int xCompass    = 920;        int yCompass    = 341; //760,336
-int xLevelObj   = 920;        int yLevelObj   = 80; //760,80
+int xObj        = 520;        int yObj        = 293;
+int xCompass    = 920;        int yCompass    = 341;
+int xLevelObj   = 920;        int yLevelObj   = 80;
 int xParam      = 120;        int yParam      = 5;
-int xRC         = 690;        int yRC         = 10; //850,10
-int xMot        = 690;        int yMot        = 155; //850,155
-int xButton     = 845;        int yButton     = 231; //685,222
+int xRC         = 690;        int yRC         = 10;
+int xMot        = 690;        int yMot        = 155;
+int xButton     = 845;        int yButton     = 231; 
 int xBox        = 415;        int yBox        = 10;
-//int xGPS        = 853;        int yGPS        = 438; //693,438
+//int xGPS        = 853;        int yGPS        = 438;
 int XSim        = DisplayWindowX+WindowAdjX;        int YSim        = 288-WindowShrinkY + 85;
 
-//DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 360-WindowShrinkX, 288-WindowShrinkY);
 // Box locations -------------------------------------------------------------------------
 int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 360;
 
@@ -199,10 +103,9 @@ int XTemp      = 305;        int YTemp    = 5;
 int XGPS       = 305;        int YGPS    = 45;
 int XCS      = 120;          int YCS    = 472;
 
-//int XUV = 490;        int XUV   = 5; //48;
-int XOther     = 490;        int YOther   = 5; //48;
+int XOther     = 490;        int YOther   = 5; 
 int XPortStat  = 5;            int YPortStat = 272;
-int XControlBox     = 5;        int YControlBox   = 310;  //389
+int XControlBox     = 5;        int YControlBox   = 310;  
 int XRCSim    =   XSim;      int YRCSim = 430;
 
 
@@ -239,16 +142,12 @@ String[] ConfigNames = {
   "RSSI Alarm",
   "Input", //MW ADC
   "PWM",
-
   "Voltage Alarm",
   "Battery Cells",
   "Divider Ratio",
-  "Input", //MW ADC
-  
+  "Input", //MW ADC  
   "Divider Ratio",
   "Input", //Mw ADC
-  
-
   "Temperature Max",
   
   "", // for Board type do not remove
@@ -256,16 +155,15 @@ String[] ConfigNames = {
   "GPS",
   "Coords",
   "Heading",
-  
-  "Unit", //unit
-  "Video",// signal
+  "Unit",   //unit
+  "Video",  // signal
   "Stats",
   "OSD ADC",
   " ",
   "Blink Frequency",
   "Input",
   "Offset",
-  "Descend Alarm",
+  "m/s Descend Alarm",
   
   "Display CallSign",
   "S_CS0",
@@ -287,16 +185,13 @@ String[] ConfigHelp = {
   "RSSI Max",
   "RSSI Alarm",
   "RSSI",
-  "PWM RSSI",
-  
+  "PWM RSSI", 
   "Voltage Min",
   "Battery Cells",
   "Main Voltage Devider",
   "Main Voltage MW",
-  
   "Video Voltage Devider",
   "Video Voltage MW",
-  
   "Temperature Max",
   
   "", // for Board type do not remove
@@ -304,10 +199,8 @@ String[] ConfigHelp = {
   "GPS",
   "Coords",
   "Display Heading 360",
-  
   "Units",
   "Video Signal",
-  
   "Reset Stats After Arm",
   "ADC",
   " ",
@@ -329,8 +222,6 @@ String[] ConfigHelp = {
   "S_CS9",
   
   };
-
-
 
 
 static int CHECKBOXITEMS=0;
@@ -577,20 +468,6 @@ String[] SimNames= {
 };
   
   
-  int[] SimRanges = {
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  255,
-  1,
-  1,
-  1};
-
-
 PFont font8,font9,font10,font11,font12,font15;
 
 //Colors--------------------------------------------------------------------------------------------------------------------
@@ -623,7 +500,6 @@ RadioButton R_PortStat;
 //  number boxes--------------------------------------------------------------------------------------------------------------
 
 Numberbox confItem[] = new Numberbox[CONFIGITEMS] ;
-//Numberbox SimItem[] = new Numberbox[SIMITEMS] ;
 //  number boxes--------------------------------------------------------------------------------------------------------------
 
 Group MGUploadF,
@@ -656,18 +532,8 @@ controlP5.Controller hideLabel(controlP5.Controller c) {
 void setup() {
   size(windowsX,windowsY);
  
-//Map<Settings, String> table = new EnumMap<Settings>(Settings.class);
 OnTimer = millis();
   frameRate(30); 
-OSDBackground = loadImage("Background3.jpg");
-//RadioPot = loadImage("kvImage.jpg");
-//PGraphics icon = createGraphics(16, 16, P3D);
-//icon.beginDraw();
-//icon.beginShape();
-//icon.texture(RadioPot);
-//icon.endShape();
-//icon.endDraw();
-//frame.setIconImage(icon.image);
   font8 = createFont("Arial bold",8,false);
   font9 = createFont("Arial bold",10,false);
   font10 = createFont("Arial bold",11,false);
@@ -677,36 +543,17 @@ OSDBackground = loadImage("Background3.jpg");
 
   controlP5 = new ControlP5(this); // initialize the GUI controls
   controlP5.setControlFont(font10);
-  //controlP5.setAutoDraw(false);
-  
-
   SmallcontrolP5 = new ControlP5(this); // initialize the GUI controls
   SmallcontrolP5.setControlFont(font9); 
-  //SmallcontrolP5.setAutoDraw(false); 
- 
   ScontrolP5 = new ControlP5(this); // initialize the GUI controls
   ScontrolP5.setControlFont(font10);  
-  //ScontrolP5.setAutoDraw(false);  
- 
- 
- 
- //FontGroupcontrolP5.setAutoDraw(false); 
- 
- 
   GroupcontrolP5 = new ControlP5(this); // initialize the GUI controls
   GroupcontrolP5.setControlFont(font10);
-  //GroupcontrolP5.setColorForeground(color(30,255));
-  //GroupcontrolP5.setColorBackground(color(30,255));
-  //GroupcontrolP5.setColorLabel(color(0, 110, 220));
-  //GroupcontrolP5.setColorValue(0xffff88ff);
-  //GroupcontrolP5.setColorActive(color(30,255));
-  //GroupcontrolP5.setAutoDraw(false);
   FontGroupcontrolP5 = new ControlP5(this); // initialize the GUI controls
- FontGroupcontrolP5.setControlFont(font10);
+  FontGroupcontrolP5.setControlFont(font10);
+
 
   SetupGroups();
-
-
 
 
   commListbox = controlP5.addListBox("portComList",5,100,110,260); // make a listbox and populate it with the available comm ports
@@ -721,6 +568,7 @@ OSDBackground = loadImage("Background3.jpg");
     commListMax = i;
   }
   commListbox.addItem("Close Comm",++commListMax); // addItem(name,value)
+  
   // text label for which comm port selected
   txtlblWhichcom = controlP5.addTextlabel("txtlblWhichcom","No Port Selected",5,65); // textlabel(name,text,x,y)
   
@@ -788,7 +636,6 @@ CreateItem(GetSetting("S_UNITSYSTEM"),  5,0, G_Other);
 BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial");
 CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
 BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other, "NTSC","PAL");
-
 CreateItem(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other);
 BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Reset","Maintain");
 CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
@@ -829,17 +676,7 @@ controlP5.addTextfield("CallSign")
  CreateCS(GetSetting("S_CS9"),  0,0, G_CallSign);
 
 
-
-
-       
-  // CheckBox "Hide Background"
-  /*ShowSimBackground = controlP5.addCheckBox("ShowSimBackground",XSim,YSim+1);
-  ShowSimBackground.setColorActive(color(255));
-  ShowSimBackground.setColorBackground(color(120));
-  ShowSimBackground.setItemsPerRow(1);
-  ShowSimBackground.setSpacingColumn(10);
-  ShowSimBackground.setLabel("Hide Background");
-  ShowSimBackground.addItem("Hide Background",1);*/
+//*************** Config Items **************//
 
   for(int i=0;i<CONFIGITEMS;i++) {
     if (ConfigRanges[i] == 0) {
@@ -858,21 +695,13 @@ controlP5.addTextfield("CallSign")
       confItem[i].hide();  
     }
   }
-  
-  //byte[] inBuf = new byte[256];
   for (int txTimes = 0; txTimes<255; txTimes++) {
     inBuf[txTimes] = 0;
   }
 
-  
-  
-
-  BuildToolHelp();
   Font_Editor_setup();
    SimSetup();
   img_Clear = LoadFont(FontFileName);
-  //toggleMSP_Data = true;
-  CloseMode = 0;
   LoadConfig();
   
   
@@ -881,14 +710,14 @@ controlP5.addTextfield("CallSign")
 
 controlP5.Controller hideCheckbox(controlP5.Controller c) {
   c.hide();
-  //c.setLabelVisible(false);
+  c.setLabelVisible(false);
   return c;
 }
 
 controlP5.Controller CheckboxVisable(controlP5.Controller c) {
   c.isVisible(); 
 
-  //c.setLabelVisible(false);
+  c.setLabelVisible(false);
   return c;
 }
 
@@ -900,9 +729,6 @@ void BuildRadioButton(int ItemIndex, int XLoction, int YLocation,Group inGroup, 
          .setPosition(XLoction,YLocation+3)
          .setSize(10,10)
          .setNoneSelectedAllowed(false) 
-         //.setColorBackground(color(120))
-         //.setColorActive(color(255))
-        // .setColorLabel(color(255))
          .setItemsPerRow(2)
          .setSpacingColumn(int(textWidth(Cap1))+10)
          .addItem("First"+ItemIndex,0)
@@ -917,7 +743,6 @@ void BuildRadioButton(int ItemIndex, int XLoction, int YLocation,Group inGroup, 
     toggleConfItem[ItemIndex].hide();
     txtlblconfItem[ItemIndex].hide();
     
-  
 }
 
 void CreateCS(int ItemIndex, int XLoction, int YLocation, Group inGroup){
@@ -931,8 +756,6 @@ void CreateCS(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
   toggleConfItem[ItemIndex].hide();
   
-  
-
 }
 
 void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
@@ -940,7 +763,7 @@ void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+/*"ItemLocationPAL"+"ItemLocationNTSC"+*/ ItemIndex,0,XLoction,YLocation,35,14));
   confItem[ItemIndex].setColorBackground(red_);
   confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setDirection(Controller.VERTICAL);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
   confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
   confItem[ItemIndex].setDecimalPrecision(0);
   confItem[ItemIndex].setGroup(inGroup);
@@ -953,23 +776,13 @@ void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //TextLabel
   txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
   txtlblconfItem[ItemIndex].setGroup(inGroup);
-  //controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 
 } 
 
 
-void BuildToolHelp(){
-  controlP5.getTooltip().setDelay(100);
-  //confItem[1].setMultiplier(confItem[1].value);
-  //controlP5.getTooltip().register("txtlblconfItem"+0,"Changes the size of the ellipse.");
-  //controlP5.getTooltip().register("s2","Changes the Background");
-}
-
-
-
-
-
 void MakePorts(){
+  
   if (PortWrite){  
        TXText.setColorValue(color(255,10,0));
   }
@@ -988,12 +801,6 @@ void MakePorts(){
 
 void draw() {
   time=millis();
-  //hint(ENABLE_DEPTH_TEST);
-  //pushMatrix();
-  //PortRead = false; 
-  //PortWrite = false; 
-  //del++; 
-  //System.out.println(del);
   if ((init_com==1)  && (toggleMSP_Data == true)) {
     //time2 = time;
     PortRead = true;
@@ -1002,11 +809,7 @@ void draw() {
     if (!FontMode) PortRead = false;
     
   }
-  
-  //PortWrite = false;
   if ((SendSim ==1) && (ClosePort == false)){
-    //PortWrite = true;
-      //MakePorts();
  
     if ((init_com==1)  && (time-time5 >5000) && (toggleMSP_Data == false) && (!FontMode)){
       if(ClosePort) return;
@@ -1016,13 +819,12 @@ void draw() {
         SendCommand(MSP_BOXNAMES);
         SendCommand(MSP_BOXIDS);
       }
-      //PortWrite = false;
+
     }
     if ((init_com==1)  && (time-time4 >200) && (!FontMode)){
       if(ClosePort) return;
       time4 = time; 
-      //PortWrite = !PortWrite;
-      //MakePorts();
+
       if (init_com==1)SendCommand(MSP_ANALOG);
       if (init_com==1)SendCommand(MSP_STATUS);
       if (init_com==1)SendCommand(MSP_RC);
@@ -1038,23 +840,19 @@ void draw() {
       PortWrite = !PortWrite;
       
       if (init_com==1)SendCommand(MSP_ATTITUDE);
-      //PortWrite = false;
+
     }
   }
   else
   {
     if (!FontMode) PortWrite = false; 
   }
-
-
-  
-  
   if ((FontMode) && (time-time2 >100)){
     SendChar();
-   }
+   }   
     
-    
-  MakePorts();  
+  MakePorts();   
+  
   
   background(80);
   
@@ -1082,42 +880,16 @@ void draw() {
   fill(0, 0, 0);
   strokeWeight(3);stroke(0);
   rectMode(CORNERS);
-  //if (int(ShowSimBackground.arrayValue()[0]) < 1){
-//image(OSDBackground,DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 529-WindowShrinkX, 360-WindowShrinkY); //529-WindowShrinkX, 360-WindowShrinkY);
-  /*}
-  else{
-    fill(80, 80,80); strokeWeight(3);stroke(1); rectMode(CORNER); rect(DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY, 529-WindowShrinkX, 360-WindowShrinkY);  //335-WindowShrinkX, 288-WindowShrinkY);
-  }
-*/
-
  
-
- //displayHorizon(int(MW_Pitch_Roll.arrayValue()[0])*10,int(MW_Pitch_Roll.arrayValue()[1])*10*-1);
-  //SimulateTimer();
-  //ShowCurrentThrottlePosition();
-  //if (int(confItem[GetSetting("S_DISPLAYRSSI")].value()) > 0)
-    //ShowRSSI(); 
-  //if (int(confItem[GetSetting("S_DISPLAYVOLTAGE")].value()) > 0) {
-    // ShowVolts(sVBat);
- // }
-    
- 
-  //CalcAlt_Vario(); 
-  //displaySensors();
-  //displayMode();
-  //ShowAmperage();
-  //displayHeadingGraph();
-  //displayHeading();
  
   MatchConfigs();
   MakePorts();
 
   
-  if ((ClosePort ==true)&& (PortWrite == false)){ //&& (init_com==1)
+  if ((ClosePort ==true)&& (PortWrite == false)){ 
     ClosePort();
   }
 }
-
 
 int GetSetting(String test){
   int TheSetting = 0;
@@ -1132,9 +904,6 @@ int GetSetting(String test){
 void ShowSimBackground(float[] a) {
   Showback = int(a[0]);
 }
-
-//void SimulateMultiWii(float[] a) {
-//}
 
 public void BuildCallSign(){
   String CallSText = "";
@@ -1151,7 +920,6 @@ public void CheckCallSign() {
   // automatically receives results from controller input
   String CallSText = controlP5.get(Textfield.class,"CallSign").getText().toUpperCase();
   controlP5.get(Textfield.class,"CallSign").setText(CallSText);
-  //if (CallSText.length()  >0){
     if (CallSText.length()  >10){
       controlP5.get(Textfield.class,"CallSign").setText(CallSText.substring(0, 10));
       CallSText = controlP5.get(Textfield.class,"CallSign").getText();
@@ -1161,16 +929,15 @@ public void CheckCallSign() {
     }
     for (int i=0; i<CallSText.length(); i++){ 
       confItem[(GetSetting("S_CS0"))+i].setValue(int(CallSText.charAt(i)));
-    //println(int(CallSText.charAt(0)));
-    //println(controlP5.get(Textfield.class,"CallSign").getText());
     }
-  //}
 }
 
 
 
 
-void MatchConfigs(){
+void MatchConfigs()
+
+{
  for(int i=0;i<CONFIGITEMS;i++) {
    try{ 
        if (RadioButtonConfItem[i].isVisible()){
@@ -1190,7 +957,6 @@ void MatchConfigs(){
    
    if (ConfigRanges[i] == 0) {
       toggleConfItem[i].hide();
-      //RadioButtonConfItem[i].hide();
       confItem[i].hide();
     }
     if (ConfigRanges[i] > 1) {
@@ -1216,6 +982,7 @@ void MatchConfigs(){
 
 
 }
+//***************************************************************//
 
 // controls comport list click
 public void controlEvent(ControlEvent theEvent) {
@@ -1227,68 +994,22 @@ public void controlEvent(ControlEvent theEvent) {
   }catch(Exception e){
     System.out.println("error with Port");
   }
-
 if (theEvent.name()=="CallSign"){
   CheckCallSign();
 }
-
       
   try{
-  //for (int i=0;i<col.length;i++) {
     if ((theEvent.getController().getName().substring(0, 7).equals("CharPix")) && (theEvent.getController().isMousePressed())) {
-      //println("Got a pixel " + theEvent.controller().id());
         int ColorCheck = int(theEvent.getController().value());
         curPixel = theEvent.controller().id();
     }
     if ((theEvent.getController().getName().substring(0, 7).equals("CharMap")) && (theEvent.getController().isMousePressed())) {
       curChar = theEvent.controller().id();    
-      //println("Got a Char " + theEvent.controller().id());
     }
    } catch(ClassCastException e){}
      catch(StringIndexOutOfBoundsException se){}
       
 }
-
-
-
-
-
-void mapchar(int address, int screenAddress){
-  int placeX = (screenAddress % 30) * 12;
-  int placeY = (screenAddress / 30) * 18;
-
-  blend(img_Clear, 0,address*18, 12, 18, placeX+DisplayWindowX, placeY+DisplayWindowY, 12, 18, BLEND);
-}
-
-void makeText(String inString, int inStartAddress ){
-  for (int i = 0; i < inString.length(); i++){
-    mapchar(int(inString.charAt(i)), inStartAddress +i); 
-  }   
-}
-
-
-
-void displaySensors()
-{
-   mapchar(0xa0,sensorPosition[0]);
-   mapchar(0xa2,sensorPosition[0]+1);
-   mapchar(0xa1,sensorPosition[0]+2);
-   mapchar(0xa3,sensorPosition[0]+3);
-   /* 
-  if(MwSensorPresent&ACCELEROMETER) mapchar("0xa0",sensorPosition[0]);
-  else ;
-  if(MwSensorPresent&BAROMETER)     screenBuffer[1]=0xa2;
-  else screenBuffer[1]=' ';
-  if(MwSensorPresent&MAGNETOMETER)  screenBuffer[2]=0xa1;
-  else screenBuffer[2]=' ';
-  if(MwSensorPresent&GPSSENSOR)     screenBuffer[3]=0xa3;
-  else screenBuffer[3]=' ';
-  screenBuffer[4]=0;
-  MAX7456_WriteString(screenBuffer,sensorPosition[videoSignalType][screenType]);
-  */
-}
-
-
 
 
 
@@ -1379,13 +1100,11 @@ public void updateModel(){
 public void updateView(){
   for(int j=0; j<ConfigNames.length; j++) {
     
-    //confItem[j].setValue(int(MWI.getProperty(ConfigNames[j])));
     if(j >= CONFIGITEMS)
     return;
   int value = int(MWI.getProperty(ConfigNames[j]));
   confItem[j].setValue(value);
   if (j == CONFIGITEMS-1){
-    //buttonWRITE.setColorBackground(green_);
   }  
   if (value >0){
     toggleConfItem[j].setValue(1);
@@ -1441,7 +1160,7 @@ public class MwiFileFilter extends FileFilter {
 }
 
 
-
+//**********************************************************//
 
 // import the content of a file into the model
 public void bIMPORT(){
@@ -1491,7 +1210,7 @@ public void bIMPORT(){
   );
 }
 
-
+//******************************************************************//
 //  our model 
 static class MWI {
   private static Properties conf = new Properties();
@@ -1534,8 +1253,8 @@ public void updateConfig(){
             }
             if (error !=null){
               JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
-            }
-      }
+    }
+  }
 }
 
 
@@ -1564,11 +1283,10 @@ public void LoadConfig(){
           }
           if (error !=null){
             JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
-          }
-    //}
-    
+  }
 }
 
+//***************************************************************//
 //  our configuration 
 static class ConfigClass {
   private static Properties conf = new Properties();
@@ -1585,26 +1303,6 @@ static class ConfigClass {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-        
-        
-
-
 void mouseReleased() {
   mouseDown = false;
   mouseUp = true;
@@ -1619,8 +1317,6 @@ public void mousePressed() {
                 mouseDown = true;
                 mouseUp = false;
         }
-
-
 
         public boolean mouseDown() {
                 return mouseDown;
@@ -1660,15 +1356,8 @@ void SketchUploader(){
   }
 
   toggleMSP_Data = false;
-  //delay(1000);
   InitSerial(200.00);
   updateConfig(); 
-  //if (init_com==1){
-    //init_com=0;
-  //g_serial.stop();
-  //}
-  
- 
   
   super.exit();
 }
