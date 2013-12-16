@@ -12,7 +12,7 @@
 //#define SYM_SAT 0X0F  // Not used
 
 // Degrees Icon for HEADING/DIRECTION HOME
-#define SYM_DEGREES 0XBD
+#define SYM_DEGREES 0XBC
 
 // Direction arrows 
 #define SYM_ARROW_SOUTH 0X60
@@ -55,15 +55,15 @@
 #define SYM_MAG 0XA1
 #define SYM_BAR 0XA2
 #define SYM_GPS 0XA3
-#define SYM_CHECK 0XBE
+#define SYM_CHECK 0XBD
 
 // AH Center screen Graphics
 #define SYM_AH_CENTER 0X01
 #define SYM_AH_RIGHT 0X02
 #define SYM_AH_LEFT 0X03
 #define SYM_AH_CENTER_LINE 0X00
-#define SYM_AH_DECORATION_RIGHT 0XC6
-#define SYM_AH_DECORATION_LEFT 0XC7
+#define SYM_AH_DECORATION_RIGHT 0XBE
+#define SYM_AH_DECORATION_LEFT 0XBF
 
 // AH Bars
 #define SYM_AH_BAR9_0 0x80
@@ -96,7 +96,7 @@
 
 // Batt Icon´s
 #define SYM_MAIN_BATT 0X97
-#define SYM_VID_BAT 0XBF
+#define SYM_VID_BAT 0X98
 
 // Unit Icon´s (Metric)
 #define SYM_MS 0X9F
@@ -120,8 +120,8 @@
 #define SYM_ACRO1 0XAF
 #define SYM_STABLE 0XAC
 #define SYM_STABLE1 0XAD
-#define SYM_TARGET_LOCK 0XAA
-#define SYM_TARGET_LOCK1 0XAB
+#define SYM_HORIZON 0XAA
+#define SYM_HORIZON1 0XAB
 
 // Time
 #define SYM_ON_M 0X9B

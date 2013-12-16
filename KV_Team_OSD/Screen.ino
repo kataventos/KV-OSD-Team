@@ -89,6 +89,7 @@ uint8_t FindNull(void)
   return xx;
 }
 
+
 void displayTemperature(void)        // WILL WORK ONLY WITH Rushduino V1.2
 {
  if(!(MwSensorActive&mode_osd_switch)){  // mode_osd_switch=0 --> Display, =1 --> Hide
@@ -118,7 +119,14 @@ if(!(MwSensorActive&mode_osd_switch)){
     screenBuffer[1] = (MwSensorPresent&BAROMETER) ? SYM_BAR : ' ';
     screenBuffer[2] = (MwSensorPresent&MAGNETOMETER) ? SYM_MAG : ' ';
     screenBuffer[3] = (MwSensorPresent&GPSSENSOR) ? SYM_GPS : ' ';
-  
+    
+    if(MwSensorActive&mode_lock)
+    {
+      screenBuffer[4]=SYM_HORIZON;
+      screenBuffer[5]=SYM_HORIZON1;
+    }
+    else
+    
     if(MwSensorActive&mode_stable)
     {
       screenBuffer[4]=SYM_STABLE;
@@ -180,7 +188,7 @@ void displayCallsign(void)
 
 void displayHorizon(int rollAngle, int pitchAngle)
 {
-  if(!(MwSensorActive&mode_osd_switch)){
+   if(!(MwSensorActive&mode_osd_switch)){
     if(Settings[L_HORIZONPOSITIONDSPL]){
       uint16_t position = ((Settings[L_HORIZONPOSITIONROW]-1)*30) + Settings[L_HORIZONPOSITIONCOL];
       
@@ -200,7 +208,7 @@ void displayHorizon(int rollAngle, int pitchAngle)
             screen[pos-LINE] = SYM_AH_BAR9_9;
         }
       }
-    
+    //if(!(MwSensorActive&mode_osd_switch)){
       if(Settings[L_HORIZONCENTERREFDSPL]){  
         //Draw center screen
         //screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
@@ -223,13 +231,12 @@ void displayHorizon(int rollAngle, int pitchAngle)
         screen[position+3*LINE+12] =  SYM_AH_DECORATION_RIGHT;
         screen[position+4*LINE+12] =  SYM_AH_DECORATION_RIGHT;
        }
-     }
+    }
   }
 }
 
 void displayVoltage(void)
 {
-//if(!(MwSensorActive&mode_osd_switch)){  // Main Batt always visible ? (Example)
   if(Settings[L_VOLTAGEPOSITIONDSPL]){
     if (Settings[S_MAINVOLTAGE_VBAT]){
       voltage=MwVBat;
@@ -238,6 +245,7 @@ void displayVoltage(void)
       ItoaPadded(voltage, screenBuffer, 4, 3);
       return;
    }
+   if(!(MwSensorActive&mode_osd_switch) || (voltage <=(Settings[S_VOLTAGEMIN]+2))){ 
       ItoaPadded(voltage, screenBuffer, 4, 3);
       screenBuffer[4] = SYM_VOLT;
       screenBuffer[5] = 0;
@@ -267,7 +275,7 @@ void displayVoltage(void)
       MAX7456_WriteString(screenBuffer,((Settings[L_VOLTAGEPOSITIONROW]-1)*30) + Settings[L_VOLTAGEPOSITIONCOL]-1);
    }
   }
-//}  // Main Batt always visible ?
+} 
 
 void displayVidVoltage(void)
 {
@@ -335,7 +343,7 @@ void displayCurrentThrottle(void)
 void displayTime(void)
 {
 // Fly Time
- if(!(MwSensorActive&mode_osd_switch)){
+  if(!(MwSensorActive&mode_osd_switch)){
   if(Settings[L_FLYTIMEPOSITIONDSPL]){
     if(flyTime < 3600) {
       screenBuffer[0] = SYM_FLY_M;
@@ -348,6 +356,7 @@ void displayTime(void)
       MAX7456_WriteString(screenBuffer,((Settings[L_FLYTIMEPOSITIONROW]-1)*30) + Settings[L_FLYTIMEPOSITIONCOL]);
   }
  }  
+ 
 // On Time
  if(!(MwSensorActive&mode_osd_switch)){
   if(Settings[L_ONTIMEPOSITIONDSPL]){
@@ -396,7 +405,7 @@ void displaypMeterSum(void)
 
 void displayRSSI(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]+5)){
   if (rssi <=(Settings[S_RSSI_ALARM]) && !BlinkAlarm){
   screenBuffer[0] = SYM_RSSI;
   return;
@@ -435,7 +444,7 @@ void displayHeading(void)
 
 void displayHeadingGraph(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ if(!(MwSensorActive&mode_osd_switch)  || (!GPS_fix)){
   if(Settings[L_MW_HEADINGGRAPHPOSDSPL]){
     int xx;
     xx = MwHeading * 4;
@@ -489,37 +498,46 @@ void displayFontScreen(void) {
 
 void displayGPSPosition(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
   if(!GPS_fix)
     return;
-
+     
+ if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]-10)){
+   
   if(Settings[S_COORDINATES]){
     if(Settings[L_MW_GPS_LATPOSITIONDSPL]){
         screenBuffer[0] = SYM_LAT;
         FormatGPSCoord(GPS_latitude,screenBuffer+1,4,'N','S');
         MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_LATPOSITIONROW]-1)*30) + Settings[L_MW_GPS_LATPOSITIONCOL]);
-      }
-    if(Settings[L_MW_GPS_LONPOSITIONDSPL]){
-        screenBuffer[0] = SYM_LON;
-        FormatGPSCoord(GPS_longitude,screenBuffer+1,4,'E','W');
-        MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_LONPOSITIONROW]-1)*30) + Settings[L_MW_GPS_LONPOSITIONCOL]);
+       }
+     if(Settings[L_MW_GPS_LONPOSITIONDSPL]){
+         screenBuffer[0] = SYM_LON;
+         FormatGPSCoord(GPS_longitude,screenBuffer+1,4,'E','W');
+         MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_LONPOSITIONROW]-1)*30) + Settings[L_MW_GPS_LONPOSITIONCOL]);
       }
     }
-  
-  if(Settings[L_MW_GPS_ALTPOSITIONDSPL]){
-      screenBuffer[0] = MwGPSAltPositionAdd1[Settings[S_UNITSYSTEM]];
-      screenBuffer[1] = MwGPSAltPositionAdd[Settings[S_UNITSYSTEM]];
-      uint16_t xx;
-      if(Settings[S_UNITSYSTEM])
-        xx = GPS_altitude * 3.2808; // Mt to Feet
-      else
-        xx = GPS_altitude;          // Mt
-      itoa(xx,screenBuffer+2,10);
-      MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_ALTPOSITIONROW]-1)*30) + Settings[L_MW_GPS_ALTPOSITIONCOL]);
-      }
-  }
+  }  
 }
 
+void displayGPS_altitude (void)
+{
+  if(!GPS_fix)
+      return;
+      
+   if(!(MwSensorActive&mode_osd_switch)){
+     if(Settings[L_MW_GPS_ALTPOSITIONDSPL]){
+        screenBuffer[0] = MwGPSAltPositionAdd1[Settings[S_UNITSYSTEM]];
+        screenBuffer[1] = MwGPSAltPositionAdd[Settings[S_UNITSYSTEM]];
+        uint16_t xx;
+          if(Settings[S_UNITSYSTEM])
+           xx = GPS_altitude * 3.2808; // Mt to Feet
+      else
+           xx = GPS_altitude;          // Mt
+        itoa(xx,screenBuffer+2,10);
+        MAX7456_WriteString(screenBuffer,((Settings[L_MW_GPS_ALTPOSITIONROW]-1)*30) + Settings[L_MW_GPS_ALTPOSITIONCOL]);
+     }
+   }
+ } 
+   
 void displayNumberOfSat(void)
 {
  if(!(MwSensorActive&mode_osd_switch)){
@@ -578,7 +596,7 @@ void displayAltitude(void)
 
 void displayClimbRate(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ if(!(MwSensorActive&mode_osd_switch)) {
   if(Settings[L_CLIMBRATEPOSITIONDSPL]){
     if(MwVario > 70)       screenBuffer[0] = SYM_POS_CLIMB3;
     else if(MwVario > 50)  screenBuffer[0] = SYM_POS_CLIMB2;
@@ -607,7 +625,7 @@ void displayClimbRate(void)
 
 void displayDistanceToHome(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+  if(!(MwSensorActive&mode_osd_switch)){
   if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
     if(!GPS_fix)
       return;
@@ -648,7 +666,7 @@ void displayAngleToHome(void)
 
 void displayDirectionToHome(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1)))){
   if(Settings[L_GPS_DIRECTIONTOHOMEPOSDSPL]){
     if(!GPS_fix)
       return;
