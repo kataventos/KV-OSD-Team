@@ -62,8 +62,8 @@
 #define SYM_AH_RIGHT 0X02
 #define SYM_AH_LEFT 0X03
 #define SYM_AH_CENTER_LINE 0X00
-#define SYM_AH_DECORATION_RIGHT 0XBE
-#define SYM_AH_DECORATION_LEFT 0XBF
+#define SYM_AH_DECORATION_RIGHT 0XB9
+#define SYM_AH_DECORATION_LEFT 0XBA
 
 // AH Bars
 #define SYM_AH_BAR9_0 0x80
@@ -102,13 +102,11 @@
 #define SYM_MS 0X9F
 #define SYM_KMH 0XA5
 #define SYM_ALTM 0XA7
-#define SYM_DISTHOME_M 0XBB
 
 // Unit Icon´s (Imperial)
 #define SYM_FTS 0X99
 #define SYM_MPH 0XA6
 #define SYM_ALTFT 0XA8
-#define SYM_DISTHOME_FT 0XB9
 
 // Voltage and amperage 
 #define SYM_VOLT 0XA9
@@ -120,25 +118,27 @@
 #define SYM_ACRO1 0XAF
 #define SYM_STABLE 0XAC
 #define SYM_STABLE1 0XAD
-#define SYM_HORIZON 0XAA
-#define SYM_HORIZON1 0XAB
+#define SYM_HORIZON 0X77
+#define SYM_HORIZON1 0X78
+#define SYM_HORIZON2 0x79
 
 // Time
 #define SYM_ON_M 0X9B
 #define SYM_FLY_M 0X9C
-#define SYM_ON_H 0X70
-#define SYM_FLY_H 0X71
+#define SYM_ON_H 0X9D
+#define SYM_FLY_H 0X9E
 
 // Throttle Position (%)
-#define SYM_THR 0XC8
-#define SYM_THR1 0XC9
+#define SYM_THR 0XCD
+#define SYM_THR1 0XCE
+#define SYM_THR2 0XCF
 
 // Stall Warning
-#define SYM_THR_STALL 0X9D
-#define SYM_THR_STALL1 0X9E
+#define SYM_THR_STALL 0XBE
+#define SYM_THR_STALL1 0XBF
 
 // RSSI
-#define SYM_RSSI 0XBA
+#define SYM_RSSI 0XBB
 
 // Menu cursor
 #define SYM_CURSOR SYM_AH_LEFT
