@@ -37,7 +37,7 @@ uint8_t retransmitQueue;
 // Mode bits
 uint32_t mode_armed;
 uint32_t mode_stable;
-uint32_t mode_lock;
+uint32_t mode_horizon;
 uint32_t mode_baro;
 uint32_t mode_mag;
 uint32_t mode_gpshome;
@@ -196,10 +196,10 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 1,   // S_MAINVOLTAGE_VBAT          9
 100, // S_VIDDIVIDERRATIO           10
 0,   // S_VIDVOLTAGE_VBAT           11 
-90, // S_TEMPERATUREMAX            12
+90,  // S_TEMPERATUREMAX            12
 1,   // S_BOARDTYPE                 13
 1,   // S_DISPLAYGPS                14
-0,   // S_COORDINATES               15
+1,   // S_COORDINATES               15
 1,   // S_HEADING360                16
 0,   // S_UNITSYSTEM                17
 1,   // S_VIDEOSIGNALTYPE           18
@@ -230,7 +230,7 @@ uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
-2,   // L_GPS_NUMSATPOSITIONROW LINE02+2
+4,   // L_GPS_NUMSATPOSITIONROW LINE02+2
 2,   // L_GPS_NUMSATPOSITIONCOL
 1,   // L_GPS_NUMSATPOSITIONDSPL
 3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
@@ -248,7 +248,7 @@ uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
 24,  // L_MW_GPS_ALTPOSITIONCOL
 1,   // L_MW_GPS_ALTPOSITIONDSPL
-3,   // L_SENSORPOSITIONROW LINE03+2
+2,   // L_SENSORPOSITIONROW LINE03+2
 2,   // L_SENSORPOSITIONCOL
 1,   // L_SENSORPOSITIONDSPL
 2,   // L_MW_HEADINGPOSITIONROW LINE02+19
@@ -324,7 +324,7 @@ uint8_t EEPROM_NTSC_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
-2,   // L_GPS_NUMSATPOSITIONROW LINE02+2
+4,   // L_GPS_NUMSATPOSITIONROW LINE02+2
 2,   // L_GPS_NUMSATPOSITIONCOL
 1,   // L_GPS_NUMSATPOSITIONDSPL
 3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
@@ -342,7 +342,7 @@ uint8_t EEPROM_NTSC_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
 24,  // L_MW_GPS_ALTPOSITIONCOL
 1,   // L_MW_GPS_ALTPOSITIONDSPL
-3,   // L_SENSORPOSITIONROW LINE03+2
+2,   // L_SENSORPOSITIONROW LINE03+2
 2,   // L_SENSORPOSITIONCOL
 1,   // L_SENSORPOSITIONDSPL
 2,   // L_MW_HEADINGPOSITIONROW LINE02+19
@@ -731,7 +731,7 @@ const unsigned char MwAltitudeAdd[2]={
 const unsigned char MwClimbRateAdd[2]={
   0x9f,0x99};
 const unsigned char GPS_distanceToHomeAdd[2]={
-  0x8a,0x72,};
+  0x8a,0x7a,};
   const unsigned char GPS_distanceToHomeAdd1[2]={
   0x8b,0x8b};
 const unsigned char MwGPSAltPositionAdd[2]={

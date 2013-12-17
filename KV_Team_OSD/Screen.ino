@@ -120,10 +120,12 @@ if(!(MwSensorActive&mode_osd_switch)){
     screenBuffer[2] = (MwSensorPresent&MAGNETOMETER) ? SYM_MAG : ' ';
     screenBuffer[3] = (MwSensorPresent&GPSSENSOR) ? SYM_GPS : ' ';
     
-    if(MwSensorActive&mode_lock)
+    if(MwSensorActive&mode_horizon)
     {
       screenBuffer[4]=SYM_HORIZON;
       screenBuffer[5]=SYM_HORIZON1;
+      screenBuffer[6]=SYM_HORIZON2;
+      
     }
     else
     
@@ -131,13 +133,14 @@ if(!(MwSensorActive&mode_osd_switch)){
     {
       screenBuffer[4]=SYM_STABLE;
       screenBuffer[5]=SYM_STABLE1;
+      screenBuffer[6]=' ';
     }
     else
     {
       screenBuffer[4]=SYM_ACRO;
       screenBuffer[5]=SYM_ACRO1;
+      screenBuffer[6]=' ';
     }
-    screenBuffer[6]=' ';
     if(MwSensorActive&mode_gpshome)
       screenBuffer[7]=SYM_G_HOME;
     else if(MwSensorActive&mode_gpshold)
@@ -151,7 +154,7 @@ if(!(MwSensorActive&mode_osd_switch)){
     MAX7456_WriteString(screenBuffer,((Settings[L_SENSORPOSITIONROW]-1)*30) + Settings[L_SENSORPOSITIONCOL]);
   
     // Put ON indicator under sensor symbol
-    screenBuffer[0] = (MwSensorActive&mode_stable) ? SYM_CHECK : ' ';
+    screenBuffer[0] = (MwSensorActive&mode_stable|(MwSensorActive&mode_horizon && MwRcData[PITCHSTICK] > 1450 && MwRcData[PITCHSTICK] < 1550)) ? SYM_CHECK : ' ';
     screenBuffer[1] = (MwSensorActive&mode_baro) ? SYM_CHECK : ' ';
     screenBuffer[2] = (MwSensorActive&mode_mag) ? SYM_CHECK : ' ';
     screenBuffer[3] = (MwSensorActive&(mode_gpshome|mode_gpshold)) ? SYM_CHECK : ' ';
@@ -309,12 +312,13 @@ void displayCurrentThrottle(void)
     
     screenBuffer[0]=SYM_THR;
     screenBuffer[1]=SYM_THR1;
-    screenBuffer[2]=0;
-    MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]);
+    screenBuffer[2]=SYM_THR2;
+    screenBuffer[3]=0;
+    MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]-1);
     if(!armed) {
       screenBuffer[0]=' ';
-      screenBuffer[1]= SYM_THR_STALL;
-      screenBuffer[2]= SYM_THR_STALL1;
+      screenBuffer[1]='-';
+      screenBuffer[2]='-';
       screenBuffer[3]=0;
       MAX7456_WriteString(screenBuffer,((Settings[L_CURRENTTHROTTLEPOSITIONROW]-1)*30) + Settings[L_CURRENTTHROTTLEPOSITIONCOL]+2);
      
