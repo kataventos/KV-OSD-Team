@@ -142,7 +142,7 @@ String[] ConfigNames = {
   "RSSI Alarm",
   "Input", //MW ADC
   "PWM",
-  "Voltage Alarm",
+  "Main&Video Alarm",
   "Battery Cells",
   "Divider Ratio",
   "Input", //MW ADC  
