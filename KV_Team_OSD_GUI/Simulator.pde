@@ -20,7 +20,7 @@ Group SG,SGControlBox,SGModes,SGAtitude,SGRadio,SGSensors1,SGGPS;
 
 // Checkboxs
 CheckBox checkboxSimItem[] = new CheckBox[SIMITEMS] ;
-CheckBox ShowSimBackground, UnlockControls, SGPS_FIX;
+CheckBox UnlockControls, SGPS_FIX;
 //Toggles
 Toggle toggleModeItems[] = new Toggle[boxnames.length] ;
 Toggle SimControlToggle;
@@ -52,8 +52,9 @@ void SimSetup(){
     .activateEvent(true)
     .disableCollapse()
     .setBackgroundColor(color(0,255))
+    .setColorLabel(color(0, 140, 130))
     .setBackgroundHeight(187)
-   .setLabel("Simulator")
+   .setLabel("                                                                                Multiwii flight control data simulator ")
    .setMoveable(true);
     ;
                 
@@ -66,7 +67,7 @@ void SimSetup(){
                 .disableCollapse()
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight((boxnames.length*17) + 9)
-                .setLabel("Modes")
+                .setLabel("  Flight Modes")
                 .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 .disableCollapse() 
@@ -95,7 +96,7 @@ void SimSetup(){
                 .disableCollapse()
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(62)
-                .setLabel("Radio")
+                .setLabel("  RC Radio Control")
                 .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
@@ -109,7 +110,7 @@ SGSensors1 = ScontrolP5.addGroup("SGSensors1")
                 .disableCollapse()
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(110)
-                .setLabel("Sensors")
+                .setLabel("      MWii Sensors & ADC´s ")
                 .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
@@ -122,7 +123,7 @@ SGGPS = ScontrolP5.addGroup("SGGPS")
                 .disableCollapse()
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(111)
-                .setLabel("GPS")
+                .setLabel("               Multiwii GPS Data")
                 .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
@@ -136,25 +137,26 @@ SGControlBox = ScontrolP5.addGroup("SGControlBox")
                 .disableCollapse()
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(33)
-                .setLabel("Simulator Control")
+                .setLabel("       Simulator Control")
                 .setColorLabel(color(0, 300, 320))
                 .setGroup(SG)
                 //.close() 
                ;   
 
 SimControlToggle = (controlP5.Toggle) hideLabel(controlP5.addToggle("SendSim"));
-SimControlToggle.setPosition(5,5);
-SimControlToggle.setSize(35,10);
+SimControlToggle.setPosition(60,5);
+SimControlToggle.setSize(40,10);
 SimControlToggle.setMode(ControlP5.SWITCH);
+SimControlToggle.setColorActive(color(0, 160, 100));
+SimControlToggle.setColorBackground(color(80,0,0));
 SimControlToggle.setGroup(SGControlBox);
-
-SimControlText = controlP5.addTextlabel("SimControlText","Simulate on OSD",45,3);
+SimControlText = controlP5.addTextlabel("SimControlText","On  Off",56,15);
 SimControlText.setGroup(SGControlBox);
                
-
+               
 SGPS_FIX =  ScontrolP5.addCheckBox("GPS_FIX",5,5);
-    SGPS_FIX.setColorBackground(color(120));
-    SGPS_FIX.setColorActive(color(255));
+    SGPS_FIX.setColorBackground(color(80));
+    SGPS_FIX.setColorActive(color(0, 160, 100));
     SGPS_FIX.addItem("GPS Fix",1);
     //GPSLock.hideLabels();
     SGPS_FIX.setGroup(SGGPS);
@@ -264,8 +266,8 @@ SGPS_altitude = ScontrolP5.addNumberbox("SGPS_altitude",0,5,40,40,14);
 
 
 UnlockControls =  ScontrolP5.addCheckBox("UnlockControls",60,25);
-    UnlockControls.setColorBackground(color(120));
-    UnlockControls.setColorActive(color(255));
+    UnlockControls.setColorBackground(color(80));
+    UnlockControls.setColorActive(color(255,255,0));
     UnlockControls.addItem("UnlockControls1",1);
     UnlockControls.hideLabels();
     UnlockControls.setGroup(SGRadio);
