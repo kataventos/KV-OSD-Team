@@ -161,10 +161,11 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
                 .setPosition(694,20)
                 .setWidth(157)
                 .setBarHeight(15)
-                .activateEvent(true)
+                .activateEvent(true)  
                 .setBackgroundColor(color(30,255))
                 .setBackgroundHeight(128) 
                 .setLabel("             Font Tools")
+                .setColorForeground(color(30,255))
                 .setColorLabel(color(0, 300, 320))
                 .disableCollapse();
                ; 
