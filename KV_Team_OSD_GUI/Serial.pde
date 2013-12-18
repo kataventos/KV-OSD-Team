@@ -264,7 +264,7 @@ public void FONT_UPLOAD(){
   PortWrite = true;
   MakePorts();
   FontCounter = 0;
-  FileUploadText.setText("  Please Wait");
+  FileUploadText.setText("Please Wait 30 Seconds...");
   p = 0;
   inBuf[0] = OSD_GET_FONT;
   //for (int txTimes = 0; txTimes<2; txTimes++) {

@@ -158,13 +158,14 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
   buttonFClose.setGroup(FG);
  
   MGUploadF = controlP5.addGroup("MGUploadF")
-                .setPosition(5,153)
-                .setWidth(110)
+                .setPosition(694,20)
+                .setWidth(157)
                 .setBarHeight(15)
                 .activateEvent(true)
                 .setBackgroundColor(color(30,255))
-                .setBackgroundHeight(100)
-                .setLabel("Font Tools")
+                .setBackgroundHeight(128) 
+                .setLabel("             Font Tools")
+                .setColorLabel(color(0, 300, 320))
                 .disableCollapse();
                ; 
 
@@ -172,23 +173,26 @@ FileUploadText = controlP5.addTextlabel("FileUploadText","",10,5)
 .setGroup(MGUploadF);
 ;
 
-buttonEditFont = controlP5.addButton("EditFont",1,20,25,60,16)
+buttonEditFont = controlP5.addButton("EditFont",1,48,25,60,16)
 .setGroup(MGUploadF);
  buttonEditFont.getCaptionLabel()
 .toUpperCase(false)
-.setText("Edit Font")
+.setText(" Edit Font")
 ;
 
-buttonSendFile = controlP5.addButton("FONT_UPLOAD",1,20,50,60,16)
+buttonSendFile = controlP5.addButton("FONT_UPLOAD",1,48,50,60,16)
 .setGroup(MGUploadF);
 
-buttonBrowseFile = controlP5.addButton("Browse",1,20,75,60,16)
+buttonBrowseFile = controlP5.addButton("Browse",1,48,75,60,16)
 .setGroup(MGUploadF);
+buttonBrowseFile.getCaptionLabel()
+.toUpperCase(false)
+.setText("  Browse");
 
 
 buttonSendFile.getCaptionLabel()
     .toUpperCase(false)
-    .setText("Upload");
+    .setText("  Upload");
  
 }
 
@@ -373,7 +377,7 @@ public void Browse(){
           FontFileName = FontFile.getPath();
           img_Clear = LoadFont(FontFileName);
           updateConfig(); 
-          JOptionPane.showMessageDialog(null,new StringBuffer().append("Font File loaded : ").append(FontFile.toURI()) );
+          JOptionPane.showMessageDialog(null,new StringBuffer().append("Font File successfully loaded"));
           completed  = true;
           
         }catch(FileNotFoundException e){
