@@ -56,7 +56,7 @@ void setup()
   Serial.flush();
   
   //PWM RSSI
-  pinMode(PwmRssiPin, INPUT);
+  pinMode(12, INPUT);
   
   //Led output
   pinMode(7,OUTPUT);  // PD7
@@ -159,7 +159,7 @@ void loop()
       rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023 / 4 (avoid a number > 255)
   } 
    if (Settings[S_PWMRSSI]){
-      rssiADC = pulseIn(PwmRssiPin, HIGH)/4;  // RSSI PWM Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255). To be verified (max value 1023 ?)
+   rssiADC = pulseIn(12, HIGH,1000)/4; //Reading W/ time out (microseconds to wait for pulse to start: 1000=0.001sec)
   }
   
   // Blink Basic Sanity Test Led at 1hz
