@@ -1,11 +1,6 @@
  
  
- /*--------------------------------------------------       Configurable parameters      ----------------------------------------------------*/
- 
- 
-/********************       PWM RSSI      *********************/
-
-#define PwmRssiPin 3    // Pin 3 (PD3) 
+ /*--------------------------------------------------       Configurable parameters      ----------------------------------------------------*/ 
 
 /**********    Here you can define time out for Mag calibration and EEProm write (mostly useful for mag calibration)    ***********/
 #define CALIBRATION_DELAY 6
