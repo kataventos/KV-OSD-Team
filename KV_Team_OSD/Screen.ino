@@ -410,18 +410,20 @@ void displaypMeterSum(void)
 void displayRSSI(void)
 {
  if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]+5)){
-  if (rssi <=(Settings[S_RSSI_ALARM]) && !BlinkAlarm){
-  screenBuffer[0] = SYM_RSSI;
-  return;
+  if(Settings[L_RSSIPOSITIONDSPL]){
+    if (rssi <=(Settings[S_RSSI_ALARM]) && !BlinkAlarm){
+      screenBuffer[0] = SYM_RSSI;
+      return;
+      }
+    screenBuffer[0] = SYM_RSSI;
+    // Calcul et affichage du Rssi
+    itoa(rssi,screenBuffer+1,10);
+    uint8_t xx = FindNull();
+    screenBuffer[xx++] = '%';
+    screenBuffer[xx] = 0;
+    MAX7456_WriteString(screenBuffer,((Settings[L_RSSIPOSITIONROW]-1)*30) + Settings[L_RSSIPOSITIONCOL]);
+    }
   }
-  screenBuffer[0] = SYM_RSSI;
-  // Calcul et affichage du Rssi
-  itoa(rssi,screenBuffer+1,10);
-  uint8_t xx = FindNull();
-  screenBuffer[xx++] = '%';
-  screenBuffer[xx] = 0;
-  MAX7456_WriteString(screenBuffer,((Settings[L_RSSIPOSITIONROW]-1)*30) + Settings[L_RSSIPOSITIONCOL]);
- }
 }
 
 void displayHeading(void)
