@@ -35,9 +35,7 @@ char screenBuffer[20];
 uint32_t modeMSPRequests;
 uint32_t queuedMSPRequests;
 
-//-------------- Timed Service Routine vars (No more needed Metro.h library)
-
-// May be moved in GlobalVariables.h
+//-------------- Timed Service Routine vars (No need Metro.h library)
 unsigned long previous_millis_low=0;
 unsigned long previous_millis_high =0;
 int hi_speed_cycle = 50;
@@ -56,7 +54,7 @@ void setup()
   Serial.flush();
   
   //PWM RSSI
-  pinMode(12, INPUT);
+  pinMode(PWMrssiPin, INPUT);
   
   //Led output
   pinMode(7,OUTPUT);  // PD7
@@ -143,24 +141,27 @@ void loop()
         voltageRaw += voltageRawArray[i];
       vidvoltage = float(voltageRaw) * Settings[S_VIDDIVIDERRATIO] /1023;  
     }
-    if (!Settings[S_MWRSSI]) {
-      rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023 / 4 (avoid a number > 255)
+    if (!Settings[S_MWRSSI] && !Settings[S_PWMRSSI]) {
+      rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023/4 (avoid a number > 255)
     }
-    if (Settings[S_MWAMPERAGE]) {
-    amperage = MWAmperage /100;
-  }
     if (!Settings[S_MWAMPERAGE]) {
-    amperage = analogRead(amperagePin)- Settings[S_AMPOFFSET] /2;
-    if (amperage >=999) amperage=999;
-    }
+      int currsensOffSet=(Settings[S_CURRSENSOFFSET_L] | (Settings[S_CURRSENSOFFSET_H] << 8));  // Read OffSetH/L
+      amperageADC = analogRead(amperagePin);
+//      if (amperageADC > currsensOffSet) amperageADC=((amperageADC-currsensOffSet)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; else amperageADC=0; // [A]
+      if (amperageADC > currsensOffSet) amperageADC=((amperageADC-currsensOffSet)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; // [A] Positive Current flow (512...1023) or Unidir (0...1023)
+      else amperageADC=((currsensOffSet-amperageADC)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; // [A] Negative Current flow (0...512)
+      }
 }
-    
-  if (Settings[S_MWRSSI]) {
-      rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023 / 4 (avoid a number > 255)
-  } 
+   if (Settings[S_MWAMPERAGE]) {
+     amperagesum = MWpMeterSum;
+     amperage = MWAmperage /100;
+    }
+  if (Settings[S_MWRSSI] && !Settings[S_PWMRSSI]) {
+      rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023/4 (avoid a number > 255)
+    } 
    if (Settings[S_PWMRSSI]){
-   rssiADC = pulseIn(12, HIGH,1000)/4; //Reading W/ time out (microseconds to wait for pulse to start: 1000=0.001sec)
-  }
+   rssiADC = pulseIn(PWMrssiPin, HIGH,15000)/Settings[S_PWMRSSIDIVIDER]; // Reading W/time out (microseconds to wait for pulse to start: 15000=0.015sec)
+    }
   
   // Blink Basic Sanity Test Led at 1hz
   if(tenthSec>10)
@@ -191,7 +192,8 @@ void loop()
     tenthSec++;
     TempBlinkAlarm++;
     Blink10hz=!Blink10hz;
-    calculateTrip();  // Speed integration on 50msec
+    calculateTrip();      // Speed integration on 50msec
+    if (!Settings[S_MWAMPERAGE]) calculateAmperage();  // Amperage and amperagesum integration on 50msec
     
       uint8_t MSPcmdsend;
       if(queuedMSPRequests == 0)
@@ -279,7 +281,7 @@ void loop()
         displayRSSI();
         displayTime();
         displayMode();
-        if(Settings[L_TEMPERATUREPOSDSPL]&&((temperature<Settings[S_TEMPERATUREMAX])||(BlinkAlarm))) displayTemperature();        
+        if((temperature<Settings[S_TEMPERATUREMAX])||(BlinkAlarm)) displayTemperature();
         displayAmperage();
         displaypMeterSum();
         displayArmed();
@@ -332,8 +334,6 @@ void loop()
   if(tenthSec >= 20)     // this execute 1 time a second
   {
     onTime++;
-
-    amperagesum += amperage *100 /3600; //(mAh)
     
     tenthSec=0;
 
@@ -370,7 +370,7 @@ void loop()
     if(eepromWriteTimer>0) eepromWriteTimer--;
 
     if((rssiTimer==1)&&(configMode)) {
-      Settings[S_RSSIMIN]=rssiADC;  // set MIN RSSI signal received (tx off?)
+      Settings[S_RSSIMIN]=rssiADC;  // set MIN RSSI signal received (tx off)
       rssiTimer=0;
     }
     if(rssiTimer>0) rssiTimer--;
@@ -383,6 +383,7 @@ void loop()
 
 void calculateTrip(void)
 {
+// trip is speed integration on 50msec
   if(GPS_fix && armed && (GPS_speed>0)) {
     if(Settings[S_UNITSYSTEM])
       trip += GPS_speed *0.0016404;     //  50/(100*1000)*3.2808=0.0016404     cm/sec ---> ft/50msec
@@ -393,16 +394,30 @@ void calculateTrip(void)
 
 void calculateRssi(void)
 {
-  float aa=0;
-  
+  float aa=0;  
   aa = rssiADC;  // actual RSSI signal received  (already divided by 4)
   aa = ((aa-Settings[S_RSSIMIN]) *101)/(Settings[S_RSSIMAX]-Settings[S_RSSIMIN]) ;  // Percentage of signal strength
-  rssi_Int += ( ( (signed int)((aa*rssiSample) - rssi_Int )) / rssiSample );  // Smoothing the readings
+  rssi_Int += ( ( (signed int)((aa*rssiSample) - rssi_Int )) / rssiSample );  // Smoothing the readings with rssiSample
   rssi = rssi_Int / rssiSample ;
   if(rssi<0) rssi=0;
   if(rssi>100) rssi=100;
 }
 
+void calculateAmperage(void)
+{
+  float aa=0;
+// calculation of amperage [A*10]
+  aa = amperageADC*10;   // *10 We want one decimal digit
+  amperage_Int += ( ( (signed int)((aa* 10) - amperage_Int )) / 10 );  // Smoothing the displayed value with average of 10 samples
+  amperage = (amperage_Int / 10);
+  if (amperage >=999) amperage=999;  // [A*10]
+  
+// Calculation of amperagesum = amperage integration on 50msec (without reading average)
+// 720= *100/72000 --> where:
+// *100=mA (instead of *1000 as the value is already multiplied by 10)
+// 72000=n. of 50ms in 1 hour
+   amperagesum += aa /720; // [mAh]    // NEB (Carlonb note) if want add 3% change with this "amperagesum += aa /690;"
+}
 
 void writeEEPROM(void)
 {
