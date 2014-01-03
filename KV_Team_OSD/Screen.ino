@@ -93,6 +93,7 @@ uint8_t FindNull(void)
 void displayTemperature(void)        // WILL WORK ONLY WITH Rushduino V1.2
 {
  if(!(MwSensorActive&mode_osd_switch)){  // mode_osd_switch=0 --> Display, =1 --> Hide
+  if(Settings[L_TEMPERATUREPOSDSPL]){
     int xxx;
     if (Settings[S_UNITSYSTEM])
       xxx = temperature*1.8+32;       //Fahrenheit conversion for imperial system.
@@ -108,6 +109,7 @@ void displayTemperature(void)        // WILL WORK ONLY WITH Rushduino V1.2
     screenBuffer[xx]=0;  // Restore the NULL
     MAX7456_WriteString(screenBuffer,((Settings[L_TEMPERATUREPOSROW]-1)*30) + Settings[L_TEMPERATUREPOSCOL]);
   }
+ }
 }
 
 void displayMode(void)
@@ -211,7 +213,6 @@ void displayHorizon(int rollAngle, int pitchAngle)
             screen[pos-LINE] = SYM_AH_BAR9_9;
         }
       }
-    //if(!(MwSensorActive&mode_osd_switch)){
       if(Settings[L_HORIZONCENTERREFDSPL]){  
         //Draw center screen
         //screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
@@ -221,8 +222,7 @@ void displayHorizon(int rollAngle, int pitchAngle)
         screen[position+2*LINE+11] =  SYM_AH_RIGHT;
       }
       if(Settings[L_HORIZONSIDEREFDSPL]){
-        // Draw AH sides
-        
+        // Draw AH sides        
         screen[position+0*LINE] =     SYM_AH_DECORATION_LEFT;
         screen[position+1*LINE] =     SYM_AH_DECORATION_LEFT;
         screen[position+2*LINE] =     SYM_AH_DECORATION_LEFT;
@@ -394,14 +394,9 @@ void displayAmperage(void)
 void displaypMeterSum(void)
 {
  if(!(MwSensorActive&mode_osd_switch)){
-  if (Settings[S_ENABLEADC]){
-    pMeterSum = amperagesum;
-    
-  }
   if(Settings[L_PMETERSUMPOSITIONDSPL]){
     screenBuffer[0]=SYM_MAH;
-    int xx = pMeterSum;
-    itoa(xx,screenBuffer+1,10);
+    itoa(amperagesum,screenBuffer+1,10);
     MAX7456_WriteString(screenBuffer,((Settings[L_PMETERSUMPOSITIONROW]-1)*30) + Settings[L_PMETERSUMPOSITIONCOL]);
   }
  }
@@ -1038,12 +1033,7 @@ void displayConfigScreen(void)
     MAX7456_WriteString(screenBuffer,VELD-4);
 
     MAX7456_WriteString_P(configMsg96, LEVT);
-    if (!Settings[S_MWAMPERAGE]){
-    xx=amperagesum;
-   }
-  else 
-    xx= pMeterSum;
-    MAX7456_WriteString(itoa(xx,screenBuffer,10),LEVD-3);
+    MAX7456_WriteString(itoa(amperagesum,screenBuffer,10),LEVD-3);    
 
     MAX7456_WriteString_P(configMsg97, MAGT);
     MAX7456_WriteString(itoa(temperMAX,screenBuffer,10),MAGD-3);

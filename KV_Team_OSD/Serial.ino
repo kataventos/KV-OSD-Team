@@ -149,7 +149,7 @@ void serialMSPCheck()
   if (cmdMSP==MSP_ANALOG)
   {
     MwVBat=read8();
-    pMeterSum=read16();
+    MWpMeterSum = read16();
     MwRssi = read16();
     MWAmperage = read16(); 
   }
@@ -419,11 +419,11 @@ void handleRawRC() {
                       }
          	 }
 	      if (COL==2) Settings[screen_pos_item_pointer+2]=!Settings[screen_pos_item_pointer+2];  // Display/Hide
-	      if (COL==3) {
-                  if ((Settings[screen_pos_item_pointer] > 1) && (Settings[screen_pos_item_pointer] !=255)) Settings[screen_pos_item_pointer]--;  // subtract 1 line
+	      if ((COL==3) && ((Settings[screen_pos_item_pointer] !=255))) {
+                  if (Settings[screen_pos_item_pointer] > 1) Settings[screen_pos_item_pointer]--;    // subtract 1 line
                   }
-	      if (COL==4) {
-                  if ((Settings[screen_pos_item_pointer+1] > 1) && (Settings[screen_pos_item_pointer+1] !=255)) Settings[screen_pos_item_pointer+1]--;  // subtract 1 column
+	      if ((COL==4) && ((Settings[screen_pos_item_pointer+1] !=255))) {
+                  if (Settings[screen_pos_item_pointer+1] > 1) Settings[screen_pos_item_pointer+1]--; // subtract 1 column
                   }
 	     }                
           if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
@@ -511,13 +511,13 @@ void handleRawRC() {
                       }
                   }
 	      if (COL==2) Settings[screen_pos_item_pointer+2]=!Settings[screen_pos_item_pointer+2];  // Display/Hide
-	      if (COL==3) {
+	      if ((COL==3) && ((Settings[screen_pos_item_pointer] !=255))) {
                   if(Settings[S_VIDEOSIGNALTYPE]){
                     if (Settings[screen_pos_item_pointer]  < 15) Settings[screen_pos_item_pointer]++; // add 1 line (Max 15 for PAL)
                       }
                     else if(Settings[screen_pos_item_pointer]  < 13) Settings[screen_pos_item_pointer]++; // add 1 line (Max 13 for NTSC)                     
                   }
-	      if (COL==4) {
+	      if ((COL==4) && ((Settings[screen_pos_item_pointer+1] !=255))) {
                   if (Settings[screen_pos_item_pointer+1] < 25) Settings[screen_pos_item_pointer+1]++;  // add 1 column
                   }
               }
@@ -681,7 +681,7 @@ void saveExit()
 }
 
 
-// back to default setting & position for PAL/NTSC
+// back to layout default setting & position for PAL/NTSC
 void WriteScreenLayoutDefault(void)
 {
   if (Settings[S_VIDEOSIGNALTYPE]){  // PAL

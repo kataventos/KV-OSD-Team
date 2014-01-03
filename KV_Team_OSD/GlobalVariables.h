@@ -3,11 +3,24 @@
 #define IMPERIAL 1
 
 //Analog input defines
-const uint16_t voltagePin=0;
-const uint16_t vidvoltagePin=2;
-const uint16_t amperagePin=1;
-const uint16_t rssiPin=3;
-const uint16_t temperaturePin=6;            // Temperature pin 6 for original Rushduino Board V1.2
+// **** WiteSpy hardware **** //
+#define voltagePin A0
+#define vidvoltagePin A2
+#define amperagePin A1
+#define rssiPin A3
+#define PWMrssiPin A3           // PWM RSSI uses same pin of analog RSSI A3
+#define temperaturePin A6       // Temperature pin 6 for original Rushduino Board V1.2
+
+// **** JDrones hardware **** //
+/* Pins n. to be defined ......
+#define voltagePin A0
+#define vidvoltagePin A2
+#define amperagePin A1
+#define rssiPin A3
+#define PWMrssiPin A3
+#define temperaturePin A6       // Temperature pin 6 for original Rushduino Board V1.2
+*/
+
 const uint8_t rssiSample=30;
 
 //General use variables
@@ -52,6 +65,7 @@ enum Setting_ {
   S_RSSI_ALARM,
   S_MWRSSI,
   S_PWMRSSI,
+  S_PWMRSSIDIVIDER,
   S_VOLTAGEMIN,
   S_BATCELLS,
   S_DIVIDERRATIO,
@@ -70,8 +84,14 @@ enum Setting_ {
   S_USE_BOXNAMES,
   S_BLINKINGHZ,    // selectable alarm blink freq
   S_MWAMPERAGE,
-  S_AMPOFFSET,
+  S_CURRSENSSENSITIVITY,
+  S_CURRSENSOFFSET_H,
+  S_CURRSENSOFFSET_L,
   S_CLIMB_RATE_ALARM,
+  S_SPARE1,
+  S_SPARE2,
+  S_SPARE3,
+  S_SPARE4,
   
   S_CS0,      // 10 callsign char locations
   S_CS1,
@@ -190,29 +210,35 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 60,  //S_RSSI_ALARM                 3
 1,   // S_MWRSSI                    4
 0,   // S_PWMRSSI                   5
-105, // S_VOLTAGEMIN                6
-3,   // S_BATCELLS                  7
-100, // S_DIVIDERRATIO              8
-1,   // S_MAINVOLTAGE_VBAT          9
-100, // S_VIDDIVIDERRATIO           10
-0,   // S_VIDVOLTAGE_VBAT           11 
-90,  // S_TEMPERATUREMAX            12
-1,   // S_BOARDTYPE                 13
-1,   // S_DISPLAYGPS                14
-1,   // S_COORDINATES               15
-1,   // S_HEADING360                16
-0,   // S_UNITSYSTEM                17
-1,   // S_VIDEOSIGNALTYPE           18
-0,   // S_RESETSTATISTICS           19
-1,   // S_ENABLEADC                 20
-0,   // S_USE_BOXNAMES              21
-5,   // S_BLINKINGHZ,               22   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
-0,   //S_MWAMPERAGE                 23
-0,   //S_AMPOFFSET,                 24
-2,   //S_CLIMB_RATE_ALARM           25
+8,   // S_PWMRSSIDIVIDER            6       // PWM Freq 500Hz=8, 1KHz=4 (Divider to avoid value >255)
+105, // S_VOLTAGEMIN                7
+3,   // S_BATCELLS                  8
+100, // S_DIVIDERRATIO              9
+1,   // S_MAINVOLTAGE_VBAT          10
+100, // S_VIDDIVIDERRATIO           11
+0,   // S_VIDVOLTAGE_VBAT           12 
+90,  // S_TEMPERATUREMAX            13
+1,   // S_BOARDTYPE                 14
+1,   // S_DISPLAYGPS                15
+1,   // S_COORDINATES               16
+1,   // S_HEADING360                17
+0,   // S_UNITSYSTEM                18
+1,   // S_VIDEOSIGNALTYPE           19
+0,   // S_RESETSTATISTICS           20
+1,   // S_ENABLEADC                 21
+0,   // S_USE_BOXNAMES              22
+5,   // S_BLINKINGHZ,               23   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
+0,   //S_MWAMPERAGE                 24
+40,  //S_CURRSENSSENSITIVITY,       25   // May vary from 17 to 40mV/A (Sensor type)
+2,   //S_CURRSENSOFFSET_H,          26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
+0,   //S_CURRSENSOFFSET_L,          27   // 2H+0L=512
+2,   //S_CLIMB_RATE_ALARM           28
+0,   //S_SPARE1                     29
+0,   //S_SPARE2                     30
+0,   //S_SPARE3                     31
+0,   //S_SPARE4                     32
 
-
-0,   // S_CS0,                      26  // 10 callsign char locations
+0,   // S_CS0,                      33    // 10 callsign char locations
 0,   // S_CS1,
 0,   // S_CS2,
 0,   // S_CS3,
@@ -221,7 +247,7 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 0,   // S_CS6,
 0,   // S_CS7,
 0,   // S_CS8,
-0,   // S_CS9,                      35
+0,   // S_CS9,                     42
 };
 
 
@@ -448,7 +474,7 @@ int16_t GPS_directionToHome=0;
 uint8_t GPS_numSat=0;
 int16_t I2CError=0;
 uint16_t cycleTime=0;
-uint16_t pMeterSum=0;
+uint16_t MWpMeterSum=0;
 uint16_t MwRssi=0;
 uint16_t MWAmperage=0;
 
@@ -466,6 +492,8 @@ const char headGraph[] PROGMEM = {
 static int16_t MwHeading=0;
 
 // For Amperage
+float amperageADC =0;
+int amperage_Int=0;  
 float amperage = 0;                // its the real value x10
 float amperagesum = 0;
 
@@ -644,7 +672,7 @@ const char configMsg97[] PROGMEM = "MAX TEMP";
 // Variables for items pos change on screen
 //-----------------------------------------------------------
 int8_t screenitemselect=0; // pointer for item text strings
-int8_t screen_pos_item_pointer=EEPROM_SETTINGS+1;  // 0; // pointer for first item display/row/col positions
+int8_t screen_pos_item_pointer=EEPROM_SETTINGS+1;  // pointer for first item display/row/col positions
 #define MAXSCREENITEMS 27
 
 // Strings for item select on screen
