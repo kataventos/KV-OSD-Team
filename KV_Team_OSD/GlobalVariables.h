@@ -88,10 +88,10 @@ enum Setting_ {
   S_CURRSENSOFFSET_H,
   S_CURRSENSOFFSET_L,
   S_CLIMB_RATE_ALARM,
-  S_SPARE1,
-  S_SPARE2,
-  S_SPARE3,
-  S_SPARE4,
+ // S_SPARE1,
+ // S_SPARE2,
+ // S_SPARE3,
+ // S_SPARE4,
   
   S_CS0,      // 10 callsign char locations
   S_CS1,
@@ -233,10 +233,10 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 2,   //S_CURRSENSOFFSET_H,          26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
 0,   //S_CURRSENSOFFSET_L,          27   // 2H+0L=512
 2,   //S_CLIMB_RATE_ALARM           28
-0,   //S_SPARE1                     29
-0,   //S_SPARE2                     30
-0,   //S_SPARE3                     31
-0,   //S_SPARE4                     32
+//0,   //S_SPARE1                     29
+//0,   //S_SPARE2                     30
+//0,   //S_SPARE3                     31
+//0,   //S_SPARE4                     32
 
 0,   // S_CS0,                      33    // 10 callsign char locations
 0,   // S_CS1,

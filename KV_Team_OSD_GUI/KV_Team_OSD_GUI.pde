@@ -91,14 +91,14 @@ int xBox        = 415;        int yBox        = 10;
 int XSim        = DisplayWindowX+WindowAdjX;        int YSim        = 288-WindowShrinkY + 85;
 
 // Box locations -------------------------------------------------------------------------
-int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 360;
+int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 155;
 
 int XEEPROM    = 120;        int YEEPROM    = 5;  //hidden do not remove
 int XBoard     = 120;        int YBoard   = 5;
 int XRSSI      = 120;        int YRSSI    = 45;
-int XVolts      = 120;       int YVolts    = 152;
-int XAmps       = 490;       int YAmps    = 152;
-int XVVolts    = 305;        int YVVolts  = 152;
+int XVolts     = 305;       int YVolts    = 152;
+int XAmps      = 695;       int YAmps    = 152;
+int XVVolts    = 490;        int YVVolts  = 152;
 int XTemp      = 305;        int YTemp    = 5;
 int XGPS       = 305;        int YGPS    = 45;
 int XCS      = 120;          int YCS    = 472;
@@ -142,6 +142,7 @@ String[] ConfigNames = {
   "RSSI Alarm",
   "Input", //MW ADC
   "PWM",
+  "PWM Divider",
   "Main&Video Alarm",
   "Battery Cells",
   "Divider Ratio",
@@ -162,7 +163,9 @@ String[] ConfigNames = {
   " ",
   "Blink Frequency",
   "Input",
-  "Offset",
+  "Sensitivity",
+  "OffSet High",
+  "OffSet Low",
   "m/s Descend Alarm",
   
   "Display CallSign",
@@ -206,7 +209,9 @@ String[] ConfigHelp = {
   " ",
   "Blink Frequency",
   "Amps",
-  "Amp Offset",
+  "Sensitivity",
+  "OffSet High",
+  "OffSet Low",
   "CLimb Rate Alarm",
   
   "Display CallSign",
@@ -233,32 +238,35 @@ int[] ConfigRanges = {
 
 255, // S_RSSIMIN                   1
 255, // S_RSSIMAX                   2
-70,  //S_RSSI_ALARM                 3
+70,  // S_RSSI_ALARM                3
 1,   // S_MWRSSI                    4
 1,   // S_PWMRSSI                   5
-110, // S_VOLTAGEMIN                6
-4,   // S_BATCELLS                  7
-110, // S_DIVIDERRATIO              8
-1,   // S_MAINVOLTAGE_VBAT          9
-110, // S_VIDDIVIDERRATIO           10
-1,   // S_VIDVOLTAGE_VBAT           11 
-255, // S_TEMPERATUREMAX            12
-1,   // S_BOARDTYPE                 13
-1,   // S_DISPLAYGPS                14
-1,   // S_COORDINATES               15
-1,   // S_HEADING360                16
-1,   // S_UNITSYSTEM                17
-1,   // S_VIDEOSIGNALTYPE           18
-1,   // S_RESETSTATISTICS           19
-1,   // S_ENABLEADC                 20
-1,   // S_USE_BOXNAMES              21
-10,  // S_BLINKINGHZ,               22
-1,   // S_MWAMPERAGE,               23
-255, // S_AMPOFFSET,                24
-8,   //S_CLIMB_RATE_ALARM           25  // Descend Alarm
+8,   // S_PWMRSSIDIVIDER            6
+135,  // S_VOLTAGEMIN               7
+4,   // S_BATCELLS                  8
+110, // S_DIVIDERRATIO              9
+1,   // S_MAINVOLTAGE_VBAT          10
+110, // S_VIDDIVIDERRATIO           11
+1,   // S_VIDVOLTAGE_VBAT           12 
+255, // S_TEMPERATUREMAX            13
+1,   // S_BOARDTYPE                 14
+1,   // S_DISPLAYGPS                15
+1,   // S_COORDINATES               16
+1,   // S_HEADING360                17
+1,   // S_UNITSYSTEM                18
+1,   // S_VIDEOSIGNALTYPE           19
+1,   // S_RESETSTATISTICS           20
+1,   // S_ENABLEADC                 21
+1,   // S_USE_BOXNAMES              22
+10,  // S_BLINKINGHZ                23
+1,   // S_MWAMPERAGE                24
+60,  // S_CURRSENSSENSITIVITY       25
+512, // S_CURRSENSOFFSET_H          26
+512, // S_CURRSENSOFFSET_L          27
+8,   //S_CLIMB_RATE_ALARM           28
 
 
-1,     // call sign                37
+1,     // call sign                
 255,
 255,
  255,
@@ -588,13 +596,14 @@ OnTimer = millis();
 CreateItem(GetSetting("S_CHECK_"), 5, 0, G_EEPROM);
 
 // RSSI  ---------------------------------------------------------------------------
-CreateItem(GetSetting("S_MWRSSI"),  5,0*17, G_RSSI);
-BuildRadioButton(GetSetting("S_MWRSSI"),  5,0*17, G_RSSI, "ADC","MWii");
-CreateItem(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI);
-BuildRadioButton(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI, "Off","On");
-CreateItem(GetSetting("S_RSSIMIN"), 5, 2*17, G_RSSI);
-CreateItem(GetSetting("S_RSSIMAX"), 5,3*17, G_RSSI);
-CreateItem(GetSetting("S_RSSI_ALARM"), 5,4*17, G_RSSI);
+CreateItem(GetSetting("S_MWRSSI"),  5,1*17, G_RSSI);
+BuildRadioButton(GetSetting("S_MWRSSI"),  5,1*17, G_RSSI, "ADC","MWii");
+CreateItem(GetSetting("S_PWMRSSI"),  5,2*17, G_RSSI);
+BuildRadioButton(GetSetting("S_PWMRSSI"),  5,2*17, G_RSSI, "Off","On");
+CreateItem(GetSetting("S_PWMRSSIDIVIDER"),  5,4*17, G_RSSI);
+CreateItem(GetSetting("S_RSSIMIN"), 5, 6*17, G_RSSI);
+CreateItem(GetSetting("S_RSSIMAX"), 5,7*17, G_RSSI);
+CreateItem(GetSetting("S_RSSI_ALARM"), 5,8*17, G_RSSI);
 
 
 
@@ -649,7 +658,9 @@ CreateItem(GetSetting("S_CLIMB_RATE_ALARM"),  5,6*17, G_Other);
 // Amperage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage);
 BuildRadioButton(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage, "ADC","MWii");
-CreateItem(GetSetting("S_AMPOFFSET"),  5,2*17, G_Amperage);
+CreateItem(GetSetting("S_CURRSENSSENSITIVITY"),  5,1*17, G_Amperage);
+CreateItem(GetSetting("S_CURRSENSOFFSET_H"),  5,2*17, G_Amperage);
+CreateItem(GetSetting("S_CURRSENSOFFSET_L"),  5,3*17, G_Amperage);
 
 
 //  Call Sign ---------------------------------------------------------------------------
