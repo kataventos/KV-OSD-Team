@@ -45,7 +45,7 @@ int lo_speed_cycle = 100;
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(SPEED);
 //---- override UBRR with MWC settings
   uint8_t h = ((F_CPU  / 4 / (115200) -1) / 2) >> 8;
   uint8_t l = ((F_CPU  / 4 / (115200) -1) / 2);

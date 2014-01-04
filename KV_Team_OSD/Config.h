@@ -1,6 +1,10 @@
  
  
  /*--------------------------------------------------       Configurable parameters      ----------------------------------------------------*/ 
+ 
+/**********************          Serial port Speed       *************************/
+
+#define SPEED 115200 // 115200,57600,38400,28800,19200,14400,9600
 
 /**********    Here you can define time out for Mag calibration and EEProm write (mostly useful for mag calibration)    ***********/
 #define CALIBRATION_DELAY 6
