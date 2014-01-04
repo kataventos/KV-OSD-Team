@@ -156,10 +156,10 @@ void loop()
      amperagesum = MWpMeterSum;
      amperage = MWAmperage /100;
     }
-  if (Settings[S_MWRSSI] && !Settings[S_PWMRSSI]) {
+  if (Settings[S_MWRSSI]) {
       rssiADC = MwRssi/4;  // RSSI from MWii, rssiADC=0 to 1023/4 (avoid a number > 255)
     } 
-   if (Settings[S_PWMRSSI]){
+   if (Settings[S_PWMRSSI] && !Settings[S_MWRSSI]){
    rssiADC = pulseIn(PWMrssiPin, HIGH,15000)/Settings[S_PWMRSSIDIVIDER]; // Reading W/time out (microseconds to wait for pulse to start: 15000=0.015sec)
     }
   
