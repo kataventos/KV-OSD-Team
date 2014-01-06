@@ -646,7 +646,7 @@ BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial")
 CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
 BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other, "NTSC","PAL");
 CreateItem(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other);
-BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Reset","Maintain");
+BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Maintain","Reset");
 CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
 BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
 CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
