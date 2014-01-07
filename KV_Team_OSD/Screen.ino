@@ -675,7 +675,7 @@ void displayDirectionToHome(void)
     if(GPS_distanceToHome <= 2 && !BlinkAlarm)
       return;
     
-    int16_t d = MwHeading + 180 + 360 - GPS_directionToHome;
+    int16_t d = MwHeading + 360 + 180 - GPS_directionToHome;
     d *= 4;
     d += 45;
     d = (d/90)%16;
