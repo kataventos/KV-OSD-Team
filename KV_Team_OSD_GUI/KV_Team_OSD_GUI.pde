@@ -151,6 +151,7 @@ String[] ConfigNames = {
   "Input", //Mw ADC
   "Temperature Max",
   
+  
   "", // for Board type do not remove
   
   "GPS",
@@ -167,8 +168,8 @@ String[] ConfigNames = {
   "OffSet High",
   "OffSet Low",
   "m/s Descend Alarm",
+  "mx100 Max Volume",
   
-  //"Display CallSign",
   "S_CS0",
   "S_CS1",
   "S_CS2",
@@ -213,8 +214,8 @@ String[] ConfigHelp = {
   "OffSet High",
   "OffSet Low",
   "CLimb Rate Alarm",
+  "Volume Distance",
   
-  //"Display CallSign",
   "S_CS0",
   "S_CS1",
   "S_CS2",
@@ -264,6 +265,7 @@ int[] ConfigRanges = {
 512, // S_CURRSENSOFFSET_H          26
 512, // S_CURRSENSOFFSET_L          27
 8,   //S_CLIMB_RATE_ALARM           28
+255, //S_VOLUME,
 
 
  255,      //Call sign 10 chars 29 to 38
@@ -635,8 +637,9 @@ CreateItem(GetSetting("S_DISPLAYGPS"), 5,0, G_GPS);
 BuildRadioButton(GetSetting("S_DISPLAYGPS"),  5,0, G_GPS, "Off","On");
 CreateItem(GetSetting("S_COORDINATES"),  5,1*17, G_GPS);
 BuildRadioButton(GetSetting("S_COORDINATES"),  5,1*17, G_GPS, "Off","On");
-CreateItem(GetSetting("S_HEADING360"),  5,3*17, G_GPS);
-BuildRadioButton(GetSetting("S_HEADING360"),  5,3*17, G_GPS, "180°","360°");
+CreateItem(GetSetting("S_HEADING360"),  5,2*17, G_GPS);
+BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
+CreateItem(GetSetting("S_VOLUME"),  5,4*17, G_GPS);
 
 
 

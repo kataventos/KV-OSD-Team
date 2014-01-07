@@ -88,10 +88,7 @@ enum Setting_ {
   S_CURRSENSOFFSET_H,
   S_CURRSENSOFFSET_L,
   S_CLIMB_RATE_ALARM,
- // S_SPARE1,
- // S_SPARE2,
- // S_SPARE3,
- // S_SPARE4,
+  S_VOLUME,
   
   S_CS0,      // 10 callsign char locations
   S_CS1,
@@ -227,16 +224,14 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 0,   // S_RESETSTATISTICS           20
 1,   // S_ENABLEADC                 21
 0,   // S_USE_BOXNAMES              22
-5,   // S_BLINKINGHZ,               23   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
+5,   // S_BLINKINGHZ                23   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
 0,   //S_MWAMPERAGE                 24
-40,  //S_CURRSENSSENSITIVITY,       25   // May vary from 17 to 40mV/A (Sensor type)
-2,   //S_CURRSENSOFFSET_H,          26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
-0,   //S_CURRSENSOFFSET_L,          27   // 2H+0L=512
+40,  //S_CURRSENSSENSITIVITY        25   // May vary from 17 to 40mV/A (Sensor type)
+2,   //S_CURRSENSOFFSET_H           26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
+0,   //S_CURRSENSOFFSET_L           27   // 2H+0L=512
 2,   //S_CLIMB_RATE_ALARM           28
-//0,   //S_SPARE1                     29
-//0,   //S_SPARE2                     30
-//0,   //S_SPARE3                     31
-//0,   //S_SPARE4                     32
+5,  //S_VOLUME                      29   // Flying Volume Warning (value in meters x100) by default is 500m
+
 
 0,   // S_CS0,                      33    // 10 callsign char locations
 0,   // S_CS1,
