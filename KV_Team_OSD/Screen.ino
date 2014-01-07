@@ -626,9 +626,11 @@ void displayClimbRate(void)
 
 void displayDistanceToHome(void)
 {
-  if(!(MwSensorActive&mode_osd_switch)){
+  if(!(MwSensorActive&mode_osd_switch) || GPS_distanceToHome >= (Settings[S_VOLUME]*100)){
   if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
     if(!GPS_fix)
+      return;    
+    if (GPS_distanceToHome >= (Settings[S_VOLUME]*100) && !BlinkAlarm) 
       return;
 
     int16_t dist;
@@ -639,11 +641,13 @@ void displayDistanceToHome(void)
   
     if(dist > distanceMAX)
       distanceMAX = dist;
-
+      
     screenBuffer[0] = GPS_distanceToHomeAdd[Settings[S_UNITSYSTEM]];
     screenBuffer[1] = GPS_distanceToHomeAdd1[Settings[S_UNITSYSTEM]];
     itoa(dist, screenBuffer+2, 10);
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_DISTANCETOHOMEPOSROW]-1)*30) + Settings[L_GPS_DISTANCETOHOMEPOSCOL]);
+    
+    
     }
   }
 }
@@ -667,7 +671,7 @@ void displayAngleToHome(void)
 
 void displayDirectionToHome(void)
 {
- if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1)))){
+ if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1) ||  GPS_distanceToHome >= (Settings[S_VOLUME]*100)))){
   if(Settings[L_GPS_DIRECTIONTOHOMEPOSDSPL]){
     if(!GPS_fix)
       return;

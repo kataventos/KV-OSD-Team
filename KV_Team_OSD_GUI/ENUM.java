@@ -28,6 +28,7 @@ enum Settings {
   S_CURRSENSOFFSET_H,
   S_CURRSENSOFFSET_L,
   S_CLIMB_RATE_ALARM,
+  S_VOLUME,
   
   S_CS0,
   S_CS1,
