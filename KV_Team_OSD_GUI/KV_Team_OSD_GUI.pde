@@ -168,7 +168,7 @@ String[] ConfigNames = {
   "OffSet Low",
   "m/s Descend Alarm",
   
-  "Display CallSign",
+  //"Display CallSign",
   "S_CS0",
   "S_CS1",
   "S_CS2",
@@ -214,7 +214,7 @@ String[] ConfigHelp = {
   "OffSet Low",
   "CLimb Rate Alarm",
   
-  "Display CallSign",
+  //"Display CallSign",
   "S_CS0",
   "S_CS1",
   "S_CS2",
@@ -266,9 +266,8 @@ int[] ConfigRanges = {
 8,   //S_CLIMB_RATE_ALARM           28
 
 
-1,     // call sign                
-255,
-255,
+ 255,      //Call sign 10 chars 29 to 38
+ 255,
  255,
  255,
  255,
@@ -458,6 +457,7 @@ int[] ItemLocationNTSC = {
 0,    // L_PMETERSUMPOSITIONDSPL
 12,   // L_CALLSIGNPOSITIONROW LINE14+10
 10,   // L_CALLSIGNPOSITIONCOL
+0,    // L_CALLSIGNPOSITIONDSPL
 
 };
   
@@ -598,8 +598,8 @@ CreateItem(GetSetting("S_CHECK_"), 5, 0, G_EEPROM);
 // RSSI  ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_MWRSSI"),  5,1*17, G_RSSI);
 BuildRadioButton(GetSetting("S_MWRSSI"),  5,1*17, G_RSSI, "ADC","MWii");
-CreateItem(GetSetting("S_PWMRSSI"),  5,2*17, G_RSSI);
-BuildRadioButton(GetSetting("S_PWMRSSI"),  5,2*17, G_RSSI, "Off","On");
+CreateItem(GetSetting("S_PWMRSSI"),  5,3*17, G_RSSI);
+BuildRadioButton(GetSetting("S_PWMRSSI"),  5,3*17, G_RSSI, "Off","On");
 CreateItem(GetSetting("S_PWMRSSIDIVIDER"),  5,4*17, G_RSSI);
 CreateItem(GetSetting("S_RSSIMIN"), 5, 6*17, G_RSSI);
 CreateItem(GetSetting("S_RSSIMAX"), 5,7*17, G_RSSI);
@@ -664,7 +664,7 @@ CreateItem(GetSetting("S_CURRSENSOFFSET_L"),  5,3*17, G_Amperage);
 
 
 //  Call Sign ---------------------------------------------------------------------------
-CreateItem(GetSetting("S_DISPLAY_CS"),  5,0, G_CallSign);
+//CreateItem(GetSetting("S_DISPLAY_CS"),  5,0, G_CallSign);
 
 controlP5.addTextfield("CallSign")
      .setPosition(5,1*17)
@@ -944,8 +944,6 @@ public void CheckCallSign() {
 }
 
 
-
-
 void MatchConfigs()
 
 {
@@ -963,36 +961,12 @@ void MatchConfigs()
      }
      else{ 
        confItem[i].setValue(0);
-     }
-   }
-   
-   if (ConfigRanges[i] == 0) {
-      toggleConfItem[i].hide();
-      confItem[i].hide();
+      }
     }
-    if (ConfigRanges[i] > 1) {
-      toggleConfItem[i].hide();
-      
-    }  
-    if (ConfigRanges[i] == 1){
-      confItem[i].hide();  
-    }
-    
-    
   }
-  // turn on FlyTimer----
-  if ((toggleModeItems[0].getValue() == 0) && (SimItem0 < 1)){
-    Armed = 1;
-    FlyTimer = millis();
-  }
-  // turn off FlyTimer----
-  if ((toggleModeItems[0].getValue() == 1 ) && (SimItem0 == 1)){
-    FlyTimer = 0;
-  }
-
-
-
 }
+
+
 //***************************************************************//
 
 // controls comport list click
@@ -1005,6 +979,8 @@ public void controlEvent(ControlEvent theEvent) {
   }catch(Exception e){
     System.out.println("error with Port");
   }
+  
+  
 if (theEvent.name()=="CallSign"){
   CheckCallSign();
 }
@@ -1021,8 +997,6 @@ if (theEvent.name()=="CallSign"){
      catch(StringIndexOutOfBoundsException se){}
       
 }
-
-
 
 
 
