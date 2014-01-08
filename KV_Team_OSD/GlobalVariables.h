@@ -88,7 +88,9 @@ enum Setting_ {
   S_CURRSENSOFFSET_H,
   S_CURRSENSOFFSET_L,
   S_CLIMB_RATE_ALARM,
-  S_VOLUME,
+  S_VOLUME_DIST_MAX,
+  S_VOLUME_ALT_MAX,
+  S_VOLUME_ALT_MIN,
   
   S_CS0,      // 10 callsign char locations
   S_CS1,
@@ -230,10 +232,12 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 2,   //S_CURRSENSOFFSET_H           26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
 0,   //S_CURRSENSOFFSET_L           27   // 2H+0L=512
 2,   //S_CLIMB_RATE_ALARM           28
-5,  //S_VOLUME                      29   // Flying Volume Warning (value in meters x100) by default is 500m
+5,   //S_VOLUME_DIST_MAX            29   // Flying Volume Warning (Distance value in meters x100) by default is 500m
+50,  //S_VOLUME_ALT_MAX             30   //   "     "       "   (Altitude Max "    "    "   ___     "     "   "   50m 
+0,   //S_VOLUE_ALT_MIN              31   //   "     "       "   (Altitude Min "    "    "   ___     "     "   "    0m 
 
 
-0,   // S_CS0,                      33    // 10 callsign char locations
+0,   // S_CS0,                      32    // 10 callsign char locations
 0,   // S_CS1,
 0,   // S_CS2,
 0,   // S_CS3,
@@ -242,7 +246,7 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 0,   // S_CS6,
 0,   // S_CS7,
 0,   // S_CS8,
-0,   // S_CS9,                     42
+0,   // S_CS9,                      41
 };
 
 

@@ -94,18 +94,18 @@ int XSim        = DisplayWindowX+WindowAdjX;        int YSim        = 288-Window
 int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 155;
 
 int XEEPROM    = 120;        int YEEPROM    = 5;  //hidden do not remove
-int XBoard     = 120;        int YBoard   = 5;
-int XRSSI      = 120;        int YRSSI    = 45;
-int XVolts     = 305;       int YVolts    = 152;
-int XAmps      = 695;       int YAmps    = 152;
+int XBoard     = 120;        int YBoard     = 5;
+int XRSSI      = 120;        int YRSSI      = 45;
+int XVolts     = 305;        int YVolts    = 152;
+int XAmps      = 695;        int YAmps    = 152;
 int XVVolts    = 490;        int YVVolts  = 152;
 int XTemp      = 305;        int YTemp    = 5;
-int XGPS       = 305;        int YGPS    = 45;
-int XCS      = 120;          int YCS    = 472;
-
-int XOther     = 490;        int YOther   = 5; 
-int XPortStat  = 5;            int YPortStat = 272;
-int XControlBox     = 5;        int YControlBox   = 310;  
+int XGPS       = 305;        int YGPS     = 45;
+int XCS        = 120;        int YCS      = 472;
+int XOther     = 490;        int YOther    = 5;
+int XVolume    = 120;        int YVolume   = 182;
+int XPortStat  = 5;          int YPortStat = 272;
+int XControlBox     = 5;     int YControlBox   = 310;  
 int XRCSim    =   XSim;      int YRCSim = 430;
 
 
@@ -167,8 +167,10 @@ String[] ConfigNames = {
   "Sensitivity",
   "OffSet High",
   "OffSet Low",
-  "m/s Descend Alarm",
-  "mx100 Max Volume",
+  "Descend Alarm (m/s)",
+  "Volume Dist Max (x100)",
+  "Volume Alt Max",
+  "Volume Alt Min",
   
   "S_CS0",
   "S_CS1",
@@ -214,7 +216,9 @@ String[] ConfigHelp = {
   "OffSet High",
   "OffSet Low",
   "CLimb Rate Alarm",
-  "Volume Distance",
+  "Volume Distance Max",
+  "Volume Altitude Max",
+  "Volume Altitude Min",
   
   "S_CS0",
   "S_CS1",
@@ -264,11 +268,13 @@ int[] ConfigRanges = {
 60,  // S_CURRSENSSENSITIVITY       25
 512, // S_CURRSENSOFFSET_H          26
 512, // S_CURRSENSOFFSET_L          27
-8,   //S_CLIMB_RATE_ALARM           28
-255, //S_VOLUME,
+8,   // S_CLIMB_RATE_ALARM          28
+255, // S_VOLUME_DIST_MAX           29
+255, // S_VOLUME_ALT_MAX            30
+50,  // S_VOLUME_ALT_MIN            31
 
 
- 255,      //Call sign 10 chars 29 to 38
+ 255,      //Call sign 10 chars 32 to 41
  255,
  255,
  255,
@@ -523,6 +529,7 @@ Group MGUploadF,
   G_GPS,
   G_UV,
   G_Other,
+  G_Volume,
   G_CallSign,
   G_PortStatus
   
@@ -598,14 +605,14 @@ OnTimer = millis();
 CreateItem(GetSetting("S_CHECK_"), 5, 0, G_EEPROM);
 
 // RSSI  ---------------------------------------------------------------------------
-CreateItem(GetSetting("S_MWRSSI"),  5,1*17, G_RSSI);
-BuildRadioButton(GetSetting("S_MWRSSI"),  5,1*17, G_RSSI, "ADC","MWii");
-CreateItem(GetSetting("S_PWMRSSI"),  5,3*17, G_RSSI);
-BuildRadioButton(GetSetting("S_PWMRSSI"),  5,3*17, G_RSSI, "Off","On");
-CreateItem(GetSetting("S_PWMRSSIDIVIDER"),  5,4*17, G_RSSI);
-CreateItem(GetSetting("S_RSSIMIN"), 5, 6*17, G_RSSI);
-CreateItem(GetSetting("S_RSSIMAX"), 5,7*17, G_RSSI);
-CreateItem(GetSetting("S_RSSI_ALARM"), 5,8*17, G_RSSI);
+CreateItem(GetSetting("S_MWRSSI"),  5,0*17, G_RSSI);
+BuildRadioButton(GetSetting("S_MWRSSI"),  5,0*17, G_RSSI, "ADC","MWii");
+CreateItem(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI);
+BuildRadioButton(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI, "Off","On");
+CreateItem(GetSetting("S_PWMRSSIDIVIDER"),  5,2*17, G_RSSI);
+CreateItem(GetSetting("S_RSSIMIN"), 5,3*17, G_RSSI);
+CreateItem(GetSetting("S_RSSIMAX"), 5,4*17, G_RSSI);
+CreateItem(GetSetting("S_RSSI_ALARM"), 5,5*17, G_RSSI);
 
 
 
@@ -639,7 +646,7 @@ CreateItem(GetSetting("S_COORDINATES"),  5,1*17, G_GPS);
 BuildRadioButton(GetSetting("S_COORDINATES"),  5,1*17, G_GPS, "Off","On");
 CreateItem(GetSetting("S_HEADING360"),  5,2*17, G_GPS);
 BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
-CreateItem(GetSetting("S_VOLUME"),  5,4*17, G_GPS);
+
 
 
 
@@ -664,6 +671,12 @@ BuildRadioButton(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage, "ADC","MWii");
 CreateItem(GetSetting("S_CURRSENSSENSITIVITY"),  5,1*17, G_Amperage);
 CreateItem(GetSetting("S_CURRSENSOFFSET_H"),  5,2*17, G_Amperage);
 CreateItem(GetSetting("S_CURRSENSOFFSET_L"),  5,3*17, G_Amperage);
+
+// Volume Flight  -------------------------------------------------------------------
+CreateItem(GetSetting("S_VOLUME_DIST_MAX"),  5,0*17, G_Volume);
+CreateItem(GetSetting("S_VOLUME_ALT_MAX"),  5,1*17, G_Volume);
+CreateItem(GetSetting("S_VOLUME_ALT_MIN"),  5,2*17, G_Volume);
+
 
 
 //  Call Sign ---------------------------------------------------------------------------

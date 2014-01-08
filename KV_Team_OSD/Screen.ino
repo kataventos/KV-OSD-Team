@@ -215,8 +215,6 @@ void displayHorizon(int rollAngle, int pitchAngle)
       }
       if(Settings[L_HORIZONCENTERREFDSPL]){  
         //Draw center screen
-        //screen[position+2*LINE+6-1] = SYM_AH_CENTER_LINE;
-        //screen[position+2*LINE+6+1] = SYM_AH_CENTER_LINE;
         screen[position+2*LINE+6] =   SYM_AH_CENTER;
         screen[position+2*LINE+1] =   SYM_AH_LEFT;
         screen[position+2*LINE+11] =  SYM_AH_RIGHT;
@@ -577,9 +575,8 @@ void displayGPS_speed(void)
 
 void displayAltitude(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
-    if(Settings[L_MW_ALTITUDEPOSITIONDSPL]){
     int16_t altitude;
+    if(Settings[L_MW_ALTITUDEPOSITIONDSPL]){
     if(Settings[S_UNITSYSTEM])
       altitude = MwAltitude*0.032808;    // cm to feet
     else
@@ -587,7 +584,9 @@ void displayAltitude(void)
   
     if(armed && allSec>5 && altitude > altitudeMAX)
       altitudeMAX = altitude;
-  
+    if(!(MwSensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]) || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN])){
+    if(altitude >= (Settings[S_VOLUME_ALT_MAX]) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
+      return;
     screenBuffer[0]=MwAltitudeAdd[Settings[S_UNITSYSTEM]];
     itoa(altitude,screenBuffer+1,10);
     MAX7456_WriteString(screenBuffer,((Settings[L_MW_ALTITUDEPOSITIONROW]-1)*30) + Settings[L_MW_ALTITUDEPOSITIONCOL]);
@@ -626,11 +625,11 @@ void displayClimbRate(void)
 
 void displayDistanceToHome(void)
 {
-  if(!(MwSensorActive&mode_osd_switch) || GPS_distanceToHome >= (Settings[S_VOLUME]*100)){
+  if(!(MwSensorActive&mode_osd_switch) || GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)){
   if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
     if(!GPS_fix)
       return;    
-    if (GPS_distanceToHome >= (Settings[S_VOLUME]*100) && !BlinkAlarm) 
+    if (GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100) && !BlinkAlarm) 
       return;
 
     int16_t dist;
@@ -671,7 +670,7 @@ void displayAngleToHome(void)
 
 void displayDirectionToHome(void)
 {
- if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1) ||  GPS_distanceToHome >= (Settings[S_VOLUME]*100)))){
+ if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1) ||  GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)))){
   if(Settings[L_GPS_DIRECTIONTOHOMEPOSDSPL]){
     if(!GPS_fix)
       return;
