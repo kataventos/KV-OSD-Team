@@ -53,7 +53,7 @@ G_RSSI = GroupcontrolP5.addGroup("G_RSSI")
                 .setBarHeight(15)
                 .setBackgroundColor(color(30,255))
                 .setColorActive(red_)
-                .setBackgroundHeight((6*28) +9)
+                .setBackgroundHeight((7*14)+6)
                 .setLabel("RSSI")
                 .disableCollapse() 
                 ; 
@@ -204,7 +204,27 @@ G_Amperage = GroupcontrolP5.addGroup("G_Amperage")
                 G_Amperage.captionLabel()
                 .toUpperCase(false)
                 .align(controlP5.CENTER,controlP5.CENTER)
-                ;                 
+                ;
+
+G_Volume = GroupcontrolP5.addGroup("G_Volume")
+                .setPosition(XVolume,YVolume)
+                .setWidth(Col1Width)
+                .setBarHeight(15)
+                .setColorForeground(color(30,255))
+                .setColorBackground(color(30,255))
+                .setColorLabel(color(0, 300, 320))
+                .setBarHeight(15)
+                .setBackgroundColor(color(30,255))
+                .setColorActive(red_)
+                .setBackgroundHeight((10*5) +5)
+                .setLabel("VOLUME FLIGHT")
+                .disableCollapse() 
+                ; 
+                G_Volume.captionLabel()
+                .toUpperCase(false)
+                .align(controlP5.CENTER,controlP5.CENTER)
+                ; 
+                //G_Volume.hide();                
 
   
 }
