@@ -1,7 +1,7 @@
 /*
-KV Team OSD
+KV Team OSD V2.3
 http://code.google.com/p/rush-osd-development/
-December  2013  V2.2
+ Copyright (C) January 2014 (KV Team OSD)
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or

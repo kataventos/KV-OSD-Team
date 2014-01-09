@@ -1,11 +1,11 @@
 
 //   KV Team OSD GUI
 //   http://code.google.com/p/rush-osd-development/
-//   December  2013  V_2.2
+//   Copyright (C) January 2014 (KV Team OSD)   
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
-//   any later version. see http://www.gnu.org/licenses/
+//   any later version. see http://www.gnu.org/licenses/  
 
               /*********************************************************************/
               /*                           KV_OSD_Team                             */
@@ -32,7 +32,7 @@ import java.util.*;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 
-String KV_OSD_GUI_Version = "2.2";
+String KV_OSD_GUI_Version = "2.3";
 
 
 PImage img_Clear,RadioPot;
@@ -168,9 +168,9 @@ String[] ConfigNames = {
   "OffSet High",
   "OffSet Low",
   "Descend Alarm (m/s)",
-  "Volume Dist Max (x100)",
-  "Volume Alt Max",
-  "Volume Alt Min",
+  "Dist Max (x100m)",
+  "Alt Max",
+  "Alt Min",
   
   "S_CS0",
   "S_CS1",
