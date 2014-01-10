@@ -181,7 +181,7 @@ void displayArmed(void)
 void displayCallsign(void)
 {
   if(!(MwSensorActive&mode_osd_switch)){
-    if(Settings[L_CALLSIGNPOSITIONDSPL]){
+    if(Settings[L_CALLSIGNPOSITIONDSPL] || Settings[S_CALLSIGN]){
         for(int X=0; X<10; X++) {
             screenBuffer[X] = char(Settings[S_CS0 + X]);
        }   
@@ -478,7 +478,7 @@ void displayIntro(void)
   MAX7456_WriteString_P(message8, KVTeamVersionPosition+125+LINE+LINE+LINE+LINE+LINE+LINE+LINE);
   
   MAX7456_WriteString_P(message9, KVTeamVersionPosition+120+LINE+LINE+LINE+LINE+LINE+LINE+LINE+LINE);
-  if(Settings[L_CALLSIGNPOSITIONDSPL]){
+  if(Settings[L_CALLSIGNPOSITIONDSPL] || Settings[S_CALLSIGN]){
       for(int X=0; X<10; X++) {
           screenBuffer[X] = char(Settings[S_CS0 + X]);
       }

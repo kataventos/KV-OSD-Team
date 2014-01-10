@@ -11,7 +11,7 @@ void SetupGroups(){
     .setBarHeight(15)
     .setBackgroundColor(color(30,255))
     .setColorActive(red_)
-    .setBackgroundHeight(30)
+    .setBackgroundHeight(27)
     .setLabel("    Port Status")
     .disableCollapse()
     ;
@@ -151,23 +151,23 @@ G_Board = GroupcontrolP5.addGroup("G_Board")
                 .align(controlP5.CENTER,controlP5.CENTER)
                 ;  
                
-/*G_CallSign = GroupcontrolP5.addGroup("G_CallSign")
+G_CallSign = GroupcontrolP5.addGroup("G_CallSign")
                 .setPosition(XCS,YCS+15)
-                .setWidth(Col1Width)
+                .setWidth(Col4Width)
                 .setBarHeight(15)
                 .setColorForeground(color(30,255))
                 .setColorBackground(color(30,255))
-                .setColorLabel(color(0, 110, 220))
+                .setColorLabel(color(0, 300, 320))
                 .setBarHeight(15)
                 .setBackgroundColor(color(30,255))
                 .setColorActive(red_)
-                .setBackgroundHeight((3*17) +5)
+                .setBackgroundHeight((3*4) +4)
                 .setLabel("Call Sign")
                 .disableCollapse(); 
                 G_CallSign.captionLabel()
-                .toUpperCase(false)
+                .toUpperCase(true)
                 .align(controlP5.CENTER,controlP5.CENTER)
-                ;      */                                     
+                ;                                          
          
 G_Other = GroupcontrolP5.addGroup("G_Other")
                 .setPosition(XOther,YOther+15)
