@@ -31,6 +31,7 @@ enum Settings {
   S_VOLUME_DIST_MAX,
   S_VOLUME_ALT_MAX,
   S_VOLUME_ALT_MIN,
+  S_VIDVOLTAGEMIN,
   
   S_CALLSIGN,
   

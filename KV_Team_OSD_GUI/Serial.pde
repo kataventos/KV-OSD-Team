@@ -105,6 +105,7 @@ void InitSerial(float portValue) {
       commListbox.setColorBackground(green_);
       buttonRESTART.setColorBackground(green_);
       
+      
       g_serial.buffer(256);
       System.out.println("Port Turned On " );
       FileUploadText.setText("");

@@ -289,10 +289,10 @@ UnlockControls =  ScontrolP5.addCheckBox("UnlockControls",60,25);
 s_Altitude = ScontrolP5.addSlider("sAltitude")
   .setPosition(5,10)
   .setSize(8,75)
-  .setRange(-500,1000)
+  .setRange(-100,1000)
   .setValue(0)
   .setLabel("Alt")
-  .setDecimalPrecision(1)
+  .setDecimalPrecision(0)
   .setGroup(SGSensors1);
   ScontrolP5.getController("sAltitude").getValueLabel()
     .setFont(font9);
@@ -303,7 +303,7 @@ s_Altitude = ScontrolP5.addSlider("sAltitude")
 s_Vario = ScontrolP5.addSlider("sVario")
   .setPosition(47,10)
   .setSize(8,75)
-  .setRange(-30,30)
+  .setRange(-40,40)
   .setNumberOfTickMarks(41)
   .showTickMarks(false)
   .setValue(0)
@@ -319,7 +319,7 @@ s_Vario = ScontrolP5.addSlider("sVario")
 s_VBat = ScontrolP5.addSlider("sVBat")
   .setPosition(90,10)
   .setSize(8,75)
-  .setRange(9,17)
+  .setRange(7,25.2)
   .setValue(0)
   .setLabel("VBat")
   .setDecimalPrecision(1)
@@ -372,7 +372,7 @@ void keyPressed()
   keys[keyCode] = true;
   //println(keyCode);
   if((checkKey(CONTROL) == true) && (checkKey(85) == true)){
-    SketchUploader();
+  //SketchUploader();
   }
 }
 

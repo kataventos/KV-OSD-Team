@@ -217,7 +217,7 @@ G_Volume = GroupcontrolP5.addGroup("G_Volume")
                 .setBackgroundColor(color(30,255))
                 .setColorActive(red_)
                 .setBackgroundHeight((10*5) +5)
-                .setLabel("VOLUME FLIGHT")
+                .setLabel("VOLUME FLIGHT WARNINGS")
                 .disableCollapse() 
                 ; 
                 G_Volume.captionLabel()

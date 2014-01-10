@@ -285,7 +285,7 @@ void displayVidVoltage(void)
       if (Settings[S_VIDVOLTAGE_VBAT]){
       vidvoltage=MwVBat;
       }
-      if (vidvoltage <=(Settings[S_VOLTAGEMIN]) && !BlinkAlarm){
+      if (vidvoltage <=(Settings[S_VIDVOLTAGEMIN]) && !BlinkAlarm){
       ItoaPadded(vidvoltage, screenBuffer, 4, 3);
       return;
       }
