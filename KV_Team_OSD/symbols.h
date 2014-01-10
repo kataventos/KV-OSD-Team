@@ -7,8 +7,8 @@
 
 
 // Satellite Graphics
-#define SYM_SAT_L 0X1E
-#define SYM_SAT_R 0X1F
+#define SYM_SAT_L 0XDE
+#define SYM_SAT_R 0XEE
 //#define SYM_SAT 0X0F  // Not used
 
 // Degrees Icon for HEADING/DIRECTION HOME
@@ -16,7 +16,7 @@
 
 // Direction arrows 
 #define SYM_ARROW_SOUTH 0X60
-#define SYM_ARROW_2 0X61
+/*#define SYM_ARROW_2 0X61
 #define SYM_ARROW_3 0X62
 #define SYM_ARROW_4 0X63
 #define SYM_ARROW_EAST 0X64
@@ -30,15 +30,15 @@
 #define SYM_ARROW_WEST 0X6C
 #define SYM_ARROW_14 0X6D
 #define SYM_ARROW_15 0X6E
-#define SYM_ARROW_16 0X6F
+#define SYM_ARROW_16 0X6F*/
 
 // Heading Graphics
-#define SYM_HEADING_N 0X18 
-#define SYM_HEADING_S 0X19
-#define SYM_HEADING_E 0X1A
-#define SYM_HEADING_W 0X1B
-#define SYM_HEADING_DIVIDED_LINE 0X1C
-#define SYM_HEADING_LINE 0X1D
+#define SYM_HEADING_N 0XF9 
+#define SYM_HEADING_S 0XFA
+#define SYM_HEADING_E 0XFB
+#define SYM_HEADING_W 0XFC
+#define SYM_HEADING_DIVISION_LINE 0XFD
+#define SYM_HEADING_LINE 0XFE
 
 // GPS Coordinates and Altitude
 #define SYM_LAT 0xCA
@@ -58,10 +58,10 @@
 #define SYM_CHECK 0XBD
 
 // AH Center screen Graphics
-#define SYM_AH_CENTER 0X01
-#define SYM_AH_RIGHT 0X02
-#define SYM_AH_LEFT 0X03
-#define SYM_AH_CENTER_LINE 0X00
+#define SYM_AH_CENTER 0XC5
+#define SYM_AH_RIGHT 0XC6
+#define SYM_AH_LEFT 0XC7
+#define SYM_AH_CENTER_LINE 0XC4     // No line (moved to C3)
 #define SYM_AH_DECORATION_RIGHT 0XB9
 #define SYM_AH_DECORATION_LEFT 0XBA
 
@@ -82,8 +82,8 @@
 #define SYM_ZERO_CLIMB 0XB8
 
 // Temperature
-#define SYM_TEMP_F 0X0D
-#define SYM_TEMP_C 0X0E
+#define SYM_TEMP_F 0XC1
+#define SYM_TEMP_C 0XC2
 
 // Batt evolution
 #define SYM_BATT_FULL 0X90
@@ -109,8 +109,8 @@
 #define SYM_ALTFT 0XA8
 
 // Voltage and amperage 
-#define SYM_VOLT 0XA9
-#define SYM_AMP 0X9A
+#define SYM_VOLT 0XC9
+#define SYM_AMP 0XC8
 #define SYM_MAH 0XA4
 
 // Flying Mode
@@ -118,9 +118,9 @@
 #define SYM_ACRO1 0XAF
 #define SYM_STABLE 0XAC
 #define SYM_STABLE1 0XAD
-#define SYM_HORIZON 0X77
-#define SYM_HORIZON1 0X78
-#define SYM_HORIZON2 0x79
+#define SYM_HORIZON 0XA9
+#define SYM_HORIZON1 0XAA
+#define SYM_HORIZON2 0xAB
 
 // Time
 #define SYM_ON_M 0X9B
