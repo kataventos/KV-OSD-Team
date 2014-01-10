@@ -124,11 +124,9 @@ float SimItem0= 0;
 int Armed = 0;
 int Showback = 1;
 int del = 0;
-// int variables
 
-// For Heading
-char[] headGraph={
-  0x1a,0x1d,0x1c,0x1d,0x19,0x1d,0x1c,0x1d,0x1b,0x1d,0x1c,0x1d,0x18,0x1d,0x1c,0x1d,0x1a,0x1d,0x1c,0x1d,0x19,0x1d,0x1c,0x1d,0x1b};
+
+// int variables
 
 static int MwHeading=0;
 char MwHeadingUnitAdd=0xbd;
@@ -139,11 +137,11 @@ String[] ConfigNames = {
   
   "RSSI Min",
   "RSSI Max",
-  "RSSI Alarm",
+  "RSSI WARNING",
   "Input", //MW ADC
   "PWM",
   "PWM Divider",
-  "Main&Video Alarm",
+  "Minim Volt WARNING",
   "Battery Cells",
   "Divider Ratio",
   "Input", //MW ADC  
@@ -167,10 +165,11 @@ String[] ConfigNames = {
   "Sensitivity",
   "OffSet High",
   "OffSet Low",
-  "Descend Alarm (m/s)",
+  "Descend WARNING (m/s)",
   "Dist Max (x100m)",
   "Alt Max",
   "Alt Min",
+  "Minim Volt WARNING",
   
   "Call Sign",
   
@@ -221,6 +220,7 @@ String[] ConfigHelp = {
   "Volume Distance Max",
   "Volume Altitude Max",
   "Volume Altitude Min",
+  "Minimum Video Voltage",
   
   "Call Sign",
   
@@ -251,8 +251,8 @@ int[] ConfigRanges = {
 1,   // S_MWRSSI                    4
 1,   // S_PWMRSSI                   5
 8,   // S_PWMRSSIDIVIDER            6
-135,  // S_VOLTAGEMIN               7
-4,   // S_BATCELLS                  8
+215, // S_VOLTAGEMIN                7
+6,   // S_BATCELLS                  8
 110, // S_DIVIDERRATIO              9
 1,   // S_MAINVOLTAGE_VBAT          10
 110, // S_VIDDIVIDERRATIO           11
@@ -276,6 +276,7 @@ int[] ConfigRanges = {
 255, // S_VOLUME_DIST_MAX           29
 255, // S_VOLUME_ALT_MAX            30
 50,  // S_VOLUME_ALT_MIN            31
+105, // S_VIDVOLTAGEMIN             32
 
 0,   // S_CALLSIGN
 
@@ -475,25 +476,11 @@ int[] ItemLocationNTSC = {
 
 };
   
-String[] SimNames= {
-  "Armed:",
-  "Acro/Stable:",
-  "Bar Mode:",
-  "Mag Mode:",
-  "GPS Home:",
-  "GPS Hold:",
-  "Sim 6:",
-  "Sim 7:",
-  "Sim 8:",
-  "Sim 9:",
-  "Sim 10:"
-};
-  
   
 PFont font8,font9,font10,font11,font12,font15;
 
-//Colors--------------------------------------------------------------------------------------------------------------------
-color yellow_ = color(200, 200, 20), green_ = color(30, 120, 30), red_ = color(120, 30, 30), blue_ = color(50, 50, 100),
+//Colors--------------------------------------------------------------------------------------------------------------------  
+color yellow_ = color(200, 200, 20), green_ = color(30, 130, 30), red_ = color(120, 30, 30), blue_ = color(25, 50, 80), //blue_ = color(50, 50, 100)
 grey_ = color(30, 30, 30);
 //Colors--------------------------------------------------------------------------------------------------------------------
 
@@ -618,23 +605,20 @@ BuildRadioButton(GetSetting("S_PWMRSSI"),  5,1*17, G_RSSI, "Off","On");
 CreateItem(GetSetting("S_PWMRSSIDIVIDER"),  5,2*17, G_RSSI);
 CreateItem(GetSetting("S_RSSIMIN"), 5,3*17, G_RSSI);
 CreateItem(GetSetting("S_RSSIMAX"), 5,4*17, G_RSSI);
-CreateItem(GetSetting("S_RSSI_ALARM"), 5,5*17, G_RSSI);
-
+RSSIWarning(GetSetting("S_RSSI_ALARM"), 5,5*17, G_RSSI);
 
 
 // Voltage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,0*17, G_Voltage);
 BuildRadioButton(GetSetting("S_MAINVOLTAGE_VBAT"),  5,0*17, G_Voltage, "ADC","MWii");
-CreateItem(GetSetting("S_BATCELLS"), 5,1*17, G_Voltage);
-CreateItem(GetSetting("S_VOLTAGEMIN"), 5,2*17, G_Voltage);
+BattCellItem(GetSetting("S_BATCELLS"), 5,1*17, G_Voltage);
+BattWarningItem(GetSetting("S_VOLTAGEMIN"), 5,2*17, G_Voltage);
 CreateItem(GetSetting("S_DIVIDERRATIO"), 5,3*17, G_Voltage);
-
-
-
 
 // Video Voltage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0*17, G_VVoltage);
 BuildRadioButton(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0, G_VVoltage, "ADC","MWii");
+BattWarningItem(GetSetting("S_VIDVOLTAGEMIN"), 5,1*17, G_VVoltage);
 CreateItem(GetSetting("S_VIDDIVIDERRATIO"),  5,2*17, G_VVoltage);
 
 //  Temperature  --------------------------------------------------------------------
@@ -644,7 +628,6 @@ CreateItem(GetSetting("S_TEMPERATUREMAX"),  5,0*17, G_Temperature);
 CreateItem(GetSetting("S_BOARDTYPE"),  5,0, G_Board);
 BuildRadioButton(GetSetting("S_BOARDTYPE"),  5,0, G_Board, "Rush","Minim");
 
-
 //  GPS  ----------------------------------------------------------------------------
 CreateItem(GetSetting("S_DISPLAYGPS"), 5,0, G_GPS);
 BuildRadioButton(GetSetting("S_DISPLAYGPS"),  5,0, G_GPS, "Off","On");
@@ -652,9 +635,6 @@ CreateItem(GetSetting("S_COORDINATES"),  5,1*17, G_GPS);
 BuildRadioButton(GetSetting("S_COORDINATES"),  5,1*17, G_GPS, "Off","On");
 CreateItem(GetSetting("S_HEADING360"),  5,2*17, G_GPS);
 BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
-
-
-
 
 //  OTHER  ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_UNITSYSTEM"),  5,0, G_Other);
@@ -667,9 +647,8 @@ CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
 BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
 CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
 BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other, "BoxIDs","BoxNames");
-CreateItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
-CreateItem(GetSetting("S_CLIMB_RATE_ALARM"),  5,6*17, G_Other);
-
+BlinkFreqItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
+DescendWarningItem(GetSetting("S_CLIMB_RATE_ALARM"),  5,6*17, G_Other);
 
 // Amperage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage);
@@ -679,17 +658,13 @@ CreateItem(GetSetting("S_CURRSENSOFFSET_H"),  5,2*17, G_Amperage);
 CreateItem(GetSetting("S_CURRSENSOFFSET_L"),  5,3*17, G_Amperage);
 
 // Volume Flight  -------------------------------------------------------------------
-CreateItem(GetSetting("S_VOLUME_DIST_MAX"),  5,0*17, G_Volume);
-CreateItem(GetSetting("S_VOLUME_ALT_MAX"),  5,1*17, G_Volume);
-CreateItem(GetSetting("S_VOLUME_ALT_MIN"),  5,2*17, G_Volume);
-
-
+VolumeFlightDist(GetSetting("S_VOLUME_DIST_MAX"),  5,0*17, G_Volume);
+VolumeFlightAltMax(GetSetting("S_VOLUME_ALT_MAX"),  5,1*17, G_Volume);
+VolumeFlightAltMin(GetSetting("S_VOLUME_ALT_MIN"),  5,2*17, G_Volume);
 
 //  Call Sign ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_CALLSIGN"),9,0,G_CallSign);
 BuildRadioButton(GetSetting("S_CALLSIGN"),10,2*17,G_CallSign, "","");
-
-
 controlP5.addTextfield("CallSign")
      .setPosition(15,0*16)
      .setSize(78,13)
@@ -723,8 +698,8 @@ controlP5.addTextfield("CallSign")
       toggleConfItem[i].hide();
       }catch(Exception e) {
       }finally {
-      }  	
-    }
+   }  	
+ }
       
     if (ConfigRanges[i] == 1){
       confItem[i].hide();  
@@ -738,7 +713,6 @@ controlP5.addTextfield("CallSign")
    SimSetup();
   img_Clear = LoadFont(FontFileName);
   LoadConfig();
-  
   
 }
 
@@ -755,7 +729,6 @@ controlP5.Controller CheckboxVisable(controlP5.Controller c) {
   c.setLabelVisible(false);
   return c;
 }
-
 
 
 void BuildRadioButton(int ItemIndex, int XLoction, int YLocation,Group inGroup, String Cap1, String Cap2){
@@ -795,8 +768,8 @@ void CreateCS(int ItemIndex, int XLoction, int YLocation, Group inGroup){
 
 void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+/*"ItemLocationPAL"+"ItemLocationNTSC"+*/ ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(blue_);
   confItem[ItemIndex].setMin(0);
   confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
   confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
@@ -813,8 +786,175 @@ void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   txtlblconfItem[ItemIndex].setGroup(inGroup);
   controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 
+}
+
+void BlinkFreqItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(blue_);
+  confItem[ItemIndex].setMin(1);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 } 
 
+void BattCellItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(blue_);
+  confItem[ItemIndex].setMin(2);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void BattWarningItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex].setMin(7);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void RSSIWarning(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex].setMin(10);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void DescendWarningItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex].setMin(0);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void VolumeFlightDist(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex].setMin(1);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void VolumeFlightAltMax(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex].setMin(0);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void VolumeFlightAltMin(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+  confItem[ItemIndex].setColorBackground(red_);
+  confItem[ItemIndex].setMin(0);
+  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+  confItem[ItemIndex].setDecimalPrecision(0);
+  confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+  toggleConfItem[ItemIndex].setSize(35,10);
+  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+  toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+  txtlblconfItem[ItemIndex].setGroup(inGroup);
+  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
 
 void MakePorts(){
   
@@ -887,8 +1027,7 @@ void draw() {
    }   
     
   MakePorts();   
-  
-  
+
   background(80);
   
   // ------------------------------------------------------------------------
@@ -916,11 +1055,9 @@ void draw() {
   strokeWeight(3);stroke(0);
   rectMode(CORNERS);
  
- 
   MatchConfigs();
   MakePorts();
 
-  
   if ((ClosePort ==true)&& (PortWrite == false)){ 
     ClosePort();
   }
@@ -966,7 +1103,6 @@ public void CheckCallSign() {
       confItem[(GetSetting("S_CS0"))+i].setValue(int(CallSText.charAt(i)));
     }
 }
-
 
 void MatchConfigs()
 
@@ -1022,12 +1158,7 @@ if (theEvent.name()=="CallSign"){
       
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// BEGIN FILE OPS//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 //save the content of the model to a file
 public void bSAVE() {
@@ -1074,7 +1205,7 @@ public void bSAVE() {
         String error = null;
         try{
           out = new FileOutputStream(file) ;
-          MWI.conf.storeToXML(out, "RUSH_OSD Configuration File  " + new  Date().toString());
+          MWI.conf.storeToXML(out, "KVTOSD Configuration File  " + new  Date().toString());
           JOptionPane.showMessageDialog(null,new StringBuffer().append("configuration saved : ").append(file.toURI()) );
         }catch(FileNotFoundException e){
          
@@ -1134,7 +1265,9 @@ public void updateView(){
   }
   catch(Exception e) {}finally {}
   }
+  
   BuildCallSign();
+  
 }
 
 public class MwiFileFilter extends FileFilter {
@@ -1216,7 +1349,7 @@ public void bIMPORT(){
       }
     }
   }
-  );
+ );
 }
 
 //******************************************************************//
@@ -1334,9 +1467,8 @@ public void mousePressed() {
         public boolean mouseUp() {
                 return mouseUp;
         }
-        
-        
-void SketchUploader(){
+          
+/*void SketchUploader(){
   String ArduioLocal = ConfigClass.getProperty("ArduinoLocation");
   if (ArduioLocal == "0"){
    try {  
@@ -1370,5 +1502,5 @@ void SketchUploader(){
   
   super.exit();
 }
-
+*/
 

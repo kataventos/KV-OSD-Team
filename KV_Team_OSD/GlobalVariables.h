@@ -91,6 +91,7 @@ enum Setting_ {
   S_VOLUME_DIST_MAX,
   S_VOLUME_ALT_MAX,
   S_VOLUME_ALT_MIN,
+  S_VIDVOLTAGEMIN,
   
   S_CALLSIGN,
   
@@ -229,19 +230,20 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 1,   // S_ENABLEADC                 21
 0,   // S_USE_BOXNAMES              22
 5,   // S_BLINKINGHZ                23   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
-0,   //S_MWAMPERAGE                 24
-40,  //S_CURRSENSSENSITIVITY        25   // May vary from 17 to 40mV/A (Sensor type)
-2,   //S_CURRSENSOFFSET_H           26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
-0,   //S_CURRSENSOFFSET_L           27   // 2H+0L=512
-2,   //S_CLIMB_RATE_ALARM           28
-5,   //S_VOLUME_DIST_MAX            29   // Flying Volume Warning (Distance value in meters x100) by default is 500m
-50,  //S_VOLUME_ALT_MAX             30   //   "     "       "   (Altitude Max "    "    "   ___     "     "   "   50m 
-0,   //S_VOLUE_ALT_MIN              31   //   "     "       "   (Altitude Min "    "    "   ___     "     "   "    0m 
+0,   // S_MWAMPERAGE                24
+40,  // S_CURRSENSSENSITIVITY       25   // May vary from 17 to 40mV/A (Sensor type)
+2,   // S_CURRSENSOFFSET_H          26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
+0,   // S_CURRSENSOFFSET_L          27   // 2H+0L=512
+2,   // S_CLIMB_RATE_ALARM          28
+5,   // S_VOLUME_DIST_MAX           29   // Flying Volume Warning (Distance value in meters x100) by default is 500m
+50,  // S_VOLUME_ALT_MAX            30   //   "     "       "   (Altitude Max "    "    "   ___     "     "   "   50m 
+0,   // S_VOLUE_ALT_MIN             31   //   "     "       "   (Altitude Min "    "    "   ___     "     "   "    0m
+105, // S_VIDVOLTAGEMIN             32
 
-0,   //S_CALLSIGN                   32   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)
+0,   //S_CALLSIGN                   33   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)
 
 
-'T',   // S_CS0,                    33    // 10 callsign char locations
+'T',   // S_CS0,                    34    // 10 callsign char locations
 'E',   // S_CS1,
 'A',   // S_CS2,
 'M',   // S_CS3,
@@ -250,7 +252,7 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 'V',   // S_CS6,
 'O',   // S_CS7,
 'S',   // S_CS8,
-'D',   // S_CS9,                    42
+'D',   // S_CS9,                    43
 };
 
 
