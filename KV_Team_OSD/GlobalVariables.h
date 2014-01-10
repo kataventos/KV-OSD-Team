@@ -92,6 +92,8 @@ enum Setting_ {
   S_VOLUME_ALT_MAX,
   S_VOLUME_ALT_MIN,
   
+  S_CALLSIGN,
+  
   S_CS0,      // 10 callsign char locations
   S_CS1,
   S_CS2,
@@ -236,17 +238,19 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 50,  //S_VOLUME_ALT_MAX             30   //   "     "       "   (Altitude Max "    "    "   ___     "     "   "   50m 
 0,   //S_VOLUE_ALT_MIN              31   //   "     "       "   (Altitude Min "    "    "   ___     "     "   "    0m 
 
+0,   //S_CALLSIGN                   32   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)
 
-0,   // S_CS0,                      32    // 10 callsign char locations
-0,   // S_CS1,
-0,   // S_CS2,
-0,   // S_CS3,
-0,   // S_CS4,
-0,   // S_CS5,
-0,   // S_CS6,
-0,   // S_CS7,
-0,   // S_CS8,
-0,   // S_CS9,                      41
+
+'T',   // S_CS0,                    33    // 10 callsign char locations
+'E',   // S_CS1,
+'A',   // S_CS2,
+'M',   // S_CS3,
+'_',   // S_CS4,
+'K',   // S_CS5,
+'V',   // S_CS6,
+'O',   // S_CS7,
+'S',   // S_CS8,
+'D',   // S_CS9,                    42
 };
 
 
@@ -340,7 +344,7 @@ uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 1,    // L_PMETERSUMPOSITIONDSPL
 14,   // L_CALLSIGNPOSITIONROW LINE14+10
 10,   // L_CALLSIGNPOSITIONCOL
-0,    // L_CALLSIGNPOSITIONDSPL
+1,    // L_CALLSIGNPOSITIONDSPL
 };
 
 
@@ -434,7 +438,7 @@ uint8_t EEPROM_NTSC_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 1,    // L_PMETERSUMPOSITIONDSPL
 12,   // L_CALLSIGNPOSITIONROW LINE14+10
 10,   // L_CALLSIGNPOSITIONCOL
-0,    // L_CALLSIGNPOSITIONDSPL
+1,    // L_CALLSIGNPOSITIONDSPL
 };
 
 

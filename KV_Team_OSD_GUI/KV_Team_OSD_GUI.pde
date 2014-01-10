@@ -91,7 +91,7 @@ int xBox        = 415;        int yBox        = 10;
 int XSim        = DisplayWindowX+WindowAdjX;        int YSim        = 288-WindowShrinkY + 85;
 
 // Box locations -------------------------------------------------------------------------
-int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 155;
+int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 155; int Col4Width = 110;
 
 int XEEPROM    = 120;        int YEEPROM    = 5;  //hidden do not remove
 int XBoard     = 120;        int YBoard     = 5;
@@ -101,11 +101,11 @@ int XAmps      = 695;        int YAmps    = 152;
 int XVVolts    = 490;        int YVVolts  = 152;
 int XTemp      = 305;        int YTemp    = 5;
 int XGPS       = 305;        int YGPS     = 45;
-int XCS        = 120;        int YCS      = 472;
+int XCS        = 5;          int YCS      = 235; //int XCS        = 305;        int YCS      = 388;
 int XOther     = 490;        int YOther    = 5;
 int XVolume    = 120;        int YVolume   = 182;
-int XPortStat  = 5;          int YPortStat = 272;
-int XControlBox     = 5;     int YControlBox   = 310;  
+int XPortStat  = 5;          int YPortStat = 284;
+int XControlBox     = 5;     int YControlBox   = 315;  
 int XRCSim    =   XSim;      int YRCSim = 430;
 
 
@@ -172,6 +172,8 @@ String[] ConfigNames = {
   "Alt Max",
   "Alt Min",
   
+  "Call Sign",
+  
   "S_CS0",
   "S_CS1",
   "S_CS2",
@@ -219,6 +221,8 @@ String[] ConfigHelp = {
   "Volume Distance Max",
   "Volume Altitude Max",
   "Volume Altitude Min",
+  
+  "Call Sign",
   
   "S_CS0",
   "S_CS1",
@@ -272,6 +276,8 @@ int[] ConfigRanges = {
 255, // S_VOLUME_DIST_MAX           29
 255, // S_VOLUME_ALT_MAX            30
 50,  // S_VOLUME_ALT_MIN            31
+
+0,   // S_CALLSIGN
 
 
  255,      //Call sign 10 chars 32 to 41
@@ -680,16 +686,18 @@ CreateItem(GetSetting("S_VOLUME_ALT_MIN"),  5,2*17, G_Volume);
 
 
 //  Call Sign ---------------------------------------------------------------------------
-//CreateItem(GetSetting("S_DISPLAY_CS"),  5,0, G_CallSign);
+CreateItem(GetSetting("S_CALLSIGN"),9,0,G_CallSign);
+BuildRadioButton(GetSetting("S_CALLSIGN"),10,2*17,G_CallSign, "","");
+
 
 controlP5.addTextfield("CallSign")
-     .setPosition(5,1*17)
-     .setSize(105,15)
+     .setPosition(15,0*16)
+     .setSize(78,13)
      .setFont(font10)
      .setAutoClear(false)
      .setGroup(G_CallSign);
      ;
- controlP5.addTextlabel("TXTCallSign","Call Sign",120,1*17)
+ controlP5.addTextlabel("","")
  .setGroup(G_CallSign);
  CreateCS(GetSetting("S_CS0"),  0,0, G_CallSign);
  CreateCS(GetSetting("S_CS1"),  0,0, G_CallSign);
