@@ -231,13 +231,13 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 0,   // S_USE_BOXNAMES              22
 5,   // S_BLINKINGHZ                23   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
 0,   // S_MWAMPERAGE                24
-40,  // S_CURRSENSSENSITIVITY       25   // May vary from 17 to 40mV/A (Sensor type)
+40,  // S_CURRSENSSENSITIVITY       25   // May vary from 17 to 40mV/A (Sensor type) 
 2,   // S_CURRSENSOFFSET_H          26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
 0,   // S_CURRSENSOFFSET_L          27   // 2H+0L=512
 2,   // S_CLIMB_RATE_ALARM          28
 5,   // S_VOLUME_DIST_MAX           29   // Flying Volume Warning (Distance value in meters x100) by default is 500m
-50,  // S_VOLUME_ALT_MAX            30   //   "     "       "   (Altitude Max "    "    "   ___     "     "   "   50m 
-0,   // S_VOLUE_ALT_MIN             31   //   "     "       "   (Altitude Min "    "    "   ___     "     "   "    0m
+25,  // S_VOLUME_ALT_MAX            30   //   "     "       "   (Altitude Max "    "    "   x2  )  "     "   "   50m 
+0,   // S_VOLUE_ALT_MIN             31   //   "     "       "   (Altitude Min "    "    "   ___    "     "   "    0m
 105, // S_VIDVOLTAGEMIN             32
 
 0,   //S_CALLSIGN                   33   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)

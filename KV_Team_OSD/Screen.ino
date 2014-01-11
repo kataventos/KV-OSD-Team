@@ -584,8 +584,8 @@ void displayAltitude(void)
   
     if(armed && allSec>5 && altitude > altitudeMAX)
       altitudeMAX = altitude;
-    if(!(MwSensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]) || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN])){
-    if(altitude >= (Settings[S_VOLUME_ALT_MAX]) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
+    if(!(MwSensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*2) || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN])){
+    if(altitude >= (Settings[S_VOLUME_ALT_MAX]*2) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
       return;
     screenBuffer[0]=MwAltitudeAdd[Settings[S_UNITSYSTEM]];
     itoa(altitude,screenBuffer+1,10);
