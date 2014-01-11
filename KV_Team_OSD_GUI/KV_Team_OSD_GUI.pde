@@ -167,7 +167,7 @@ String[] ConfigNames = {
   "OffSet Low",
   "Descend WARNING (m/s)",
   "Dist Max (x100m)",
-  "Alt Max",
+  "Alt Max (x2m)",
   "Alt Min",
   "Minim Volt WARNING",
   
@@ -270,11 +270,11 @@ int[] ConfigRanges = {
 10,  // S_BLINKINGHZ                23
 1,   // S_MWAMPERAGE                24
 60,  // S_CURRSENSSENSITIVITY       25
-512, // S_CURRSENSOFFSET_H          26
-512, // S_CURRSENSOFFSET_L          27
+255, // S_CURRSENSOFFSET_H          26
+255, // S_CURRSENSOFFSET_L          27
 8,   // S_CLIMB_RATE_ALARM          28
-500, // S_VOLUME_DIST_MAX           29
-500, // S_VOLUME_ALT_MAX            30
+250, // S_VOLUME_DIST_MAX           29
+250, // S_VOLUME_ALT_MAX            30
 50,  // S_VOLUME_ALT_MIN            31
 105, // S_VIDVOLTAGEMIN             32
 
@@ -939,7 +939,7 @@ void VolumeFlightAltMin(int ItemIndex, int XLoction, int YLocation, Group inGrou
   //numberbox
   confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
   confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(-100);
+  confItem[ItemIndex].setMin(0);
   confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
   confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
   confItem[ItemIndex].setDecimalPrecision(0);
