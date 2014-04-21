@@ -33,12 +33,10 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 
 String KV_OSD_GUI_Version = "2.3";
-
-
-PImage img_Clear,RadioPot;
+PImage img_Clear,GUIBackground,RadioPot;
   
-int DisplayWindowX = 598;
-int DisplayWindowY = 40; 
+int DisplayWindowX = 350;
+int DisplayWindowY = 340; 
 int WindowAdjX = -84; 
 int WindowAdjY = -31;
 int WindowShrinkX = 8;
@@ -54,7 +52,6 @@ ControlP5 FontGroupcontrolP5;
 ControlP5 GroupcontrolP5;
 Textlabel txtlblWhichcom; 
 ListBox commListbox;
-
 
 boolean PortRead = false;
 boolean PortWrite = false;
@@ -73,11 +70,11 @@ int inByte = -1;    // Incoming serial data
 int[] serialInArray = new int[3];    // Where we'll put what we receive
 
 
-int serialCount = 0;                 // A count of how many bytes we receive
+//int serialCount = 0;                 // A count of how many bytes we receive
 int ConfigEEPROM = -1;
 int ConfigVALUE = -1;
 
-int windowsX    = 855;       int windowsY    =440;
+int windowsX    = 797;        int windowsY    = 459;
 int xGraph      = 10;         int yGraph      = 325;
 int xObj        = 520;        int yObj        = 293;
 int xCompass    = 920;        int yCompass    = 341;
@@ -87,52 +84,37 @@ int xRC         = 690;        int yRC         = 10;
 int xMot        = 690;        int yMot        = 155;
 int xButton     = 845;        int yButton     = 231; 
 int xBox        = 415;        int yBox        = 10;
-//int xGPS        = 853;        int yGPS        = 438;
 int XSim        = DisplayWindowX+WindowAdjX;        int YSim        = 288-WindowShrinkY + 85;
 
 // Box locations -------------------------------------------------------------------------
-int Col1Width = 180;        int Col2Width = 200;  int Col3Width = 155; int Col4Width = 110;
+int Col1Width = 165;        int Col2Width = 181;      int Col3Width = 154;      int Col4Width = 110;
 
-int XEEPROM    = 120;        int YEEPROM    = 5;  //hidden do not remove
-int XBoard     = 120;        int YBoard     = 5;
-int XRSSI      = 120;        int YRSSI      = 45;
-int XVolts     = 305;        int YVolts    = 152;
-int XAmps      = 695;        int YAmps    = 152;
-int XVVolts    = 490;        int YVVolts  = 152;
-int XTemp      = 305;        int YTemp    = 5;
-int XGPS       = 305;        int YGPS     = 45;
-int XCS        = 5;          int YCS      = 235; //int XCS        = 305;        int YCS      = 388;
-int XOther     = 490;        int YOther    = 5;
-int XVolume    = 120;        int YVolume   = 182;
-int XPortStat  = 5;          int YPortStat = 284;
-int XControlBox     = 5;     int YControlBox   = 315;  
-int XRCSim    =   XSim;      int YRCSim = 430;
+int XEEPROM     = 120;        int YEEPROM      = 5;  //hidden do not remove
+int XBoard      = 120;        int YBoard       = 5;
+int XRSSI       = 120;        int YRSSI        = 45;
+int XVolts      = 288;        int YVolts       = 78;
+int XAmps       = 640;        int YAmps        = 152;
+int XVVolts     = 288;        int YVVolts      = 167;
+int XTemp       = 305;        int YTemp        = 5;
+int XGPS        = 288;        int YGPS         = 5; 
+int XCS         = 5;          int YCS          = 242;
+int XOther      = 456;        int YOther       = 60;
+int XVolume     = 120;        int YVolume      = 182;
+int XPortStat   = 5;          int YPortStat    = 290;
+int XControlBox = 5;          int YControlBox  = 320;
+int XUnitVideo  = 456;        int YUnitVideo   = 5;
+int XADC        = 456;        int YADC         = 167;
 
 
-String FontFileName = "data/MW_OSD_Team.mcm";
 
-//File FontFile;
+String FontFileName = "data/KVTOSD_FMap_v1_Small.mcm";
+
 int activeTab = 1;
-int xx=0;
 int YLocation = 0;
-int Roll = 0;
-int Pitch = 0;
-
-int OnTimer = 0;
-int FlyTimer = 0;
-float SimItem0= 0;
-int Armed = 0;
-int Showback = 1;
-int del = 0;
-
-
-// int variables
 
 static int MwHeading=0;
-char MwHeadingUnitAdd=0xbd;
 
-
-String[] ConfigNames = {
+String[] ConfigHelp = {
   "EEPROM Loaded",
   
   "RSSI Min",
@@ -142,13 +124,10 @@ String[] ConfigNames = {
   "PWM",
   "PWM Divider",
   "Minim Volt WARNING",
-  "Battery Cells",
   "Divider Ratio",
   "Input", //MW ADC  
   "Divider Ratio",
   "Input", //Mw ADC
-  "Temperature Max",
-  
   
   "", // for Board type do not remove
   
@@ -159,17 +138,17 @@ String[] ConfigNames = {
   "Video",  // signal
   "Stats",
   "OSD ADC",
-  " ",
   "Blink Frequency",
   "Input",
   "Sensitivity",
   "OffSet High",
   "OffSet Low",
-  "Descend WARNING (m/s)",
+  "V Speed WARNING (m/s)",
   "Dist Max (x100m)",
   "Alt Max (x2m)",
   "Alt Min",
   "Minim Volt WARNING",
+  "Pitch Angle WARNING °",
   
   "Call Sign",
   
@@ -185,42 +164,41 @@ String[] ConfigNames = {
   "S_CS9",
 };
 
-String[] ConfigHelp = {
-  "EEPROM Loaded",
+String[] ConfigNames = {
+   "EEPROM Loaded",
   
   "RSSI Min",
   "RSSI Max",
-  "RSSI Alarm",
-  "RSSI",
-  "PWM RSSI", 
-  "Voltage Min",
-  "Battery Cells",
-  "Main Voltage Devider",
-  "Main Voltage MW",
-  "Video Voltage Devider",
-  "Video Voltage MW",
-  "Temperature Max",
+  "RSSI WARNING",
+  "Input", //MW ADC
+  "PWM",
+  "PWM Divider",
+  "Minim Volt WARNING",
+  "Divider Ratio",
+  "Input", //MW ADC  
+  "Divider Ratio",
+  "Input", //Mw ADC
   
   "", // for Board type do not remove
   
   "GPS",
   "Coords",
-  "Display Heading 360",
-  "Units",
-  "Video Signal",
-  "Reset Stats After Arm",
-  "ADC",
+  "Heading",
+  "Unit",   //unit
+  "Video",  // signal
+  "Stats",
   " ",
   "Blink Frequency",
-  "Amps",
+  "Input",
   "Sensitivity",
   "OffSet High",
   "OffSet Low",
-  "CLimb Rate Alarm",
-  "Volume Distance Max",
-  "Volume Altitude Max",
-  "Volume Altitude Min",
-  "Minimum Video Voltage",
+  "V Speed WARNING (m/s)",
+  "Dist Max (x100m)",
+  "Alt Max (x10m)",
+  "Alt Min",
+  "Minim Volt WARNING",
+  "Pitch Angle WARNING °",
   
   "Call Sign",
   
@@ -234,8 +212,7 @@ String[] ConfigHelp = {
   "S_CS7",
   "S_CS8",
   "S_CS9",
-  
-  };
+};
 
 
 static int CHECKBOXITEMS=0;
@@ -252,33 +229,31 @@ int[] ConfigRanges = {
 1,   // S_PWMRSSI                   5
 8,   // S_PWMRSSIDIVIDER            6
 215, // S_VOLTAGEMIN                7
-6,   // S_BATCELLS                  8
-110, // S_DIVIDERRATIO              9
-1,   // S_MAINVOLTAGE_VBAT          10
-110, // S_VIDDIVIDERRATIO           11
-1,   // S_VIDVOLTAGE_VBAT           12 
-255, // S_TEMPERATUREMAX            13
-1,   // S_BOARDTYPE                 14
-1,   // S_DISPLAYGPS                15
-1,   // S_COORDINATES               16
-1,   // S_HEADING360                17
-1,   // S_UNITSYSTEM                18
-1,   // S_VIDEOSIGNALTYPE           19
-1,   // S_RESETSTATISTICS           20
-1,   // S_ENABLEADC                 21
-1,   // S_USE_BOXNAMES              22
-10,  // S_BLINKINGHZ                23
-1,   // S_MWAMPERAGE                24
-60,  // S_CURRSENSSENSITIVITY       25
-255, // S_CURRSENSOFFSET_H          26
-255, // S_CURRSENSOFFSET_L          27
-8,   // S_CLIMB_RATE_ALARM          28
-250, // S_VOLUME_DIST_MAX           29
-250, // S_VOLUME_ALT_MAX            30
-50,  // S_VOLUME_ALT_MIN            31
-105, // S_VIDVOLTAGEMIN             32
+110, // S_DIVIDERRATIO              8
+1,   // S_MAINVOLTAGE_VBAT          9
+110, // S_VIDDIVIDERRATIO           10
+1,   // S_VIDVOLTAGE_VBAT           11 
+1,   // S_BOARDTYPE                 12
+1,   // S_DISPLAYGPS                13
+1,   // S_COORDINATES               14
+1,   // S_HEADING360                15
+1,   // S_UNITSYSTEM                16
+1,   // S_VIDEOSIGNALTYPE           17
+1,   // S_RESETSTATISTICS           18
+1,   // S_ENABLEADC                 19
+10,  // S_BLINKINGHZ                20
+1,   // S_MWAMPERAGE                21
+60,  // S_CURRSENSSENSITIVITY       22
+2,   // S_CURRSENSOFFSET_H          23
+255, // S_CURRSENSOFFSET_L          24
+8,   // S_CLIMB_RATE_ALARM          25
+250, // S_VOLUME_DIST_MAX           26
+250, // S_VOLUME_ALT_MAX            27
+100,  // S_VOLUME_ALT_MIN            28
+110, // S_VIDVOLTAGEMIN             29
+75,  // S_PITCH_WARNING             30
 
-0,   // S_CALLSIGN
+0,   // S_CALLSIGN                  31
 
 
  255,      //Call sign 10 chars 32 to 41
@@ -298,218 +273,251 @@ int[] ItemLocationPAL = {
   // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
-2,   // L_GPS_NUMSATPOSITIONROW LINE02+2
-2,   // L_GPS_NUMSATPOSITIONCOL
+2,   // L_GPS_NUMSATPOSITIONROW LINE02+6
+18,  // L_GPS_NUMSATPOSITIONCOL 
 1,   // L_GPS_NUMSATPOSITIONDSPL
-3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
-14,  // L_GPS_DIRECTIONTOHOMEPOSCOL
-1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
-2,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
-24,  // L_GPS_DISTANCETOHOMEPOSCOL
-1,   // L_GPS_DISTANCETOHOMEPOSDSPL
-3,   // L_SPEEDPOSITIONROW LINE03+24
-24,  // L_SPEEDPOSITIONCOL
-1,   // L_SPEEDPOSITIONDSPL
-4,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
-12,  // L_GPS_ANGLETOHOMEPOSCOL
-1,   // L_GPS_ANGLETOHOMEPOSDSPL
-4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
-24,  // L_MW_GPS_ALTPOSITIONCOL
-1,   // L_MW_GPS_ALTPOSITIONDSPL
-3,   // L_SENSORPOSITIONROW LINE03+2
-2,   // L_SENSORPOSITIONCOL
-1,   // L_SENSORPOSITIONDSPL
-2,   // L_MW_HEADINGPOSITIONROW LINE02+19
-19,  // L_MW_HEADINGPOSITIONCOL
-1,   // L_MW_HEADINGPOSITIONDSPL
-2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
-10,  // L_MW_HEADINGGRAPHPOSCOL
-1,   // L_MW_HEADINGGRAPHPOSDSPL
-11,  // L_TEMPERATUREPOSROW LINE11+2
-2,   // L_TEMPERATUREPOSCOL
-0,   // L_TEMPERATUREPOSDSPL
 
-8,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
-2,   // L_MW_ALTITUDEPOSITIONCOL
+6,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
+2,   // L_GPS_DIRECTIONTOHOMEPOSCOL
+1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
+
+10,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
+2,    // L_GPS_DISTANCETOHOMEPOSCOL
+1,    // L_GPS_DISTANCETOHOMEPOSDSPL
+
+10,   // L_SPEEDPOSITIONROW LINE03+24
+23,   // L_SPEEDPOSITIONCOL
+1,    // L_SPEEDPOSITIONDSPL
+
+9,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
+2,   // L_GPS_ANGLETOHOMEPOSCOL
+0,   // L_GPS_ANGLETOHOMEPOSDSPL
+
+2,   // L_SENSORPOSITIONROW LINE03+2
+24,  // L_SENSORPOSITIONCOL
+1,   // L_SENSORPOSITIONDSPL
+
+2,   // L_MODEPOSITIONROW   LINE05+2
+8,   // L_MODEPOSITIONCOL
+1,   // L_MODEPOSITIONDSPL
+
+3,   // L_MW_HEADINGPOSITIONROW LINE02+19
+2,   // L_MW_HEADINGPOSITIONCOL
+1,   // L_MW_HEADINGPOSITIONDSPL
+
+2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
+2,   // L_MW_HEADINGGRAPHPOSCOL
+1,   // L_MW_HEADINGGRAPHPOSDSPL
+
+6,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
+23,  // L_MW_ALTITUDEPOSITIONCOL
 1,   // L_MW_ALTITUDEPOSITIONDSPL
+
 8,   // L_CLIMBRATEPOSITIONROW LINE08+24
-24,  // L_CLIMBRATEPOSITIONCOL
+5,   // L_CLIMBRATEPOSITIONCOL
 1,   // L_CLIMBRATEPOSITIONDSPL
+
 6,   // L_HORIZONPOSITIONROW LINE06+8
 8,   // L_HORIZONPOSITIONCOL
 1,   // L_HORIZONPOSITIONDSPL
-255, // L_HORIZONSIDEREFROW,
-255, // L_HORIZONSIDEREFCOL,
-1,   // L_HORIZONSIDEREFDSPL,
-255, // L_HORIZONCENTERREFROW,
-255, // L_HORIZONCENTERREFCOL,
-1,   // L_HORIZONCENTERREFDSPL,  
-  
-14,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
-22,   // L_CURRENTTHROTTLEPOSITIONCOL
-1,    // L_CURRENTTHROTTLEPOSITIONDSPL
-15,   // L_FLYTIMEPOSITIONROW LINE15+22
-22,   // L_FLYTIMEPOSITIONCOL
-1,    // L_FLYTIMEPOSITIONDSPL
-15,   // L_ONTIMEPOSITIONROW LINE15+22
-22,   // L_ONTIMEPOSITIONCOL
-1,    // L_ONTIMEPOSITIONDSPL
-14,   // L_MOTORARMEDPOSITIONROW LINE14+11
-11,   // L_MOTORARMEDPOSITIONCOL
-1,    // L_MOTORARMEDPOSITIONDSPL
-12,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
-2,    // L_MW_GPS_LATPOSITIONCOL
-1,    // L_MW_GPS_LATPOSITIONDSPL
-12,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
-15,   // L_MW_GPS_LONPOSITIONCOL
-1,    // L_MW_GPS_LONPOSITIONDSPL
-14,   // L_RSSIPOSITIONROW LINE14+2
-2,    // L_RSSIPOSITIONCOL
-1,    // L_RSSIPOSITIONDSPL
-15,   // L_VOLTAGEPOSITIONROW LINE15+3
-3,    // L_VOLTAGEPOSITIONCOL
-1,    // L_VOLTAGEPOSITIONDSPL
-255,  // L_MAINBATLEVEVOLUTIONROW,
-255,  // L_MAINBATLEVEVOLUTIONCOL,
-1,    // L_MAINBATLEVEVOLUTIONDSPL,  
-13,   // L_VIDVOLTAGEPOSITIONROW LINE13+3
-3,    // L_VIDVOLTAGEPOSITIONCOL
-0,    // L_VIDVOLTAGEPOSITIONDSPL
-15,   // L_AMPERAGEPOSITIONROW LINE15+10
-10,   // L_AMPERAGEPOSITIONCOL
-0,    // L_AMPERAGEPOSITIONDSPL
-15,   // L_PMETERSUMPOSITIONROW LINE15+16
-16,   // L_PMETERSUMPOSITIONCOL
-0,    // L_PMETERSUMPOSITIONDSPL
-14,   // L_CALLSIGNPOSITIONROW LINE14+10
-10,   // L_CALLSIGNPOSITIONCOL
-0,    // L_CALLSIGNPOSITIONDSPL
+
+255, // L_HORIZONSIDEREFROW
+255, // L_HORIZONSIDEREFCOL
+1,   // L_HORIZONSIDEREFDSPL
+
+255, // L_HORIZONCENTERREFROW
+255, // L_HORIZONCENTERREFCOL
+1,   // L_HORIZONCENTERREFDSPL
+
+7,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
+20,  // L_CURRENTTHROTTLEPOSITIONCOL
+1,   // L_CURRENTTHROTTLEPOSITIONDSPL
+
+15,  // L_FLYTIMEPOSITIONROW LINE15+22
+14,  // L_FLYTIMEPOSITIONCOL
+1,   // L_FLYTIMEPOSITIONDSPL
+
+15,  // L_ONTIMEPOSITIONROW LINE15+22
+14,  // L_ONTIMEPOSITIONCOL
+1,   // L_ONTIMEPOSITIONDSPL
+
+3,   // L_MOTORARMEDPOSITIONROW LINE14+11
+24,  // L_MOTORARMEDPOSITIONCOL
+1,   // L_MOTORARMEDPOSITIONDSPL
+
+14,  // L_MW_GPS_LATPOSITIONROW  LINE12+2
+2,   // L_MW_GPS_LATPOSITIONCOL
+1,   // L_MW_GPS_LATPOSITIONDSPL
+
+15,  // L_MW_GPS_LONPOSITIONROW  LINE12+15
+2,   // L_MW_GPS_LONPOSITIONCOL
+1,   // L_MW_GPS_LONPOSITIONDSPL
+
+2,   // L_RSSIPOSITIONROW LINE14+2
+12,  // L_RSSIPOSITIONCOL
+1,   // L_RSSIPOSITIONDSPL
+
+15,  // L_VOLTAGEPOSITIONROW LINE15+3
+23,  // L_VOLTAGEPOSITIONCOL
+1,   // L_VOLTAGEPOSITIONDSPL
+
+13,  // L_VIDVOLTAGEPOSITIONROW LINE13+3
+23,  // L_VIDVOLTAGEPOSITIONCOL
+0,   // L_VIDVOLTAGEPOSITIONDSPL
+
+14,  // L_AMPERAGEPOSITIONROW LINE15+10
+23,  // L_AMPERAGEPOSITIONCOL
+1,   // L_AMPERAGEPOSITIONDSPL
+
+14,  // L_PMETERSUMPOSITIONROW LINE15+16
+14,  // L_PMETERSUMPOSITIONCOL
+1,   // L_PMETERSUMPOSITIONDSPL
+
+13,  // L_CALLSIGNPOSITIONROW LINE14+10
+10,  // L_CALLSIGNPOSITIONCOL
+1,   // L_CALLSIGNPOSITIONDSPL
 };
 
 int[] ItemLocationNTSC = {
-2,   // L_GPS_NUMSATPOSITIONROW LINE02+2
-2,   // L_GPS_NUMSATPOSITIONCOL
+2,   // L_GPS_NUMSATPOSITIONROW LINE02+6
+18,  // L_GPS_NUMSATPOSITIONCOL 
 1,   // L_GPS_NUMSATPOSITIONDSPL
-3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
-14,  // L_GPS_DIRECTIONTOHOMEPOSCOL
-1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
-2,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
-24,  // L_GPS_DISTANCETOHOMEPOSCOL
-1,   // L_GPS_DISTANCETOHOMEPOSDSPL
-3,   // L_SPEEDPOSITIONROW LINE03+24
-24,  // L_SPEEDPOSITIONCOL
-1,   // L_SPEEDPOSITIONDSPL
-4,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
-12,  // L_GPS_ANGLETOHOMEPOSCOL
-1,   // L_GPS_ANGLETOHOMEPOSDSPL
-4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
-24,  // L_MW_GPS_ALTPOSITIONCOL
-1,   // L_MW_GPS_ALTPOSITIONDSPL
-3,   // L_SENSORPOSITIONROW LINE03+2
-2,   // L_SENSORPOSITIONCOL
-1,   // L_SENSORPOSITIONDSPL
-2,   // L_MW_HEADINGPOSITIONROW LINE02+19
-19,  // L_MW_HEADINGPOSITIONCOL
-1,   // L_MW_HEADINGPOSITIONDSPL
-2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
-10,  // L_MW_HEADINGGRAPHPOSCOL
-1,   // L_MW_HEADINGGRAPHPOSDSPL
-9,   // L_TEMPERATUREPOSROW LINE11+2
-2,   // L_TEMPERATUREPOSCOL
-0,   // L_TEMPERATUREPOSDSPL
 
-7,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
-2,   // L_MW_ALTITUDEPOSITIONCOL
+6,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
+2,   // L_GPS_DIRECTIONTOHOMEPOSCOL
+1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
+
+10,  // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
+2,   // L_GPS_DISTANCETOHOMEPOSCOL
+1,   // L_GPS_DISTANCETOHOMEPOSDSPL
+
+10,  // L_SPEEDPOSITIONROW LINE03+24
+23,  // L_SPEEDPOSITIONCOL 
+1,   // L_SPEEDPOSITIONDSPL
+
+9,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
+2,   // L_GPS_ANGLETOHOMEPOSCOL
+0,   // L_GPS_ANGLETOHOMEPOSDSPL
+
+2,   // L_SENSORPOSITIONROW LINE03+2
+24,  // L_SENSORPOSITIONCOL
+1,   // L_SENSORPOSITIONDSPL
+
+2,   // L_MODEPOSITIONROW   LINE05+2
+8,   // L_MODEPOSITIONCOL
+1,   // L_MODEPOSITIONDSPL
+
+3,   // L_MW_HEADINGPOSITIONROW LINE02+19
+2,   // L_MW_HEADINGPOSITIONCOL
+1,   // L_MW_HEADINGPOSITIONDSPL
+
+2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
+2,   // L_MW_HEADINGGRAPHPOSCOL
+1,   // L_MW_HEADINGGRAPHPOSDSPL
+
+6,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
+23,  // L_MW_ALTITUDEPOSITIONCOL
 1,   // L_MW_ALTITUDEPOSITIONDSPL
-7,   // L_CLIMBRATEPOSITIONROW LINE08+24
-24,  // L_CLIMBRATEPOSITIONCOL
+
+8,   // L_CLIMBRATEPOSITIONROW LINE08+24
+5,   // L_CLIMBRATEPOSITIONCOL
 1,   // L_CLIMBRATEPOSITIONDSPL
-5,   // L_HORIZONPOSITIONROW LINE06+8
+
+6,   // L_HORIZONPOSITIONROW LINE06+8
 8,   // L_HORIZONPOSITIONCOL
 1,   // L_HORIZONPOSITIONDSPL
-255, // L_HORIZONSIDEREFROW,
-255, // L_HORIZONSIDEREFCOL,
-1,   // L_HORIZONSIDEREFDSPL,
-255, // L_HORIZONCENTERREFROW,
-255, // L_HORIZONCENTERREFCOL,
-1,   // L_HORIZONCENTERREFDSPL,  
-  
-12,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
-22,   // L_CURRENTTHROTTLEPOSITIONCOL
-1,    // L_CURRENTTHROTTLEPOSITIONDSPL
-13,   // L_FLYTIMEPOSITIONROW LINE15+22
-22,   // L_FLYTIMEPOSITIONCOL
-1,    // L_FLYTIMEPOSITIONDSPL
-13,   // L_ONTIMEPOSITIONROW LINE15+22
-22,   // L_ONTIMEPOSITIONCOL
-1,    // L_ONTIMEPOSITIONDSPL
-12,   // L_MOTORARMEDPOSITIONROW LINE14+11
-11,   // L_MOTORARMEDPOSITIONCOL
-1,    // L_MOTORARMEDPOSITIONDSPL
-10,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
-2,    // L_MW_GPS_LATPOSITIONCOL
-1,    // L_MW_GPS_LATPOSITIONDSPL
-10,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
-15,   // L_MW_GPS_LONPOSITIONCOL
-1,    // L_MW_GPS_LONPOSITIONDSPL
-12,   // L_RSSIPOSITIONROW LINE14+2
-2,    // L_RSSIPOSITIONCOL
-1,    // L_RSSIPOSITIONDSPL
-13,   // L_VOLTAGEPOSITIONROW LINE15+3
-3,    // L_VOLTAGEPOSITIONCOL
-1,    // L_VOLTAGEPOSITIONDSPL
-255,  // L_MAINBATLEVEVOLUTIONROW,
-255,  // L_MAINBATLEVEVOLUTIONCOL,
-1,    // L_MAINBATLEVEVOLUTIONDSPL,  
-11,   // L_VIDVOLTAGEPOSITIONROW LINE13+3
-3,    // L_VIDVOLTAGEPOSITIONCOL
-0,    // L_VIDVOLTAGEPOSITIONDSPL
-13,   // L_AMPERAGEPOSITIONROW LINE15+10
-10,   // L_AMPERAGEPOSITIONCOL
-0,    // L_AMPERAGEPOSITIONDSPL
-13,   // L_PMETERSUMPOSITIONROW LINE15+16
-16,   // L_PMETERSUMPOSITIONCOL
-0,    // L_PMETERSUMPOSITIONDSPL
-12,   // L_CALLSIGNPOSITIONROW LINE14+10
-10,   // L_CALLSIGNPOSITIONCOL
-0,    // L_CALLSIGNPOSITIONDSPL
 
+255, // L_HORIZONSIDEREFROW
+255, // L_HORIZONSIDEREFCOL
+1,   // L_HORIZONSIDEREFDSPL
+
+255, // L_HORIZONCENTERREFROW
+255, // L_HORIZONCENTERREFCOL
+1,   // L_HORIZONCENTERREFDSPL
+
+7,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
+20,  // L_CURRENTTHROTTLEPOSITIONCOL
+1,   // L_CURRENTTHROTTLEPOSITIONDSPL
+
+13,  // L_FLYTIMEPOSITIONROW LINE15+22
+14,  // L_FLYTIMEPOSITIONCOL
+1,   // L_FLYTIMEPOSITIONDSPL
+
+13,  // L_ONTIMEPOSITIONROW LINE15+22
+14,  // L_ONTIMEPOSITIONCOL
+1,   // L_ONTIMEPOSITIONDSPL
+
+3,   // L_MOTORARMEDPOSITIONROW LINE14+11
+24,  // L_MOTORARMEDPOSITIONCOL
+1,   // L_MOTORARMEDPOSITIONDSPL
+
+12,  // L_MW_GPS_LATPOSITIONROW  LINE12+2
+2,   // L_MW_GPS_LATPOSITIONCOL
+1,   // L_MW_GPS_LATPOSITIONDSPL
+
+13,  // L_MW_GPS_LONPOSITIONROW  LINE12+15
+2,   // L_MW_GPS_LONPOSITIONCOL
+1,   // L_MW_GPS_LONPOSITIONDSPL
+
+2,   // L_RSSIPOSITIONROW LINE14+2
+12,  // L_RSSIPOSITIONCOL
+1,   // L_RSSIPOSITIONDSPL
+
+13,  // L_VOLTAGEPOSITIONROW LINE15+3
+23,  // L_VOLTAGEPOSITIONCOL
+1,   // L_VOLTAGEPOSITIONDSPL
+
+11,  // L_VIDVOLTAGEPOSITIONROW LINE13+3
+23,  // L_VIDVOLTAGEPOSITIONCOL
+0,   // L_VIDVOLTAGEPOSITIONDSPL
+
+12,  // L_AMPERAGEPOSITIONROW LINE15+10
+23,  // L_AMPERAGEPOSITIONCOL
+1,   // L_AMPERAGEPOSITIONDSPL
+
+12,  // L_PMETERSUMPOSITIONROW LINE15+16
+14,  // L_PMETERSUMPOSITIONCOL
+1,   // L_PMETERSUMPOSITIONDSPL
+
+11,  // L_CALLSIGNPOSITIONROW LINE14+10
+10,  // L_CALLSIGNPOSITIONCOL
+1,   // L_CALLSIGNPOSITIONDSPL
 };
   
-  
+
 PFont font8,font9,font10,font11,font12,font15;
 
-//Colors--------------------------------------------------------------------------------------------------------------------  
-color yellow_ = color(200, 200, 20), green_ = color(30, 130, 30), red_ = color(120, 30, 30), blue_ = color(25, 50, 80), //blue_ = color(50, 50, 100)
+// Colors------------------------------------------------------------------------------------------------------------------
+color yellow_ = color(200, 200, 20), green_ = color(30, 100, 30), red_ = color(120, 30, 30), blue_ = color(25, 50, 80),
 grey_ = color(30, 30, 30);
-//Colors--------------------------------------------------------------------------------------------------------------------
+// Colors------------------------------------------------------------------------------------------------------------------
 
-// textlabels -------------------------------------------------------------------------------------------------------------
+// Textlabels -------------------------------------------------------------------------------------------------------------
 Textlabel txtlblconfItem[] = new Textlabel[CONFIGITEMS] ;
 Textlabel txtlblSimItem[] = new Textlabel[SIMITEMS] ;
-Textlabel FileUploadText, TXText, RXText;
-// textlabels -------------------------------------------------------------------------------------------------------------
+Textlabel FileUploadText, TXText, RXText, Links;
+// Textlabels -------------------------------------------------------------------------------------------------------------
 
-// Buttons------------------------------------------------------------------------------------------------------------------
-Button buttonIMPORT,buttonSAVE,buttonREAD,buttonRESET,buttonWRITE,buttonRESTART;
+// Buttons-----------------------------------------------------------------------------------------------------------------
+Button buttonIMPORT,buttonSAVE,buttonREAD,buttonRESET,buttonWRITE,buttonRESTART, buttonOSDHome, buttonOSDWiki, buttonMWiiForum, buttonSupport;
 // Buttons------------------------------------------------------------------------------------------------------------------
 
 // Toggles------------------------------------------------------------------------------------------------------------------
 Toggle toggleConfItem[] = new Toggle[CONFIGITEMS] ;
 // Toggles------------------------------------------------------------------------------------------------------------------    
 
-// checkboxes------------------------------------------------------------------------------------------------------------------
+// Checkboxes---------------------------------------------------------------------------------------------------------------
 CheckBox checkboxConfItem[] = new CheckBox[CONFIGITEMS] ;
-
+// Checkboxes---------------------------------------------------------------------------------------------------------------
 
 // Toggles------------------------------------------------------------------------------------------------------------------    
 RadioButton RadioButtonConfItem[] = new RadioButton[CONFIGITEMS] ;
 RadioButton R_PortStat;
+// Toggles------------------------------------------------------------------------------------------------------------------    
 
-//  number boxes--------------------------------------------------------------------------------------------------------------
-
+// Number boxes-------------------------------------------------------------------------------------------------------------
 Numberbox confItem[] = new Numberbox[CONFIGITEMS] ;
-//  number boxes--------------------------------------------------------------------------------------------------------------
+// Number boxes-------------------------------------------------------------------------------------------------------------
 
 Group MGUploadF,
   G_EEPROM,
@@ -517,33 +525,28 @@ Group MGUploadF,
   G_Voltage,
   G_Amperage,
   G_VVoltage,
-  G_Temperature,
   G_Board,
   G_GPS,
   G_UV,
   G_Other,
+  G_ADC,
+  G_UnitVideo,
   G_Volume,
   G_CallSign,
-  G_PortStatus
-  
+  G_PortStatus  
   ;
-
-// Timers --------------------------------------------------------------------------------------------------------------------
-//ControlTimer OnTimer,FlyTimer;
-
-controlP5.Controller hideLabel(controlP5.Controller c) {
+ 
+  controlP5.Controller hideLabel(controlP5.Controller c) {
   c.setLabel("");
   c.setLabelVisible(false);
   return c;
 }
 
-
+//*****************************************************************************************************//
 
 void setup() {
   size(windowsX,windowsY);
- 
-OnTimer = millis();
-  frameRate(30); 
+  GUIBackground = loadImage ("Background.png");
   font8 = createFont("Arial bold",8,false);
   font9 = createFont("Arial bold",10,false);
   font10 = createFont("Arial bold",11,false);
@@ -561,10 +564,8 @@ OnTimer = millis();
   GroupcontrolP5.setControlFont(font10);
   FontGroupcontrolP5 = new ControlP5(this); // initialize the GUI controls
   FontGroupcontrolP5.setControlFont(font10);
-
-
+  
   SetupGroups();
-
 
   commListbox = controlP5.addListBox("portComList",5,100,110,260); // make a listbox and populate it with the available comm ports
   commListbox.setItemHeight(15);
@@ -580,20 +581,23 @@ OnTimer = millis();
   commListbox.addItem("Close Comm",++commListMax); // addItem(name,value)
   
   // text label for which comm port selected
-  txtlblWhichcom = controlP5.addTextlabel("txtlblWhichcom","No Port Selected",5,65); // textlabel(name,text,x,y)
+  txtlblWhichcom   = controlP5.addTextlabel("txtlblWhichcom","No Port Selected",5,65); // textlabel(name,text,x,y)
+  // Links Label
+  Links            = controlP5.addTextlabel("LinkInf"," Handy Buttons >") .setPosition(XVolume, YVolume+74);    
   
-  buttonSAVE = controlP5.addButton("bSAVE",1,5,45,40,19); buttonSAVE.setLabel("SAVE"); buttonSAVE.setColorBackground(red_);
-  buttonIMPORT = controlP5.addButton("bIMPORT",1,50,45,40,19); buttonIMPORT.setLabel("LOAD"); buttonIMPORT.setColorBackground(red_); 
+  buttonSAVE       = controlP5.addButton("bSAVE",1,15,45,40,19); buttonSAVE.setLabel("SAVE"); buttonSAVE.setColorBackground(red_);
+  buttonIMPORT     = controlP5.addButton("bIMPORT",1,65,45,40,19); buttonIMPORT.setLabel("LOAD"); buttonIMPORT.setColorBackground(red_);  
+  buttonREAD       = controlP5.addButton("READ",1,XControlBox+34,YControlBox+25,37,15);buttonREAD.setColorBackground(red_);
+  buttonRESET      = controlP5.addButton("RESET",1,XControlBox+32,YControlBox+50,40,15);buttonRESET.setColorBackground(red_);
+  buttonWRITE      = controlP5.addButton("WRITE",1,XControlBox+32,YControlBox+75,42,15);buttonWRITE.setColorBackground(red_);
+  buttonRESTART    = controlP5.addButton("RESTART",1,XControlBox+25,YControlBox+100,55,16);buttonRESTART.setColorBackground(red_); 
+  buttonOSDHome    = controlP5.addButton("OSDHome", 1, XVolume+100, YVolume+74, 80, 15).setColorBackground(blue_).setLabel("      Home");//.setColorLabel(yellow_);
+  buttonOSDWiki    = controlP5.addButton("OSDWiki", 1, XVolume+190, YVolume+74, 80, 15).setColorBackground(blue_).setLabel("        Wiki");//.setColorLabel(yellow_);
+  buttonMWiiForum  = controlP5.addButton("MWiiForum",1, XVolume+280, YVolume+74, 80, 15).setColorBackground(blue_).setLabel(" MWii Forum");//.setColorLabel(yellow_);
+  buttonSupport    = controlP5.addButton("Support",1, XVolume+370, YVolume+74, 80, 15).setColorBackground(blue_).setLabel("    Support");//.setColorLabel(yellow_);
   
-  buttonREAD = controlP5.addButton("READ",1,XControlBox+30,YControlBox+25,45,16);buttonREAD.setColorBackground(red_);
-  buttonRESET = controlP5.addButton("RESET",1,XControlBox+30,YControlBox+50,45,16);buttonRESET.setColorBackground(red_);
-  buttonWRITE = controlP5.addButton("WRITE",1,XControlBox+30,YControlBox+75,45,16);buttonWRITE.setColorBackground(red_);
-  buttonRESTART = controlP5.addButton("RESTART",1,XControlBox+25,YControlBox+100,55,16);buttonRESTART.setColorBackground(red_);
-  
-    
-    
 
-// EEPROM----------------------------------------------------------------
+// EEPROM---------------------------------------------------------------------------
 
 CreateItem(GetSetting("S_CHECK_"), 5, 0, G_EEPROM);
 
@@ -607,22 +611,17 @@ CreateItem(GetSetting("S_RSSIMIN"), 5,3*17, G_RSSI);
 CreateItem(GetSetting("S_RSSIMAX"), 5,4*17, G_RSSI);
 RSSIWarning(GetSetting("S_RSSI_ALARM"), 5,5*17, G_RSSI);
 
-
 // Voltage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,0*17, G_Voltage);
 BuildRadioButton(GetSetting("S_MAINVOLTAGE_VBAT"),  5,0*17, G_Voltage, "ADC","MWii");
-BattCellItem(GetSetting("S_BATCELLS"), 5,1*17, G_Voltage);
 BattWarningItem(GetSetting("S_VOLTAGEMIN"), 5,2*17, G_Voltage);
 CreateItem(GetSetting("S_DIVIDERRATIO"), 5,3*17, G_Voltage);
 
-// Video Voltage  ------------------------------------------------------------------------
+// Video Voltage  -------------------------------------------------------------------
 CreateItem(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0*17, G_VVoltage);
 BuildRadioButton(GetSetting("S_VIDVOLTAGE_VBAT"),  5,0, G_VVoltage, "ADC","MWii");
 BattWarningItem(GetSetting("S_VIDVOLTAGEMIN"), 5,1*17, G_VVoltage);
 CreateItem(GetSetting("S_VIDDIVIDERRATIO"),  5,2*17, G_VVoltage);
-
-//  Temperature  --------------------------------------------------------------------
-CreateItem(GetSetting("S_TEMPERATUREMAX"),  5,0*17, G_Temperature);
 
 //  Board ---------------------------------------------------------------------------
 CreateItem(GetSetting("S_BOARDTYPE"),  5,0, G_Board);
@@ -636,19 +635,22 @@ BuildRadioButton(GetSetting("S_COORDINATES"),  5,1*17, G_GPS, "Off","On");
 CreateItem(GetSetting("S_HEADING360"),  5,2*17, G_GPS);
 BuildRadioButton(GetSetting("S_HEADING360"),  5,2*17, G_GPS, "180°","360°");
 
-//  OTHER  ---------------------------------------------------------------------------
-CreateItem(GetSetting("S_UNITSYSTEM"),  5,0, G_Other);
-BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_Other, "Metric","Imperial");
-CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other);
-BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_Other, "NTSC","PAL");
-CreateItem(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other);
-BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,2*17, G_Other, "Maintain","Reset");
-CreateItem(GetSetting("S_ENABLEADC"),  5,3*17, G_Other);
-BuildRadioButton(GetSetting("S_ENABLEADC"),  5,3*17, G_Other, "Off","On");
-CreateItem(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other);
-BuildRadioButton(GetSetting("S_USE_BOXNAMES"),  5,4*17, G_Other, "BoxIDs","BoxNames");
-BlinkFreqItem(GetSetting("S_BLINKINGHZ"),  5,5*17, G_Other);
-DescendWarningItem(GetSetting("S_CLIMB_RATE_ALARM"),  5,6*17, G_Other);
+//  Unit & Video  ------------------------------------------------------------------
+CreateItem(GetSetting("S_UNITSYSTEM"),  5,0, G_UnitVideo);
+BuildRadioButton(GetSetting("S_UNITSYSTEM"),  5,0, G_UnitVideo, "Metric","Imperial");
+CreateItem(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_UnitVideo);
+BuildRadioButton(GetSetting("S_VIDEOSIGNALTYPE"),  5,1*17, G_UnitVideo, "NTSC","PAL");
+
+//  Other  -------------------------------------------------------------------------
+CreateItem(GetSetting("S_RESETSTATISTICS"),  5,0*17, G_Other);
+BuildRadioButton(GetSetting("S_RESETSTATISTICS"),  5,0*17, G_Other, "Maintain","Reset");
+BlinkFreqItem(GetSetting("S_BLINKINGHZ"),  5,2*17, G_Other);
+DescendWarningItem(GetSetting("S_CLIMB_RATE_ALARM"),  5,3*17, G_Other);
+PitchWarningItem(GetSetting("S_PITCH_WARNING"),  5,4*17, G_Other);
+
+// OSD ADC´s   --------------------------------------------------------------------------
+CreateItem(GetSetting("S_ENABLEADC"),  53,1*17, G_ADC);
+BuildRadioButton(GetSetting("S_ENABLEADC"),  53,1*17, G_ADC, "Off","On");
 
 // Amperage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_MWAMPERAGE"),  5,0, G_Amperage);
@@ -662,7 +664,7 @@ VolumeFlightDist(GetSetting("S_VOLUME_DIST_MAX"),  5,0*17, G_Volume);
 VolumeFlightAltMax(GetSetting("S_VOLUME_ALT_MAX"),  5,1*17, G_Volume);
 VolumeFlightAltMin(GetSetting("S_VOLUME_ALT_MIN"),  5,2*17, G_Volume);
 
-//  Call Sign ---------------------------------------------------------------------------
+// Call Sign ------------------------------------------------------------------------
 CreateItem(GetSetting("S_CALLSIGN"),9,0,G_CallSign);
 BuildRadioButton(GetSetting("S_CALLSIGN"),10,2*17,G_CallSign, "","");
 controlP5.addTextfield("CallSign")
@@ -670,7 +672,7 @@ controlP5.addTextfield("CallSign")
      .setSize(78,13)
      .setFont(font10)
      .setAutoClear(false)
-     .setGroup(G_CallSign);
+     .setGroup(G_CallSign)
      ;
  controlP5.addTextlabel("","")
  .setGroup(G_CallSign);
@@ -685,8 +687,7 @@ controlP5.addTextfield("CallSign")
  CreateCS(GetSetting("S_CS8"),  0,0, G_CallSign);
  CreateCS(GetSetting("S_CS9"),  0,0, G_CallSign);
 
-
-//*************** Config Items **************//
+//******************************************* Config Items ********************************************//
 
   for(int i=0;i<CONFIGITEMS;i++) {
     if (ConfigRanges[i] == 0) {
@@ -716,7 +717,6 @@ controlP5.addTextfield("CallSign")
   
 }
 
-
 controlP5.Controller hideCheckbox(controlP5.Controller c) {
   c.hide();
   c.setLabelVisible(false);
@@ -730,10 +730,8 @@ controlP5.Controller CheckboxVisable(controlP5.Controller c) {
   return c;
 }
 
-
-void BuildRadioButton(int ItemIndex, int XLoction, int YLocation,Group inGroup, String Cap1, String Cap2){
-    
-  RadioButtonConfItem[ItemIndex] = controlP5.addRadioButton("RadioButton"+ItemIndex)
+void BuildRadioButton(int ItemIndex, int XLoction, int YLocation,Group inGroup, String Cap1, String Cap2){   
+     RadioButtonConfItem[ItemIndex] = controlP5.addRadioButton("RadioButton"+ItemIndex)
          .setPosition(XLoction,YLocation+3)
          .setSize(10,10)
          .setNoneSelectedAllowed(false) 
@@ -742,218 +740,237 @@ void BuildRadioButton(int ItemIndex, int XLoction, int YLocation,Group inGroup, 
          .addItem("First"+ItemIndex,0)
          .addItem("Second"+ItemIndex,1)
          .toUpperCase(false)
-        //.hideLabels() 
+         //.hideLabels() 
          ;
-    RadioButtonConfItem[ItemIndex].setGroup(inGroup);
-    RadioButtonConfItem[ItemIndex].getItem(0).setCaptionLabel(Cap1);
-    RadioButtonConfItem[ItemIndex].getItem(1).setCaptionLabel(Cap2 + "    " + ConfigNames[ItemIndex]);
+     RadioButtonConfItem[ItemIndex].setGroup(inGroup);
+     RadioButtonConfItem[ItemIndex].getItem(0).setCaptionLabel(Cap1);
+     RadioButtonConfItem[ItemIndex].getItem(1).setCaptionLabel(Cap2 + "    " + ConfigNames[ItemIndex]);
     
-    toggleConfItem[ItemIndex].hide();
-    txtlblconfItem[ItemIndex].hide();
-    
+     toggleConfItem[ItemIndex].hide();
+     txtlblconfItem[ItemIndex].hide();    
 }
 
 void CreateCS(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setMax(255);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
-  confItem[ItemIndex].hide();
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].hide();
-  
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setMin(0);
+     confItem[ItemIndex].setMax(255);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex].hide();
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].hide();
 }
 
 void CreateItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(blue_);
-  confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(blue_);
+     confItem[ItemIndex].setMin(0);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
-
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void BlinkFreqItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(blue_);
-  confItem[ItemIndex].setMin(1);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(blue_);
+     confItem[ItemIndex].setMin(1);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+}
+
+void PitchWarningItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
+  //numberbox
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(15);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
+  //Toggle
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
+  //TextLabel
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 } 
+
 
 void BattCellItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(blue_);
-  confItem[ItemIndex].setMin(2);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(blue_);
+     confItem[ItemIndex].setMin(2);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void BattWarningItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(7);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(7);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void RSSIWarning(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(10);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(10);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void DescendWarningItem(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(0);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void VolumeFlightDist(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(0);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void VolumeFlightAltMax(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(0);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void VolumeFlightAltMin(int ItemIndex, int XLoction, int YLocation, Group inGroup){
   //numberbox
-  confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
-  confItem[ItemIndex].setColorBackground(red_);
-  confItem[ItemIndex].setMin(0);
-  confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
-  confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
-  confItem[ItemIndex].setDecimalPrecision(0);
-  confItem[ItemIndex].setGroup(inGroup);
+     confItem[ItemIndex] = (controlP5.Numberbox) hideLabel(controlP5.addNumberbox("configItem"+ItemIndex,0,XLoction,YLocation,35,14));
+     confItem[ItemIndex].setColorBackground(red_);
+     confItem[ItemIndex].setMin(0);
+     confItem[ItemIndex].setDirection(Controller.HORIZONTAL);
+     confItem[ItemIndex].setMax(ConfigRanges[ItemIndex]);
+     confItem[ItemIndex].setDecimalPrecision(0);
+     confItem[ItemIndex].setGroup(inGroup);
   //Toggle
-  toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
-  toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
-  toggleConfItem[ItemIndex].setSize(35,10);
-  toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
-  toggleConfItem[ItemIndex].setGroup(inGroup);
+     toggleConfItem[ItemIndex] = (controlP5.Toggle) hideLabel(controlP5.addToggle("toggleValue"+ItemIndex));
+     toggleConfItem[ItemIndex].setPosition(XLoction,YLocation+3);
+     toggleConfItem[ItemIndex].setSize(35,10);
+     toggleConfItem[ItemIndex].setMode(ControlP5.SWITCH);
+     toggleConfItem[ItemIndex].setGroup(inGroup);
   //TextLabel
-  txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
-  txtlblconfItem[ItemIndex].setGroup(inGroup);
-  controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
+     txtlblconfItem[ItemIndex] = controlP5.addTextlabel("txtlblconfItem"+ItemIndex,ConfigNames[ItemIndex],XLoction+40,YLocation);
+     txtlblconfItem[ItemIndex].setGroup(inGroup);
+     controlP5.getTooltip().register("txtlblconfItem"+ItemIndex,ConfigHelp[ItemIndex]);
 }
 
 void MakePorts(){
@@ -985,16 +1002,13 @@ void draw() {
     
   }
   if ((SendSim ==1) && (ClosePort == false)){
- 
     if ((init_com==1)  && (time-time5 >5000) && (toggleMSP_Data == false) && (!FontMode)){
       if(ClosePort) return;
       time5 = time;
        
       if (init_com==1){
-        SendCommand(MSP_BOXNAMES);
         SendCommand(MSP_BOXIDS);
       }
-
     }
     if ((init_com==1)  && (time-time4 >200) && (!FontMode)){
       if(ClosePort) return;
@@ -1005,24 +1019,21 @@ void draw() {
       if (init_com==1)SendCommand(MSP_RC);
       if (init_com==1)SendCommand(MSP_ALTITUDE);
       if (init_com==1)SendCommand(MSP_RAW_GPS);
-      if (init_com==1)SendCommand(MSP_COMP_GPS);
-      
-      
+      if (init_com==1)SendCommand(MSP_COMP_GPS); 
     }
-    if ((init_com==1)  && (time-time1 >40) && (!FontMode)){
+      if ((init_com==1)  && (time-time1 >40) && (!FontMode)){
       if(ClosePort) return;
       time1 = time; 
       PortWrite = !PortWrite;
       
       if (init_com==1)SendCommand(MSP_ATTITUDE);
-
     }
   }
   else
   {
-    if (!FontMode) PortWrite = false; 
+      if (!FontMode) PortWrite = false; 
   }
-  if ((FontMode) && (time-time2 >100)){
+      if ((FontMode) && (time-time2 >100)){
     SendChar();
    }   
     
@@ -1030,17 +1041,14 @@ void draw() {
 
   background(80);
   
-  // ------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------------------------
   // Draw background control boxes
-  // ------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------------------------
 
   // Coltrol Box
-  fill(80); strokeWeight(2);stroke(100); rectMode(CORNERS); rect(XControlBox,YControlBox, XControlBox+108, YControlBox+123); //108//130
-  textFont(font12); fill(255, 255, 255); text("OSD Controls",XControlBox + 15,YControlBox + 15);
-  if (activeTab == 1) {
-  
-  }
-  
+  fill(80); strokeWeight(2);stroke(100); rectMode(CORNERS); rect(XControlBox,YControlBox, XControlBox+108, YControlBox+134); 
+  textFont(font12); fill(255, 255, 255); text("OSD Controls",XControlBox + 15,YControlBox + 15); 
+ // if (activeTab == 1) {}
   fill(60, 40, 40);
   strokeWeight(3);stroke(0);
   rectMode(CORNERS);
@@ -1048,13 +1056,13 @@ void draw() {
   textFont(font12);
   // version
   fill(255, 255, 255);
-  text("KV Team OSD",10,19);
-  text("  GUI    V",10,35);
-  text(KV_OSD_GUI_Version, 74, 35);
+  text("  KV Team OSD",10,19);
+  text(" GUI Version",10,35);
+  text(KV_OSD_GUI_Version, 88, 35);
   fill(0, 0, 0);
   strokeWeight(3);stroke(0);
   rectMode(CORNERS);
- 
+  image(GUIBackground,DisplayWindowX+WindowAdjX, DisplayWindowY+WindowAdjY);
   MatchConfigs();
   MakePorts();
 
@@ -1072,15 +1080,9 @@ int GetSetting(String test){
   return TheSetting;
 }
 
-
-void ShowSimBackground(float[] a) {
-  Showback = int(a[0]);
-}
-
 public void BuildCallSign(){
   String CallSText = "";
   for (int i=0; i<10; i++){ 
-    //confItem[GetSetting("S_CS0")+i].setValue(0);
     if (int(confItem[GetSetting("S_CS0")+i].getValue())>0){
     CallSText+=char(int(confItem[GetSetting("S_CS0")+i].getValue()));
     }
@@ -1125,7 +1127,6 @@ void MatchConfigs()
     }
   }
 }
-
 
 //***************************************************************//
 
@@ -1186,7 +1187,7 @@ public void bSAVE() {
                     return;
                 }
             }
-            super.approveSelection();
+        super.approveSelection();
         }
     };
 
@@ -1207,15 +1208,15 @@ public void bSAVE() {
           out = new FileOutputStream(file) ;
           MWI.conf.storeToXML(out, "KVTOSD Configuration File  " + new  Date().toString());
           JOptionPane.showMessageDialog(null,new StringBuffer().append("configuration saved : ").append(file.toURI()) );
-        }catch(FileNotFoundException e){
+           }catch(FileNotFoundException e){
          
           error = e.getCause().toString();
-        }catch( IOException ioe){
+           }catch( IOException ioe){
                 /*failed to write the file*/
                 ioe.printStackTrace();
                 error = ioe.getCause().toString();
-        }finally{
-                
+           }finally{
+             
           if (out!=null){
             try{
               out.close();
@@ -1223,12 +1224,12 @@ public void bSAVE() {
           }
           if (error !=null){
                   JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
-          }
-        }
-    }
-    }
-  }
-  );
+           }
+         }
+       }
+     }
+   }
+ );
 }
 
 public void updateModel(){
@@ -1266,8 +1267,7 @@ public void updateView(){
   catch(Exception e) {}finally {}
   }
   
-  BuildCallSign();
-  
+  BuildCallSign(); 
 }
 
 public class MwiFileFilter extends FileFilter {
@@ -1282,9 +1282,8 @@ public class MwiFileFilter extends FileFilter {
       }
     }
     return false;
-  }
-
-
+ }
+  
   public String getExtension(File f) {
     if(f != null) {
       String filename = f.getName();
@@ -1301,8 +1300,7 @@ public class MwiFileFilter extends FileFilter {
   }   
 }
 
-
-//**********************************************************//
+//*****************************************************************************************************//
 
 // import the content of a file into the model
 public void bIMPORT(){
@@ -1352,7 +1350,7 @@ public void bIMPORT(){
  );
 }
 
-//******************************************************************//
+//*****************************************************************************************************//
 //  our model 
 static class MWI {
   private static Properties conf = new Properties();
@@ -1368,22 +1366,17 @@ static class MWI {
   }
 }
 
-
-
 public void updateConfig(){
   String error = null;
   FileOutputStream out =null;
-  
   ConfigClass.setProperty("StartFontFile",FontFileName);
-  
-  
   File file = new File(dataPath("GUI.Config"));
   try{
     out = new FileOutputStream(file) ;
     ConfigClass.conf.storeToXML(out, "KV_Team_OSD GUI Configuration File  " + new  Date().toString());
-    }catch(FileNotFoundException e){
+   }catch(FileNotFoundException e){
       error = e.getCause().toString();
-      }catch( IOException ioe){
+   }catch( IOException ioe){
         /*failed to write the file*/
         ioe.printStackTrace();
         error = ioe.getCause().toString();
@@ -1394,17 +1387,15 @@ public void updateConfig(){
             }catch( IOException ioe){/*failed to close the file*/error = ioe.getCause().toString();}
             }
             if (error !=null){
-              JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
+            JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
     }
   }
 }
-
 
 public void LoadConfig(){
   String error = null;
   FileInputStream in =null;  
   try{
-   
     in = new FileInputStream(dataPath("GUI.Config"));
   }catch(FileNotFoundException e){
     System.out.println("Configuration Failed- Creating Default");
@@ -1424,7 +1415,7 @@ public void LoadConfig(){
           }catch( IOException ioe){/*failed to close the file*/error = ioe.getCause().toString();}
           }
           if (error !=null){
-            JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
+          JOptionPane.showMessageDialog(null, new StringBuffer().append("error : ").append(error) );
   }
 }
 
@@ -1444,7 +1435,6 @@ static class ConfigClass {
   }
 }
 
-
 void mouseReleased() {
   mouseDown = false;
   mouseUp = true;
@@ -1454,10 +1444,9 @@ void mouseReleased() {
   
 } 
 
-        
 public void mousePressed() {
-                mouseDown = true;
-                mouseUp = false;
+                mouseDown = false;
+                mouseUp = true;
         }
 
         public boolean mouseDown() {
@@ -1466,41 +1455,13 @@ public void mousePressed() {
 
         public boolean mouseUp() {
                 return mouseUp;
+        
         }
-          
-/*void SketchUploader(){
-  String ArduioLocal = ConfigClass.getProperty("ArduinoLocation");
-  if (ArduioLocal == "0"){
-   try {  
-    SwingUtilities.invokeAndWait(new Runnable(){
-    public void run(){
-      JFileChooser fc = new JFileChooser();
-      fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-      fc.setDialogType(JFileChooser.SAVE_DIALOG);
-      fc.setDialogTitle("Select Arduino Folder");
-      //fc.setFileFilter(new FontFileFilter());
-      //fc.setCurrentDirectory();
-      int returnVal = fc.showOpenDialog(null);
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-        File ArduioFile = fc.getSelectedFile();
-        String ArduioLocal = ArduioFile.getPath();
-        ConfigClass.setProperty("ArduinoLocation",ArduioLocal);
-        updateConfig();
         
-        String error = null;
-        
-      }
-    }
-  }
-  );  
-  } catch (Exception e) { }
-  }
-
-  toggleMSP_Data = false;
-  InitSerial(200.00);
-  updateConfig(); 
-  
-  super.exit();
-}
-*/
+  // Web Links
+   public void OSDHome()   { link("http://code.google.com/p/rush-osd-development/");}
+   public void OSDWiki()   { link("http://code.google.com/p/rush-osd-development/w/");}
+   public void MWiiForum() { link("http://www.multiwii.com/forum/viewtopic.php?f=8&t=2918");}
+   public void Support ()  { link("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q5VJ43Q2U2J6C");}
+   
 

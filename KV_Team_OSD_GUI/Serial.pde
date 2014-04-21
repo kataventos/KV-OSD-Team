@@ -15,25 +15,9 @@ boolean ClosePort = false;
 boolean PortIsWriting = false;
 boolean FontMode = false;
 int FontCounter = 0;
-//int cindex = 0;
 int CloseMode = 0;
 
 /******************************* Multiwii Serial Protocol **********************/
-
-
-String boxnames[] = { // names for dynamic generation of config GUI
-    "ARM;",
-    "ANGLE;",
-    "HORIZON;",
-    "BARO;",
-    "MAG;",
-    "GPS HOME;",
-    "GPS HOLD;",
-    "OSD SW;"
-    
-  };
-String strBoxNames = join(boxnames,""); 
-//int modebits = 0;
 
 private static final String MSP_HEADER = "$M<";
 
@@ -67,7 +51,10 @@ private static final int
   MSP_MAG_CALIBRATION      =206,
   MSP_SET_MISC             =207,
   MSP_RESET_CONF           =208,
+  MSP_SET_WP               =209,
   MSP_SELECT_SETTING       =210,
+  MSP_SET_HEAD             =211,
+  
   MSP_SPEK_BIND            =240,
 
   MSP_EEPROM_WRITE         =250,
@@ -152,9 +139,6 @@ void ClosePort(){
   
 }
 
-
-
-
 void SetConfigItem(int index, int value) {
   if(index >= CONFIGITEMS)
     return;
@@ -211,10 +195,6 @@ void RESTART(){
   READ();
 }  
 
-
-
-
-
 public void READ(){
   
   for(int i = 0; i < CONFIGITEMS; i++){
@@ -265,10 +245,9 @@ public void FONT_UPLOAD(){
   PortWrite = true;
   MakePorts();
   FontCounter = 0;
-  FileUploadText.setText("Please Wait 30 Seconds...");
+  FileUploadText.setText("Please Wait...");
   p = 0;
   inBuf[0] = OSD_GET_FONT;
-  //for (int txTimes = 0; txTimes<2; txTimes++) {
     headSerialReply(MSP_OSD, 5);
     serialize8(OSD_GET_FONT);
     serialize16(7456);  // safety code
@@ -334,11 +313,19 @@ public void RESET(){
  }
 }
 
-
-
+String boxids[] = {
+    "ARM;",
+    "ANGLE;",
+    "HORIZON;",
+    "BARO;",
+    "MAG;",
+    "GPS HOME;",
+    "GPS HOLD;",
+    "OSD SW;"
+  };
+String strBoxIds = join(boxids,"");  
 
 void SendCommand(int cmd){
-  //int icmd = (int)(cmd&0xFF);
   switch(cmd) {
   
   case MSP_STATUS:
@@ -350,7 +337,7 @@ void SendCommand(int cmd){
         serialize16(1|1<<1|1<<2|1<<3|0<<4);
         int modebits = 0;
         int BitCounter = 1;
-        for (int i=0; i<boxnames.length; i++) {
+        for (int i=0; i<boxids.length; i++) {
           if(toggleModeItems[i].getValue() > 0) modebits |= BitCounter;
           BitCounter += BitCounter;
         }
@@ -374,43 +361,27 @@ void SendCommand(int cmd){
         PortIsWriting = false;
       break;
       
-      case MSP_IDENT:
-        PortIsWriting = true;
-        headSerialReply(MSP_IDENT, 7);
-        serialize8(203);   // multiwii version
-        serialize8(0); // type of multicopter
-        serialize8(0);         // MultiWii Serial Protocol Version
-        serialize32(0);        // "capability"
-        tailSerialReply();
-        PortIsWriting = false;
-      break;
- 
-      case MSP_BOXNAMES:
-        PortIsWriting = true;
-        headSerialReply(MSP_BOXNAMES,strBoxNames.length());
-        serializeNames(strBoxNames.length());
-        tailSerialReply();
-        PortIsWriting = false;
-      break;
-      
       case MSP_BOXIDS:
-        headSerialReply(MSP_BOXIDS,19);
+        headSerialReply(MSP_BOXIDS, strBoxIds.length());
         for(int i=0;i<4;i++) 
         {serialize8(i);
+        serialize8(1);
+        serialize8(2);
+        serialize8(3);
         serialize8(5);
         serialize8(10);
         serialize8(11);
-        serialize8(16);
         serialize8(19);
         tailSerialReply();
+        
         PortIsWriting = false;
      }
      
       case MSP_ATTITUDE:
         PortIsWriting = true;
         headSerialReply(MSP_ATTITUDE, 8);
-        serialize16(int(MW_Pitch_Roll.arrayValue()[0])*10);
-        serialize16(int(MW_Pitch_Roll.arrayValue()[1])*10);
+        serialize16(int(MW_Pitch_Roll.arrayValue()[0])*20);
+        serialize16(int(MW_Pitch_Roll.arrayValue()[1])*20);
         serialize16(MwHeading);
         serialize16(0);
         tailSerialReply();
@@ -497,10 +468,7 @@ int read32() {return (inBuf[p++]&0xff) + ((inBuf[p++]&0xff)<<8) + ((inBuf[p++]&0
 int read16() {return (inBuf[p++]&0xff) + ((inBuf[p++])<<8); }
 int read8()  {return inBuf[p++]&0xff;}
 
-
-
 int outChecksum;
-
 
 void serialize8(int val) {
  if (init_com==1)  {
@@ -529,12 +497,6 @@ void serialize32(int a) {
     serialize8((a>>24) & 0xFF);
   }
  
-}
-
-void serializeNames(int s) {
-  for (int c = 0; c < strBoxNames.length(); c++) {
-    serialize8(strBoxNames.charAt(c));
-  }
 }
 
 void headSerialResponse(int requestMSP, Boolean err, int s) {
@@ -591,17 +553,9 @@ public void evaluateCommand(byte cmd, int size) {
             }
           }
         }
-
         
-
         if(cmd_internal == OSD_GET_FONT) {
           if( size == 1) {
-            //headSerialReply(MSP_OSD, 5);
-            //serialize8(OSD_GET_FONT);
-            //serialize16(7456);  // safety code
-            //serialize8(0);    // first char
-            //serialize8(255);  // last char
-           // tailSerialReply();
           }
           if(size == 3) {
        }
@@ -667,7 +621,6 @@ void MWData_Com() {
             try{
               if ((init_com==1)  && (toggleMSP_Data == true)) {
                   evaluateCommand(cmd, (int)dataSize);
-                  //PortRead = false;
               }
               else{
                 System.out.println("port is off ");
@@ -677,8 +630,7 @@ void MWData_Com() {
               } catch (Exception e) { // null pointer or serial port dead
               System.out.println("write error " + e);
               }
-           
-          }
+           }
         }
         else {
           System.out.println("invalid checksum for command "+((int)(cmd&0xFF))+": "+(checksum&0xFF)+" expected, got "+(int)(c&0xFF));
@@ -689,7 +641,7 @@ void MWData_Com() {
           }
           System.out.println("} ["+c+"]");
           System.out.println(new String(inBuf, 0, dataSize));
-        }
+      }
         c_state = IDLE;
         
       }
@@ -698,7 +650,7 @@ void MWData_Com() {
          System.out.println( t.getClass().getName() ); //this'll tell you what class has been thrown
          t.printStackTrace(); //get a stack trace
       }
-    }
+   }
 }
 
 
