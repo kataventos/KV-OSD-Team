@@ -90,7 +90,8 @@ void serialMSPCheck()
 
   if (cmdMSP==MSP_IDENT)
   {
-    MwVersion= read8();                             // MultiWii Firmware version
+    MwVersion= read8();    // MultiWii Firmware version
+    //MultiType= read8();    // Type of Multi Gadget
     modeMSPRequests &=~ REQ_MSP_IDENT;
   }
 
@@ -122,7 +123,7 @@ void serialMSPCheck()
     GPS_numSat=read8();
     GPS_latitude = read32();
     GPS_longitude = read32();
-    GPS_altitude = read16();
+    GPS_altitude = read16(); // Do not remove (currently not used but needed!!)
     GPS_speed = read16();
   }
 
@@ -176,65 +177,12 @@ void serialMSPCheck()
     modeMSPRequests &=~ REQ_MSP_PID;
   }
 
-if (Settings[S_USE_BOXNAMES]){ 
-  if(cmdMSP==MSP_BOXNAMES) {
-    uint32_t bit = 1;
-    uint8_t remaining = dataSize;
-    uint8_t len = 0;
-    char firstc, lastc;
-
-    mode_armed = 0;
-    mode_stable = 0;
-    mode_baro = 0;
-    mode_mag = 0;
-    mode_gpshome = 0;
-    mode_gpshold = 0;
-    mode_osd_switch = 0;
-
-    while(remaining > 0) {
-      char c = read8();
-      if(len == 0)
-        firstc = c;
-      len++;
-      if(c == ';') {
-        // Found end of name; set bit if first and last c matches.
-        if(firstc == 'A') {
-          if(lastc == 'M') // "ARM;"
-            mode_armed |= bit;
-          if(lastc == 'E') // "ANGLE;"
-            mode_stable |= bit;
-        }
-        //if(firstc == 'H' && lastc == 'N') // "HORIZON;"
-          //mode_stable |= bit;
-        if(firstc == 'H' && lastc == 'N') // "HORIZON;"
-          mode_horizon |= bit;
-        if(firstc == 'M' && lastc == 'G') // "MAG;"
-           mode_mag |= bit;
-        if(firstc == 'B' && lastc == 'O') // "BARO;"
-          mode_baro |= bit;
-        if(firstc == 'G') {
-          if(lastc == 'E') // "GPS HOME;"
-            mode_gpshome |= bit;
-          if(lastc == 'D') // "GPS HOLD;"
-            mode_gpshold |= bit;
-            }
-          if(firstc == 'O' && lastc == 'W') // "OSD SW;"
-            mode_osd_switch |= bit;
-            
-            len = 0;
-             bit <<= 1L;
-      }
-      lastc = c;
-      --remaining;
-    }
-    modeMSPRequests &=~ REQ_MSP_BOX;
-  }
-}else{ // use MSP_BOXIDS
   if(cmdMSP==MSP_BOXIDS) {
     uint32_t bit = 1;
     uint8_t remaining = dataSize;
 
     mode_armed = 0;
+    mode_horizon= 0;
     mode_stable = 0;
     mode_baro = 0;
     mode_mag = 0;
@@ -249,8 +197,10 @@ if (Settings[S_USE_BOXNAMES]){
         mode_armed |= bit;
         break;
       case 1:
-      case 2:
         mode_stable |= bit;
+        break;
+      case 2:
+        mode_horizon |= bit;
         break;
       case 3:
         mode_baro |= bit;
@@ -274,7 +224,7 @@ if (Settings[S_USE_BOXNAMES]){
     modeMSPRequests &=~ REQ_MSP_BOX;
   }
 }
-}
+//}
 
 // End of decoded received commands from MultiWii
 // --------------------------------------------------------------------------------------
@@ -373,8 +323,8 @@ void handleRawRC() {
 
 	if(configPage == 3 && COL == 3) {
 	  if(ROW==1) Settings[S_VOLTAGEMIN]--;
-	  if(ROW==2) Settings[S_TEMPERATUREMAX]--;
-	  if(ROW==3) {
+	  //if(ROW==2) Settings[S_TEMPERATUREMAX]--; // Do not remove yet
+	  if(ROW==2) { // (ROW==3)
               Settings[S_BLINKINGHZ]--;
               if (Settings[S_BLINKINGHZ] <1) Settings[S_BLINKINGHZ]=1; 
   	      }
@@ -428,7 +378,7 @@ void handleRawRC() {
 	     }                
           if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
 	}
-//--------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
 
 	if((ROW==10)&&(COL==3)) configPage--;
 	if(configPage<MINPAGE) configPage = MAXPAGE;
@@ -465,8 +415,8 @@ void handleRawRC() {
 
 	if(configPage == 3 && COL == 3) {
 	  if(ROW==1) Settings[S_VOLTAGEMIN]++;
-	  if(ROW==2) Settings[S_TEMPERATUREMAX]++;
-	  if(ROW==3) {
+	  //if(ROW==2) Settings[S_TEMPERATUREMAX]++; // Do not remove yet
+	  if(ROW==2) {  // (ROW==3) 
               Settings[S_BLINKINGHZ]++;
               if (Settings[S_BLINKINGHZ] >10) Settings[S_BLINKINGHZ]=10;
   	      }
@@ -499,7 +449,7 @@ void handleRawRC() {
 	    }
 	}
 
-//------------------------------  page for screen item change position
+//-----------------------------------------------------  page for screen item change position
 	if(configPage == 8) {
           if(ROW == 4) {
 	      if (COL==1) {
@@ -523,7 +473,7 @@ void handleRawRC() {
               }
           if((ROW==7)&&(COL==1)) WriteScreenLayoutDefault(); // Back and save to all default positions
 	 }
-//--------------------------------------------------
+//-----------------------------------------------------
 
 	if((ROW==10)&&(COL==3)) configPage++;
 	if(configPage>MAXPAGE) configPage = MINPAGE;
@@ -616,7 +566,7 @@ void configExit()
     distanceMAX=0;
     altitudeMAX=0;
     speedMAX=0;
-    temperMAX =0;
+    //temperMAX =0;
     flyingTime=0;
   }
   setMspRequests();
@@ -627,17 +577,17 @@ void saveExit()
   uint8_t txCheckSum;
   uint8_t txSize;
 
-  if (configPage==1){
-    Serial.write('$');
-    Serial.write('M');
-    Serial.write('<');
-    txCheckSum=0;
-    txSize=30;
-    Serial.write(txSize);
-    txCheckSum ^= txSize;
-    Serial.write(MSP_SET_PID);
-    txCheckSum ^= MSP_SET_PID;
-    for(uint8_t i=0; i<PIDITEMS; i++) {
+   if (configPage==1){
+      Serial.write('$');
+      Serial.write('M');
+      Serial.write('<');
+      txCheckSum=0;
+      txSize=30;
+      Serial.write(txSize);
+      txCheckSum ^= txSize;
+      Serial.write(MSP_SET_PID);
+      txCheckSum ^= MSP_SET_PID;
+      for(uint8_t i=0; i<PIDITEMS; i++) {
       Serial.write(P8[i]);
       txCheckSum ^= P8[i];
       Serial.write(I8[i]);
@@ -680,7 +630,6 @@ void saveExit()
   configExit();
 }
 
-
 // back to layout default setting & position for PAL/NTSC
 void WriteScreenLayoutDefault(void)
 {
@@ -697,8 +646,6 @@ void WriteScreenLayoutDefault(void)
   readEEPROM();  // Refresh with default data
   configExit();  // Exit
 }
-
-
 
 void blankserialRequest(uint8_t requestMSP)
 {

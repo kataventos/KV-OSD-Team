@@ -1,5 +1,5 @@
 /*
-KV Team OSD V2.3
+KV Team OSD V2.3 April 2014
 http://code.google.com/p/rush-osd-development/
  Copyright (C) January 2014 (KV Team OSD)
  This program is free software: you can redistribute it and/or modify
@@ -8,10 +8,8 @@ http://code.google.com/p/rush-osd-development/
  any later version. see http://www.gnu.org/licenses/
 */
 
-// This Teamwork is based on the earlier work developed by Jean Gabriel Maurice known as Rushduino. http://code.google.com/p/rushduino-osd/
-// Rushduino OSD <Multiwii forum>  http://www.multiwii.com/forum/viewtopic.php?f=8&t=922
-// Minim OSD <Multiwii forum>  http://www.multiwii.com/forum/viewtopic.php?f=8&t=2918
-// This team wish you great flights.
+//This work is based on the earlier work done by Jean Gabriel Maurice known as Rushduino. http://code.google.com/p/rushduino-osd/
+
 
               /*********************************************************************/
               /*                           KV_OSD_Team                             */
@@ -90,7 +88,6 @@ void setMspRequests() {
   }
   else {
     modeMSPRequests = 
-      REQ_MSP_IDENT|
       REQ_MSP_STATUS|
       REQ_MSP_RAW_GPS|
       REQ_MSP_COMP_GPS|
@@ -122,7 +119,7 @@ void loop()
 {
   // Process AI   
   if (Settings[S_ENABLEADC]){
-    temperature=(analogRead(temperaturePin)-102)/2.048; 
+    //temperature=(analogRead(temperaturePin)-102)/2.048; // Does someone use this ATM??
     if (!Settings[S_MAINVOLTAGE_VBAT]){
       static uint16_t ind = 0;
       static uint32_t voltageRawArray[8];
@@ -147,7 +144,6 @@ void loop()
     if (!Settings[S_MWAMPERAGE]) {
       int currsensOffSet=(Settings[S_CURRSENSOFFSET_L] | (Settings[S_CURRSENSOFFSET_H] << 8));  // Read OffSetH/L
       amperageADC = analogRead(amperagePin);
-//      if (amperageADC > currsensOffSet) amperageADC=((amperageADC-currsensOffSet)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; else amperageADC=0; // [A]
       if (amperageADC > currsensOffSet) amperageADC=((amperageADC-currsensOffSet)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; // [A] Positive Current flow (512...1023) or Unidir (0...1023)
       else amperageADC=((currsensOffSet-amperageADC)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; // [A] Negative Current flow (0...512)
       }
@@ -182,8 +178,6 @@ void loop()
     if(Settings[L_RSSIPOSITIONDSPL])
       calculateRssi();      
   }  // End of slow Timed Service Routine (100ms loop)
-
-
 
   if((currentMillis - previous_millis_high) >= hi_speed_cycle)  // 20 Hz (Executed every 50ms)
   {
@@ -235,10 +229,6 @@ void loop()
         MSPcmdsend = MSP_PID;
         break;
       case REQ_MSP_BOX:
-      
-      if (Settings[S_USE_BOXNAMES])
-        MSPcmdsend = MSP_BOXNAMES;
-      else
         MSPcmdsend = MSP_BOXIDS;
          break;
       case REQ_MSP_FONT:
@@ -246,7 +236,7 @@ void loop()
       break;
     }
       if(!fontMode)
-      blankserialRequest(MSPcmdsend);      
+      blankserialRequest(MSPcmdsend);     
 
     MAX7456_DrawScreen();
     
@@ -280,12 +270,15 @@ void loop()
         displayVidVoltage();
         displayRSSI();
         displayTime();
+        displaySensor();
+        displayGPSMode();
         displayMode();
-        if((temperature<Settings[S_TEMPERATUREMAX])||(BlinkAlarm)) displayTemperature();
+        //if((temperature<Settings[S_TEMPERATUREMAX])||(BlinkAlarm)) displayTemperature();
         displayAmperage();
         displaypMeterSum();
         displayArmed();
         displayCurrentThrottle();
+        displayautoPilot(); 
 
         if ( (onTime > (lastCallSign+300)) || (onTime < (lastCallSign+4)))
        {
@@ -294,7 +287,6 @@ void loop()
         displayCallsign(); 
        
        }
-       //if (!(MwSensorActive&mode_osd_switch)
 
         if(MwSensorPresent&ACCELEROMETER)
            displayHorizon(MwAngle[0],MwAngle[1]);
@@ -317,7 +309,7 @@ void loop()
             displayAngleToHome();
             displayGPS_speed();
             displayGPSPosition();
-            displayGPS_altitude();
+            //displayGPS_altitude(); // Do not remove yet
           }
       }
     }
@@ -416,7 +408,7 @@ void calculateAmperage(void)
 // 720= *100/72000 --> where:
 // *100=mA (instead of *1000 as the value is already multiplied by 10)
 // 72000=n. of 50ms in 1 hour
-   amperagesum += aa /720; // [mAh]    // NEB (Carlonb note) if want add 3% change with this "amperagesum += aa /690;"
+   amperagesum += aa /720; // [mAh]    // NOTE: if want add 3%, change this "amperagesum += aa /690;"
 }
 
 void writeEEPROM(void)

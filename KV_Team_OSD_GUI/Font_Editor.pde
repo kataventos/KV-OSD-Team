@@ -42,12 +42,12 @@ void Font_Editor_setup() {
  
   
   FG = FontGroupcontrolP5.addGroup("FG")
-    .setPosition(150,50)
-    .setWidth(680)
-    .setBarHeight(12)
+    .setPosition(121,15)
+    .setWidth(670)
+    .setBarHeight(14)
     .activateEvent(true)
     .setBackgroundColor(color(200,255))
-    .setBackgroundHeight(450)
+    .setBackgroundHeight(440)
     .setLabel("Font Editor")
     .setMoveable(true)
     .disableCollapse()
@@ -77,9 +77,7 @@ void Font_Editor_setup() {
     .setMoveable(true)
     .setGroup(FG);
     ;
-    
-    
-    
+        
 // RawFont = LoadFont("MW_OSD_Team.mcm");
 for (int i=0; i<256; i++) {
     int boxX = XFullFont+(i % 16) * (12+gap);
@@ -150,7 +148,7 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
   buttonFSave.setGroup(FGCharEdit); 
  
  
-  buttonFClose = FontGroupcontrolP5.addButton("FCLOSE",1,680- 55 ,10,45,18);buttonFClose.setColorBackground(red_);
+  buttonFClose = FontGroupcontrolP5.addButton("FCLOSE",1,550 ,10,45,18);buttonFClose.setColorBackground(red_);
   buttonFClose.getCaptionLabel()
     .setFont(font12)
     .toUpperCase(false)
@@ -158,8 +156,9 @@ String[] CharRows = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E"
   buttonFClose.setGroup(FG);
  
   MGUploadF = controlP5.addGroup("MGUploadF")
-                .setPosition(694,20)
-                .setWidth(157)
+                .setPosition(640,20)
+                .setWidth(155)
+                .setTab ("default")
                 .setBarHeight(15)
                 .activateEvent(true)  
                 .setBackgroundColor(color(30,255))

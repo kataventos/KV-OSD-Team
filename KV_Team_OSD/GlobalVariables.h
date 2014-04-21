@@ -9,7 +9,7 @@
 #define amperagePin A1
 #define rssiPin A3
 #define PWMrssiPin A3           // PWM RSSI uses same pin of analog RSSI A3
-#define temperaturePin A6       // Temperature pin 6 for original Rushduino Board V1.2
+//#define temperaturePin A6     // Temperature pin 6 for original Rushduino Board V1.2 (Does this still in use??)
 
 // **** JDrones hardware **** //
 /* Pins n. to be defined ......
@@ -81,7 +81,6 @@ enum Setting_ {
   S_VIDEOSIGNALTYPE,
   S_RESETSTATISTICS,
   S_ENABLEADC,
-  S_USE_BOXNAMES,
   S_BLINKINGHZ,    // selectable alarm blink freq
   S_MWAMPERAGE,
   S_CURRSENSSENSITIVITY,
@@ -92,6 +91,7 @@ enum Setting_ {
   S_VOLUME_ALT_MAX,
   S_VOLUME_ALT_MIN,
   S_VIDVOLTAGEMIN,
+  S_PITCH_WARNING,
   
   S_CALLSIGN,
   
@@ -126,21 +126,24 @@ enum Setting_ {
   L_GPS_ANGLETOHOMEPOSROW,
   L_GPS_ANGLETOHOMEPOSCOL,
   L_GPS_ANGLETOHOMEPOSDSPL,
-  L_MW_GPS_ALTPOSITIONROW,
+  /*L_MW_GPS_ALTPOSITIONROW,          // Do not remove yet
   L_MW_GPS_ALTPOSITIONCOL,
-  L_MW_GPS_ALTPOSITIONDSPL,
+  L_MW_GPS_ALTPOSITIONDSPL,*/
   L_SENSORPOSITIONROW,
   L_SENSORPOSITIONCOL,
   L_SENSORPOSITIONDSPL,
+  L_MODEPOSITIONROW,
+  L_MODEPOSITIONCOL, 
+  L_MODEPOSITIONDSPL,
   L_MW_HEADINGPOSITIONROW,
   L_MW_HEADINGPOSITIONCOL,
   L_MW_HEADINGPOSITIONDSPL,
   L_MW_HEADINGGRAPHPOSROW,
   L_MW_HEADINGGRAPHPOSCOL,
   L_MW_HEADINGGRAPHPOSDSPL,
-  L_TEMPERATUREPOSROW,
+ /* L_TEMPERATUREPOSROW,              // Do not remove yet
   L_TEMPERATUREPOSCOL,
-  L_TEMPERATUREPOSDSPL,
+  L_TEMPERATUREPOSDSPL,*/
 
   L_MW_ALTITUDEPOSITIONROW,
   L_MW_ALTITUDEPOSITIONCOL,
@@ -197,6 +200,7 @@ enum Setting_ {
   L_CALLSIGNPOSITIONROW,
   L_CALLSIGNPOSITIONCOL,
   L_CALLSIGNPOSITIONDSPL,
+  
   // EEPROM_ITEM_LOCATION must be last for Items location!
   EEPROM_ITEM_LOCATION
 };
@@ -209,50 +213,50 @@ uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 
 0,   // S_RSSIMIN                   1
 255, // S_RSSIMAX                   2
-60,  //S_RSSI_ALARM                 3
+60,  // S_RSSI_ALARM                3
 1,   // S_MWRSSI                    4
 0,   // S_PWMRSSI                   5
-8,   // S_PWMRSSIDIVIDER            6       // PWM Freq 500Hz=8, 1KHz=4 (Divider to avoid value >255)
+8,   // S_PWMRSSIDIVIDER            6    // PWM Freq 500Hz=8, 1KHz=4 (Divider to avoid value >255)
 105, // S_VOLTAGEMIN                7
 3,   // S_BATCELLS                  8
 100, // S_DIVIDERRATIO              9
 1,   // S_MAINVOLTAGE_VBAT          10
 100, // S_VIDDIVIDERRATIO           11
 0,   // S_VIDVOLTAGE_VBAT           12 
-90,  // S_TEMPERATUREMAX            13
+90,  // S_TEMPERATUREMAX            13   // Do not remove yet
 1,   // S_BOARDTYPE                 14
 1,   // S_DISPLAYGPS                15
 1,   // S_COORDINATES               16
-1,   // S_HEADING360                17
+0,   // S_HEADING360                17
 0,   // S_UNITSYSTEM                18
 1,   // S_VIDEOSIGNALTYPE           19
 0,   // S_RESETSTATISTICS           20
 1,   // S_ENABLEADC                 21
-0,   // S_USE_BOXNAMES              22
-5,   // S_BLINKINGHZ                23   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
-0,   // S_MWAMPERAGE                24
-40,  // S_CURRSENSSENSITIVITY       25   // May vary from 17 to 40mV/A (Sensor type) 
-2,   // S_CURRSENSOFFSET_H          26   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
-0,   // S_CURRSENSOFFSET_L          27   // 2H+0L=512
-2,   // S_CLIMB_RATE_ALARM          28
-5,   // S_VOLUME_DIST_MAX           29   // Flying Volume Warning (Distance value in meters x100) by default is 500m
-25,  // S_VOLUME_ALT_MAX            30   //   "     "       "   (Altitude Max "    "    "   x2  )  "     "   "   50m 
-0,   // S_VOLUE_ALT_MIN             31   //   "     "       "   (Altitude Min "    "    "   ___    "     "   "    0m
-105, // S_VIDVOLTAGEMIN             32
+5,   // S_BLINKINGHZ                22   // 10=1Hz, 9=1.1Hz, 8=1,25Hz, 7=1.4Hz, 6=1.6Hz, 5=2Hz, 4=2,5Hz, 3=3,3Hz, 2=5Hz, 1=10Hz
+0,   // S_MWAMPERAGE                23
+40,  // S_CURRSENSSENSITIVITY       24   // May vary from 17 to 40mV/A (Sensor type) 
+2,   // S_CURRSENSOFFSET_H          25   // offset(H/L) =0 for unidir sensors or =512 for bidirectional sensors, may be changed only of few units.
+0,   // S_CURRSENSOFFSET_L          26   // 2H+0L=512
+2,   // S_CLIMB_RATE_ALARM          27
+5,   // S_VOLUME_DIST_MAX           28   // Flying Volume Warning (Distance value in meters x100) by default is 500m
+25,  // S_VOLUME_ALT_MAX            29   //   "     "       "   (Altitude Max "    "    "   x2  )  "     "   "   50m 
+0,   // S_VOLUE_ALT_MIN             30   //   "     "       "   (Altitude Min "    "    "   ___    "     "   "    0m
+105, // S_VIDVOLTAGEMIN             31
+30,  // S_PITCH_WARNING             32   // Warning message at given angle in degrees positive and negative (default 30°)
 
-0,   //S_CALLSIGN                   33   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)
+0,   //S_CALLSIGN                   32   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)
 
 
-'T',   // S_CS0,                    34    // 10 callsign char locations
-'E',   // S_CS1,
-'A',   // S_CS2,
-'M',   // S_CS3,
-'_',   // S_CS4,
-'K',   // S_CS5,
-'V',   // S_CS6,
-'O',   // S_CS7,
-'S',   // S_CS8,
-'D',   // S_CS9,                    43
+0,   // S_CS0,                    33    // 10 callsign char locations
+0,   // S_CS1,
+0,   // S_CS2,
+0,   // S_CS3,
+0,   // S_CS4,
+0,   // S_CS5,
+0,   // S_CS6,
+0,   // S_CS7,
+0,   // S_CS8,
+0,   // S_CS9,                    42
 };
 
 
@@ -261,90 +265,120 @@ uint8_t EEPROM_PAL_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
-4,   // L_GPS_NUMSATPOSITIONROW LINE02+2
-2,   // L_GPS_NUMSATPOSITIONCOL
-1,   // L_GPS_NUMSATPOSITIONDSPL
-3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
-14,  // L_GPS_DIRECTIONTOHOMEPOSCOL
-1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
-2,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
-24,  // L_GPS_DISTANCETOHOMEPOSCOL
-1,   // L_GPS_DISTANCETOHOMEPOSDSPL
-3,   // L_SPEEDPOSITIONROW LINE03+24
-24,  // L_SPEEDPOSITIONCOL
-1,   // L_SPEEDPOSITIONDSPL
-4,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
-12,  // L_GPS_ANGLETOHOMEPOSCOL
-1,   // L_GPS_ANGLETOHOMEPOSDSPL
-4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
-24,  // L_MW_GPS_ALTPOSITIONCOL
-1,   // L_MW_GPS_ALTPOSITIONDSPL
-2,   // L_SENSORPOSITIONROW LINE03+2
-2,   // L_SENSORPOSITIONCOL
-1,   // L_SENSORPOSITIONDSPL
-2,   // L_MW_HEADINGPOSITIONROW LINE02+19
-19,  // L_MW_HEADINGPOSITIONCOL
-1,   // L_MW_HEADINGPOSITIONDSPL
-2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
-10,  // L_MW_HEADINGGRAPHPOSCOL
-1,   // L_MW_HEADINGGRAPHPOSDSPL
-11,  // L_TEMPERATUREPOSROW LINE11+2
-2,   // L_TEMPERATUREPOSCOL
-0,   // L_TEMPERATUREPOSDSPL
 
-8,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
-2,   // L_MW_ALTITUDEPOSITIONCOL
+2,   // L_GPS_NUMSATPOSITIONROW LINE02+6
+18,  // L_GPS_NUMSATPOSITIONCOL 
+1,   // L_GPS_NUMSATPOSITIONDSPL
+
+6,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
+2,   // L_GPS_DIRECTIONTOHOMEPOSCOL
+1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
+
+10,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
+2,   // L_GPS_DISTANCETOHOMEPOSCOL
+1,   // L_GPS_DISTANCETOHOMEPOSDSPL
+
+10,  // L_SPEEDPOSITIONROW LINE03+24
+23,   // L_SPEEDPOSITIONCOL
+1,   // L_SPEEDPOSITIONDSPL
+
+9,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
+2,   // L_GPS_ANGLETOHOMEPOSCOL
+0,   // L_GPS_ANGLETOHOMEPOSDSPL
+
+/*13,  // L_MW_GPS_ALTPOSITIONROW LINE04+24   Do not remove yet
+2,   // L_MW_GPS_ALTPOSITIONCOL
+0,   // L_MW_GPS_ALTPOSITIONDSPL*/
+
+2,   // L_SENSORPOSITIONROW LINE03+2
+24,  // L_SENSORPOSITIONCOL
+1,   // L_SENSORPOSITIONDSPL
+
+2,   // L_MODEPOSITIONROW   LINE05+2
+8,   // L_MODEPOSITIONCOL
+1,   // L_MODEPOSITIONDSPL
+
+3,   // L_MW_HEADINGPOSITIONROW LINE02+19
+2,   // L_MW_HEADINGPOSITIONCOL
+1,   // L_MW_HEADINGPOSITIONDSPL
+
+2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
+2,   // L_MW_HEADINGGRAPHPOSCOL
+1,   // L_MW_HEADINGGRAPHPOSDSPL
+
+/*12,  // L_TEMPERATUREPOSROW LINE11+2  // Do not remove yet
+2,   // L_TEMPERATUREPOSCOL
+0,   // L_TEMPERATUREPOSDSPL*/
+
+6,  // L_MW_ALTITUDEPOSITIONROW LINE08+2
+23,  // L_MW_ALTITUDEPOSITIONCOL
 1,   // L_MW_ALTITUDEPOSITIONDSPL
+
 8,   // L_CLIMBRATEPOSITIONROW LINE08+24
-24,  // L_CLIMBRATEPOSITIONCOL
+5,  // L_CLIMBRATEPOSITIONCOL
 1,   // L_CLIMBRATEPOSITIONDSPL
+
 6,   // L_HORIZONPOSITIONROW LINE06+8
 8,   // L_HORIZONPOSITIONCOL
 1,   // L_HORIZONPOSITIONDSPL
-255, // L_HORIZONSIDEREFROW,
-255, // L_HORIZONSIDEREFCOL,
-0,   // L_HORIZONSIDEREFDSPL,
-255, // L_HORIZONCENTERREFROW,
-255, // L_HORIZONCENTERREFCOL,
-1,   // L_HORIZONCENTERREFDSPL,  
-  
-14,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
-22,   // L_CURRENTTHROTTLEPOSITIONCOL
-1,    // L_CURRENTTHROTTLEPOSITIONDSPL
+
+255, // L_HORIZONSIDEREFROW
+255, // L_HORIZONSIDEREFCOL
+1,   // L_HORIZONSIDEREFDSPL
+
+255, // L_HORIZONCENTERREFROW
+255, // L_HORIZONCENTERREFCOL
+1,   // L_HORIZONCENTERREFDSPL
+
+7,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
+20,  // L_CURRENTTHROTTLEPOSITIONCOL
+1,   // L_CURRENTTHROTTLEPOSITIONDSPL
+
 15,   // L_FLYTIMEPOSITIONROW LINE15+22
-22,   // L_FLYTIMEPOSITIONCOL
+14,   // L_FLYTIMEPOSITIONCOL
 1,    // L_FLYTIMEPOSITIONDSPL
+
 15,   // L_ONTIMEPOSITIONROW LINE15+22
-22,   // L_ONTIMEPOSITIONCOL
+14,   // L_ONTIMEPOSITIONCOL
 1,    // L_ONTIMEPOSITIONDSPL
-14,   // L_MOTORARMEDPOSITIONROW LINE14+11
-11,   // L_MOTORARMEDPOSITIONCOL
-1,    // L_MOTORARMEDPOSITIONDSPL
-12,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
+
+3,   // L_MOTORARMEDPOSITIONROW LINE14+11
+24,  // L_MOTORARMEDPOSITIONCOL
+1,   // L_MOTORARMEDPOSITIONDSPL
+
+14,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
 2,    // L_MW_GPS_LATPOSITIONCOL
 1,    // L_MW_GPS_LATPOSITIONDSPL
-12,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
-18,   // L_MW_GPS_LONPOSITIONCOL
+
+15,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
+2,    // L_MW_GPS_LONPOSITIONCOL
 1,    // L_MW_GPS_LONPOSITIONDSPL
-14,   // L_RSSIPOSITIONROW LINE14+2
-2,    // L_RSSIPOSITIONCOL
+
+2,    // L_RSSIPOSITIONROW LINE14+2
+12,   // L_RSSIPOSITIONCOL
 1,    // L_RSSIPOSITIONDSPL
+
 15,   // L_VOLTAGEPOSITIONROW LINE15+3
-3,    // L_VOLTAGEPOSITIONCOL
+23,   // L_VOLTAGEPOSITIONCOL
 1,    // L_VOLTAGEPOSITIONDSPL
+
 255,  // L_MAINBATLEVEVOLUTIONROW,
 255,  // L_MAINBATLEVEVOLUTIONCOL,
-1,    // L_MAINBATLEVEVOLUTIONDSPL,  
+1,    // L_MAINBATLEVEVOLUTIONDSPL,
+
 13,   // L_VIDVOLTAGEPOSITIONROW LINE13+3
-3,    // L_VIDVOLTAGEPOSITIONCOL
+23,   // L_VIDVOLTAGEPOSITIONCOL
 0,    // L_VIDVOLTAGEPOSITIONDSPL
-15,   // L_AMPERAGEPOSITIONROW LINE15+10
-10,   // L_AMPERAGEPOSITIONCOL
+
+14,   // L_AMPERAGEPOSITIONROW LINE15+10
+23,   // L_AMPERAGEPOSITIONCOL
 1,    // L_AMPERAGEPOSITIONDSPL
-15,   // L_PMETERSUMPOSITIONROW LINE15+16
-16,   // L_PMETERSUMPOSITIONCOL
+
+14,   // L_PMETERSUMPOSITIONROW LINE15+16
+14,   // L_PMETERSUMPOSITIONCOL
 1,    // L_PMETERSUMPOSITIONDSPL
-14,   // L_CALLSIGNPOSITIONROW LINE14+10
+
+13,   // L_CALLSIGNPOSITIONROW LINE14+10
 10,   // L_CALLSIGNPOSITIONCOL
 1,    // L_CALLSIGNPOSITIONDSPL
 };
@@ -355,90 +389,120 @@ uint8_t EEPROM_NTSC_DEFAULT[EEPROM_ITEM_LOCATION-EEPROM_SETTINGS] = {
 // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
 // DSPL= Display item on screen
-4,   // L_GPS_NUMSATPOSITIONROW LINE02+2
-2,   // L_GPS_NUMSATPOSITIONCOL
-1,   // L_GPS_NUMSATPOSITIONDSPL
-3,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
-14,  // L_GPS_DIRECTIONTOHOMEPOSCOL
-1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
-2,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
-24,  // L_GPS_DISTANCETOHOMEPOSCOL
-1,   // L_GPS_DISTANCETOHOMEPOSDSPL
-3,   // L_SPEEDPOSITIONROW LINE03+24
-24,  // L_SPEEDPOSITIONCOL
-1,   // L_SPEEDPOSITIONDSPL
-4,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
-12,  // L_GPS_ANGLETOHOMEPOSCOL
-1,   // L_GPS_ANGLETOHOMEPOSDSPL
-4,   // L_MW_GPS_ALTPOSITIONROW LINE04+24
-24,  // L_MW_GPS_ALTPOSITIONCOL
-1,   // L_MW_GPS_ALTPOSITIONDSPL
-2,   // L_SENSORPOSITIONROW LINE03+2
-2,   // L_SENSORPOSITIONCOL
-1,   // L_SENSORPOSITIONDSPL
-2,   // L_MW_HEADINGPOSITIONROW LINE02+19
-19,  // L_MW_HEADINGPOSITIONCOL
-1,   // L_MW_HEADINGPOSITIONDSPL
-2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
-10,  // L_MW_HEADINGGRAPHPOSCOL
-1,   // L_MW_HEADINGGRAPHPOSDSPL
-9,   // L_TEMPERATUREPOSROW LINE11+2
-2,   // L_TEMPERATUREPOSCOL
-0,   // L_TEMPERATUREPOSDSPL
 
-7,   // L_MW_ALTITUDEPOSITIONROW LINE08+2
-2,   // L_MW_ALTITUDEPOSITIONCOL
+2,   // L_GPS_NUMSATPOSITIONROW LINE02+6
+18,  // L_GPS_NUMSATPOSITIONCOL 
+1,   // L_GPS_NUMSATPOSITIONDSPL
+
+6,   // L_GPS_DIRECTIONTOHOMEPOSROW LINE03+14
+2,   // L_GPS_DIRECTIONTOHOMEPOSCOL
+1,   // L_GPS_DIRECTIONTOHOMEPOSDSPL
+
+10,   // L_GPS_DISTANCETOHOMEPOSROW LINE02+24
+2,   // L_GPS_DISTANCETOHOMEPOSCOL
+1,   // L_GPS_DISTANCETOHOMEPOSDSPL
+
+10,  // L_SPEEDPOSITIONROW LINE03+24
+23,   // L_SPEEDPOSITIONCOL 
+1,   // L_SPEEDPOSITIONDSPL
+
+9,   // L_GPS_ANGLETOHOMEPOSROW LINE04+12
+2,   // L_GPS_ANGLETOHOMEPOSCOL
+0,   // L_GPS_ANGLETOHOMEPOSDSPL
+
+/*11,  // L_MW_GPS_ALTPOSITIONROW LINE04+24   Do not remove yet
+2,   // L_MW_GPS_ALTPOSITIONCOL
+0,   // L_MW_GPS_ALTPOSITIONDSPL*/
+
+2,   // L_SENSORPOSITIONROW LINE03+2
+24,  // L_SENSORPOSITIONCOL
+1,   // L_SENSORPOSITIONDSPL
+
+2,   // L_MODEPOSITIONROW   LINE05+2
+8,  // L_MODEPOSITIONCOL
+1,   // L_MODEPOSITIONDSPL
+
+3,   // L_MW_HEADINGPOSITIONROW LINE02+19
+2,   // L_MW_HEADINGPOSITIONCOL
+1,   // L_MW_HEADINGPOSITIONDSPL
+
+2,   // L_MW_HEADINGGRAPHPOSROW LINE02+10
+2,   // L_MW_HEADINGGRAPHPOSCOL
+1,   // L_MW_HEADINGGRAPHPOSDSPL
+
+/*12,  // L_TEMPERATUREPOSROW LINE11+2       // Do not remove yet
+2,   // L_TEMPERATUREPOSCOL
+0,   // L_TEMPERATUREPOSDSPL*/
+
+6,  // L_MW_ALTITUDEPOSITIONROW LINE08+2
+23,  // L_MW_ALTITUDEPOSITIONCOL
 1,   // L_MW_ALTITUDEPOSITIONDSPL
-7,   // L_CLIMBRATEPOSITIONROW LINE08+24
-24,  // L_CLIMBRATEPOSITIONCOL
+
+8,   // L_CLIMBRATEPOSITIONROW LINE08+24
+5,  // L_CLIMBRATEPOSITIONCOL
 1,   // L_CLIMBRATEPOSITIONDSPL
-5,   // L_HORIZONPOSITIONROW LINE06+8
+
+6,   // L_HORIZONPOSITIONROW LINE06+8
 8,   // L_HORIZONPOSITIONCOL
 1,   // L_HORIZONPOSITIONDSPL
-255, // L_HORIZONSIDEREFROW,
-255, // L_HORIZONSIDEREFCOL,
-0,   // L_HORIZONSIDEREFDSPL,
-255, // L_HORIZONCENTERREFROW,
-255, // L_HORIZONCENTERREFCOL,
-1,   // L_HORIZONCENTERREFDSPL,  
-  
-12,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
-22,   // L_CURRENTTHROTTLEPOSITIONCOL
-1,    // L_CURRENTTHROTTLEPOSITIONDSPL
+
+255, // L_HORIZONSIDEREFROW
+255, // L_HORIZONSIDEREFCOL
+1,   // L_HORIZONSIDEREFDSPL
+
+255, // L_HORIZONCENTERREFROW
+255, // L_HORIZONCENTERREFCOL
+1,   // L_HORIZONCENTERREFDSPL
+
+7,   // L_CURRENTTHROTTLEPOSITIONROW LINE14+22
+20,  // L_CURRENTTHROTTLEPOSITIONCOL
+1,   // L_CURRENTTHROTTLEPOSITIONDSPL
+
 13,   // L_FLYTIMEPOSITIONROW LINE15+22
-22,   // L_FLYTIMEPOSITIONCOL
+14,   // L_FLYTIMEPOSITIONCOL
 1,    // L_FLYTIMEPOSITIONDSPL
+
 13,   // L_ONTIMEPOSITIONROW LINE15+22
-22,   // L_ONTIMEPOSITIONCOL
+14,   // L_ONTIMEPOSITIONCOL
 1,    // L_ONTIMEPOSITIONDSPL
-12,   // L_MOTORARMEDPOSITIONROW LINE14+11
-11,   // L_MOTORARMEDPOSITIONCOL
+
+3,    // L_MOTORARMEDPOSITIONROW LINE14+11
+24,   // L_MOTORARMEDPOSITIONCOL
 1,    // L_MOTORARMEDPOSITIONDSPL
-10,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
+
+12,   // L_MW_GPS_LATPOSITIONROW  LINE12+2
 2,    // L_MW_GPS_LATPOSITIONCOL
 1,    // L_MW_GPS_LATPOSITIONDSPL
-10,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
-18,   // L_MW_GPS_LONPOSITIONCOL
+
+13,   // L_MW_GPS_LONPOSITIONROW  LINE12+15
+2,    // L_MW_GPS_LONPOSITIONCOL
 1,    // L_MW_GPS_LONPOSITIONDSPL
-12,   // L_RSSIPOSITIONROW LINE14+2
-2,    // L_RSSIPOSITIONCOL
+
+2,    // L_RSSIPOSITIONROW LINE14+2
+12,   // L_RSSIPOSITIONCOL
 1,    // L_RSSIPOSITIONDSPL
+
 13,   // L_VOLTAGEPOSITIONROW LINE15+3
-3,    // L_VOLTAGEPOSITIONCOL
+23,   // L_VOLTAGEPOSITIONCOL
 1,    // L_VOLTAGEPOSITIONDSPL
-255,  // L_MAINBATLEVEVOLUTIONROW,
-255,  // L_MAINBATLEVEVOLUTIONCOL,
-1,    // L_MAINBATLEVEVOLUTIONDSPL,  
+
+255,  // L_MAINBATLEVEVOLUTIONROW
+255,  // L_MAINBATLEVEVOLUTIONCOL
+1,    // L_MAINBATLEVEVOLUTIONDSPL 
+
 11,   // L_VIDVOLTAGEPOSITIONROW LINE13+3
-3,    // L_VIDVOLTAGEPOSITIONCOL
+23,   // L_VIDVOLTAGEPOSITIONCOL
 0,    // L_VIDVOLTAGEPOSITIONDSPL
-13,   // L_AMPERAGEPOSITIONROW LINE15+10
-10,   // L_AMPERAGEPOSITIONCOL
+
+12,   // L_AMPERAGEPOSITIONROW LINE15+10
+23,   // L_AMPERAGEPOSITIONCOL
 1,    // L_AMPERAGEPOSITIONDSPL
-13,   // L_PMETERSUMPOSITIONROW LINE15+16
-16,   // L_PMETERSUMPOSITIONCOL
+
+12,   // L_PMETERSUMPOSITIONROW LINE15+16
+14,   // L_PMETERSUMPOSITIONCOL
 1,    // L_PMETERSUMPOSITIONDSPL
-12,   // L_CALLSIGNPOSITIONROW LINE14+10
+
+11,   // L_CALLSIGNPOSITIONROW LINE14+10
 10,   // L_CALLSIGNPOSITIONCOL
 1,    // L_CALLSIGNPOSITIONDSPL
 };
@@ -453,10 +517,8 @@ static uint8_t dynThrPID;
 static uint8_t thrMid8;
 static uint8_t thrExpo8;
 
-
 static uint16_t  MwAccSmooth[3]={0,0,0};       // Those will hold Accelerator data
 int32_t  MwAltitude=0;                         // This hold barometric value
-
 
 int MwAngle[2]={0,0};           // Those will hold Accelerator Angle
 static uint16_t MwRcData[8]={   // This hold receiver pulse signal
@@ -465,6 +527,7 @@ static uint16_t MwRcData[8]={   // This hold receiver pulse signal
 uint16_t  MwSensorPresent=0;
 uint32_t  MwSensorActive=0;
 uint8_t MwVersion=0;
+//uint8_t MultiType=0; // Currently not used
 uint8_t MwVBat=0;
 int16_t MwVario=0;
 uint8_t armed=0;
@@ -473,7 +536,7 @@ int16_t GPS_distanceToHome=0;
 uint8_t GPS_fix=0;
 int32_t GPS_latitude;
 int32_t GPS_longitude;
-int16_t GPS_altitude;
+int16_t GPS_altitude;  // Do not remove (currently not used but needed!!)
 uint16_t GPS_speed=0;
 int16_t GPS_directionToHome=0;
 uint8_t GPS_numSat=0;
@@ -492,8 +555,11 @@ uint16_t onTime=0;
 uint16_t flyTime=0;
 
 // For Heading
+/*const char headGraph[] PROGMEM = {
+  0XFB,0XFE,0XFD,0XFE,0XFA,0XFE,0XFD,0XFE,0XFC,0XFE,0XFD,0XFE,0XF9,0XFE,0XFD,0XFE,0XFB,0XFE,0XFD,0XFE,0XFA,0XFE,0XFD,0XFE,0XFC,0};*/
 const char headGraph[] PROGMEM = {
-  0XFB,0XFE,0XFD,0XFE,0XFA,0XFE,0XFD,0XFE,0XFC,0XFE,0XFD,0XFE,0XF9,0XFE,0XFD,0XFE,0XFB,0XFE,0XFD,0XFE,0XFA,0XFE,0XFD,0XFE,0XFC};
+  0XFB,0XFE,0XFA,0XFE,0XFC,0XFE,0XF9,0XFE,0XFB,0XFE,0XFA,0XFE,0XFC,0};
+
 static int16_t MwHeading=0;
 
 // For Amperage
@@ -515,17 +581,16 @@ uint16_t voltage=0;                      // its the value x10
 uint16_t vidvoltage=0;                   // its the value x10
 
 // For temperature
-int16_t temperature=0;                  // temperature in degrees Centigrade
+//int16_t temperature=0;                  // temperature in degrees Centigrade
 
 
 // For Statistics
 uint16_t speedMAX=0;
-int8_t temperMAX=0;
+//int8_t temperMAX=0;
 int16_t altitudeMAX=0;
 int16_t distanceMAX=0;
 float trip=0;
 uint16_t flyingTime=0; 
-
 
 // ---------------------------------------------------------------------------------------
 // Defines imported from Multiwii Serial Protocol MultiWii_shared svn r1337
@@ -586,9 +651,6 @@ uint16_t flyingTime=0;
 #define OSD_RESET                5
 // End private MSP for use with the GUI
 
-const char disarmed_text[] PROGMEM = "DISARMED";
-const char armed_text[] PROGMEM = " ARMED";
-
 // For Intro
 const char message0[] PROGMEM = "KV_OSD_TEAM_2.3";
 const char message5[] PROGMEM = "MW VERSION:";
@@ -629,12 +691,12 @@ const char configMsg27[] PROGMEM = "MWI2C ERRORS";
 //-----------------------------------------------------------Page3
 const char configMsg30[] PROGMEM = "3/9 SUPPLY & ALARM";
 const char configMsg31[] PROGMEM = "VOLTAGE ALARM";
-const char configMsg32[] PROGMEM = "SET TEMP ALARM";
-const char configMsg33[] PROGMEM = "BLINKING FREQ";
+//const char configMsg32[] PROGMEM = "SET TEMP ALARM";                 // Do not remove yet
+const char configMsg33[] PROGMEM = "BLINKING FREQ";  
 //-----------------------------------------------------------Page4
 const char configMsg40[] PROGMEM = "4/9 RSSI";
-const char configMsg41[] PROGMEM = "ACTUAL RSSIADC";
-const char configMsg42[] PROGMEM = "ACTUAL RSSI";
+const char configMsg41[] PROGMEM = "ACTUAL RSSI RAW";
+const char configMsg42[] PROGMEM = "ACTUAL RSSI %";
 const char configMsg43[] PROGMEM = "SET RSSI MIN";
 const char configMsg44[] PROGMEM = "SET RSSI MAX";
 //-----------------------------------------------------------Page5
@@ -678,7 +740,7 @@ const char configMsg97[] PROGMEM = "MAX TEMP";
 //-----------------------------------------------------------
 int8_t screenitemselect=0; // pointer for item text strings
 int8_t screen_pos_item_pointer=EEPROM_SETTINGS+1;  // pointer for first item display/row/col positions
-#define MAXSCREENITEMS 27
+#define MAXSCREENITEMS 26 // 28 w/ GPS alt & Temperature
 
 // Strings for item select on screen
 //-----------------------------------------------------------
@@ -687,29 +749,30 @@ const char screen_item_01[] PROGMEM = "DIR TO HOME";
 const char screen_item_02[] PROGMEM = "DIST TO HOME";
 const char screen_item_03[] PROGMEM = "GPS SPEED";
 const char screen_item_04[] PROGMEM = "ANGLE TO HOM";
-const char screen_item_05[] PROGMEM = "GPS ALTITUDE";
-const char screen_item_06[] PROGMEM = "SENSORS";
+//const char screen_item_05[] PROGMEM = "GPS ALTITUDE";
+const char screen_item_05[] PROGMEM = "SENSORS";
+const char screen_item_06[] PROGMEM = "FLIGHT MODE";
 const char screen_item_07[] PROGMEM = "HEADING";
 const char screen_item_08[] PROGMEM = "HEAD GRAPH";
-const char screen_item_09[] PROGMEM = "TEMPERATURE";
-const char screen_item_10[] PROGMEM = "BARO ALTIT";
-const char screen_item_11[] PROGMEM = "CLIMB RATE";
-const char screen_item_12[] PROGMEM = "HORIZON";
-const char screen_item_13[] PROGMEM = "AH SIDE REF";
-const char screen_item_14[] PROGMEM = "AH CENTR REF";
-const char screen_item_15[] PROGMEM = "THROTTLE";
-const char screen_item_16[] PROGMEM = "FLY TIME";
-const char screen_item_17[] PROGMEM = "ON TIME";
-const char screen_item_18[] PROGMEM = "ARMED INDIC";
-const char screen_item_19[] PROGMEM = "GPS LATIT";
-const char screen_item_20[] PROGMEM = "GPS LONGIT";
-const char screen_item_21[] PROGMEM = "RSSI";
-const char screen_item_22[] PROGMEM = "MAIN BATT";
-const char screen_item_23[] PROGMEM = "MAIN BAT EVO";
-const char screen_item_24[] PROGMEM = "VIDEO BATT";
-const char screen_item_25[] PROGMEM = "AMPERAGE";
-const char screen_item_26[] PROGMEM = "MA/H CONSUM";  
-const char screen_item_27[] PROGMEM = "CALLSIGN";    
+//const char screen_item_09[] PROGMEM = "TEMPERATURE";  //Do not remove yet
+const char screen_item_09[] PROGMEM = "BARO ALTIT";
+const char screen_item_10[] PROGMEM = "CLIMB RATE";
+const char screen_item_11[] PROGMEM = "HORIZON";
+const char screen_item_12[] PROGMEM = "AH SIDE REF";
+const char screen_item_13[] PROGMEM = "AH CENTR REF";
+const char screen_item_14[] PROGMEM = "THROTTLE";
+const char screen_item_15[] PROGMEM = "FLY TIME";
+const char screen_item_16[] PROGMEM = "ON TIME";
+const char screen_item_17[] PROGMEM = "ARMED INDIC";
+const char screen_item_18[] PROGMEM = "GPS LATIT";
+const char screen_item_19[] PROGMEM = "GPS LONGIT";
+const char screen_item_20[] PROGMEM = "RSSI";
+const char screen_item_21[] PROGMEM = "MAIN BATT";
+const char screen_item_22[] PROGMEM = "MAIN BAT EVO";
+const char screen_item_23[] PROGMEM = "VIDEO BATT";
+const char screen_item_24[] PROGMEM = "AMPERAGE";
+const char screen_item_25[] PROGMEM = "MA/H CONSUM";  
+const char screen_item_26[] PROGMEM = "CALLSIGN";
 
 PROGMEM const char *item_table[] =
 {   
@@ -740,39 +803,19 @@ screen_item_23,
 screen_item_24,
 screen_item_25,
 screen_item_26,
-screen_item_27,
+//screen_item_27,
+//screen_item_28,
 };
 
-
 // POSITION OF EACH CHARACTER OR LOGO IN THE MAX7456
-const unsigned char speedUnitAdd[2] ={
-  0x8c,0x8e} ;                               // [0][0] and [0][1] = Km/h   [1][0] and [1][1] = Mph
-const unsigned char speedUnitAdd1[2] ={
-  0x8d,0x8f} ;
-const unsigned char temperatureUnitAdd[2] = {
-  0x0e,0x0d};
-
 const char MultiWiiLogoL1Add[17] PROGMEM = {
   0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0};
 const char MultiWiiLogoL2Add[17] PROGMEM = {
   0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0};
 const char MultiWiiLogoL3Add[17] PROGMEM = {
-  0xf0,0xf1,0xf2,0xf3,0xf4,0};
+  0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0};
 
-const unsigned char MwAltitudeAdd[2]={
-  0xa7,0xa8};
-const unsigned char MwClimbRateAdd[2]={
-  0x9f,0x99};
-const unsigned char GPS_distanceToHomeAdd[2]={
-  0x8a,0x9a,};
-  const unsigned char GPS_distanceToHomeAdd1[2]={
-  0x8b,0x8b};
-const unsigned char MwGPSAltPositionAdd[2]={
-  0xa7,0xa8};
-const unsigned char MwGPSAltPositionAdd1[2]={
-  0xa3,0xa3};
 const char KVTeamVersionPosition = 35;
-
 
 #define REQ_MSP_IDENT     (1 <<  0)
 #define REQ_MSP_STATUS    (1 <<  1)
