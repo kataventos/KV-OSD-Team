@@ -44,7 +44,8 @@
 	extern uint8_t accCalibrationTimer;
 	extern uint8_t magCalibrationTimer;
 	extern uint8_t eepromWriteTimer;
-	extern unsigned int allSec;
+	//extern unsigned int allSec;
+	extern int16_t allSec;
 
 	// Config status and cursor location
 	extern uint8_t ROW;
