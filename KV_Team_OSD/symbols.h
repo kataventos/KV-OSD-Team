@@ -1,9 +1,5 @@
-/*
- *  symbols.h
- *  
- *
- *
- */
+#ifndef SYMBOLS_H_
+#define SYMBOLS_H_
 
 
 // Satellite Graphics
@@ -190,3 +186,4 @@
 
 
 
+#endif /* SYMBOLS_H_ */

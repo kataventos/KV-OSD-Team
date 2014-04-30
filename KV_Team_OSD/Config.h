@@ -1,6 +1,30 @@
- 
+ #ifndef CONFIG_H_
+ #define CONFIG_H_
  
  /*--------------------------------------------------       Configurable parameters      ----------------------------------------------------*/ 
+  // Variables
+ #define METRIC 0
+ #define IMPERIAL 1
+ #define MAXSCREENITEMS 27
+ 
+ //Analog input defines
+ // **** WiteSpy hardware **** //
+ #define voltagePin A0
+ #define vidvoltagePin A2
+ #define amperagePin A1
+ #define rssiPin A3
+ #define PWMrssiPin A3           // PWM RSSI uses same pin of analog RSSI A3
+ //#define temperaturePin A6     // Temperature pin 6 for original Rushduino Board V1.2 (Does this still in use??)
+
+ // **** JDrones hardware **** //
+ /* Pins n. to be defined ......
+ #define voltagePin A0
+ #define vidvoltagePin A2
+ #define amperagePin A1
+ #define rssiPin A3
+ #define PWMrssiPin A3
+ #define temperaturePin A6       // Temperature pin 6 for original Rushduino Board V1.2
+ */
  
 /**********************          Serial port Speed       *************************/
 
@@ -21,6 +45,7 @@
 #define MAGNETOMETER   4//0b00000100
 #define GPSSENSOR      8//0b00001000
 //#define SONAR         16//0b00010000
+
 
 #define LINE      30
 #define LINE01    0
@@ -89,5 +114,5 @@
 
 #define SAVEP 93+(30*9)
 
-
+#endif /* CONFIG_H_ */
 
