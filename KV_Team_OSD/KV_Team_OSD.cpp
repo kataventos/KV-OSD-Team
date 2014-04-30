@@ -31,7 +31,8 @@ uint8_t accCalibrationTimer=0;
 uint8_t magCalibrationTimer=0;
 uint8_t eepromWriteTimer=0;
 
-unsigned int allSec=0;
+//unsigned int allSec=0;
+int16_t allSec=0;
 
 // Config status and cursor location
 uint8_t ROW=10;
@@ -396,7 +397,7 @@ void setMspRequests() {
   }
   else {
     modeMSPRequests = 
-      //REQ_MSP_IDENT|
+      REQ_MSP_IDENT|
       REQ_MSP_STATUS|
       REQ_MSP_RAW_GPS|
       REQ_MSP_COMP_GPS|
@@ -479,22 +480,24 @@ void loop()
      amperagesum = MW_ANALOG.pMeterSum;
      amperage = MW_ANALOG.Amperage /100;
     }
+	
   if (Settings[S_MWRSSI]) {
       rssiADC = MW_ANALOG.Rssi/4;  // RSSI from MWii, rssiADC=0 to 1023/4 (avoid a number > 255)
     } 
-   if (Settings[S_PWMRSSI] && !Settings[S_MWRSSI]){
-   rssiADC = pulseIn(PWMrssiPin, HIGH,15000)/Settings[S_PWMRSSIDIVIDER]; // Reading W/time out (microseconds to wait for pulse to start: 15000=0.015sec)
+	
+  if (Settings[S_PWMRSSI] && !Settings[S_MWRSSI]){
+	rssiADC = pulseIn(PWMrssiPin, HIGH,15000)/Settings[S_PWMRSSIDIVIDER]; // Reading W/time out (microseconds to wait for pulse to start: 15000=0.015sec)
     }
-  
-  // Blink Basic Sanity Test Led at 1hz
+  /* 
+  // Blink Basic Sanity Test Led at 1hz - this stuff introduces strange behavior on my system
   if(tenthSec>10)
     digitalWrite(7,HIGH);
   else
     digitalWrite(7,LOW);
-
+*/
 
   //---------------  Start Timed Service Routines  ---------------------------------------
-  static unsigned long currentMillis = millis();
+  unsigned long currentMillis = millis();
 
   if((currentMillis - previous_millis_low) >= lo_speed_cycle)  // 10 Hz (Executed every 100ms)
   {

@@ -662,6 +662,15 @@ void displayClimbRate(void)
  }
 }
 
+void displayDebug1(int16_t x) //SJa
+{
+	if(!(MW_STATUS.sensorActive&mode_osd_switch)){
+
+		itoa(x,screenBuffer,10);
+		MAX7456_WriteString(screenBuffer,242);
+	}
+}
+
 void displayDistanceToHome(void)
 {
   if(!(MW_STATUS.sensorActive&mode_osd_switch) || GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)){
