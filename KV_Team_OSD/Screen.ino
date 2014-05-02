@@ -1,4 +1,3 @@
-
 char *ItoaPadded(int val, char *str, uint8_t bytes, uint8_t decimalpos)  {
   uint8_t neg = 0;
   if(val < 0) {
@@ -681,8 +680,8 @@ void displayAltitude(void)
       altitude = MwAltitude/100;         // cm to mt
     if(armed && allSec>5 && altitude > altitudeMAX)
       altitudeMAX = altitude;
-    if(!(MwSensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*2) || flyTime > 30 && altitude < (Settings[S_VOLUME_ALT_MIN])){
-    if(altitude >= (Settings[S_VOLUME_ALT_MAX]*2) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
+    if(!(MwSensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*10) || flyTime > 30 && altitude < (Settings[S_VOLUME_ALT_MIN])){
+    if(altitude >= (Settings[S_VOLUME_ALT_MAX]*10) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
     return;
     screenBuffer[0]=SYM_ALT;
     itoa(altitude,screenBuffer+1,10);
