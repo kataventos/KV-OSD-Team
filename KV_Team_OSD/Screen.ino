@@ -483,11 +483,12 @@ void displayAmperage(void)
 
 void displaypMeterSum(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ 
   if(Settings[L_PMETERSUMPOSITIONDSPL]){    
     screenBuffer[0]=SYM_CURRENT;
     screenBuffer[1]=0;
     itoa(amperagesum,screenBuffer+1,10);
+    if(!(MwSensorActive&mode_osd_switch)){
     MAX7456_WriteString(screenBuffer,((Settings[L_PMETERSUMPOSITIONROW]-1)*30) + Settings[L_PMETERSUMPOSITIONCOL]);
   }
  }
@@ -495,7 +496,7 @@ void displaypMeterSum(void)
 
 void displayRSSI(void)
 {
- if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]+5)){
+ 
   if(Settings[L_RSSIPOSITIONDSPL]){
     if (rssi <=(Settings[S_RSSI_ALARM]) && !BlinkAlarm){
       screenBuffer[0] = SYM_RSSI;
@@ -507,6 +508,7 @@ void displayRSSI(void)
     uint8_t xx = FindNull();
     screenBuffer[xx++] = '%';
     screenBuffer[xx] = 0;
+    if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]+5)){
     MAX7456_WriteString(screenBuffer,((Settings[L_RSSIPOSITIONROW]-1)*30) + Settings[L_RSSIPOSITIONCOL]);
     }
   }
@@ -514,7 +516,7 @@ void displayRSSI(void)
 
 void displayHeading(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ 
   if(Settings[L_MW_HEADINGPOSITIONDSPL]){
       int16_t heading = MwHeading;
       if (Settings[S_HEADING360]) {
@@ -533,6 +535,7 @@ void displayHeading(void)
         screenBuffer[4]=SYM_DEGREES;
         screenBuffer[5]=0;
       }
+      if(!(MwSensorActive&mode_osd_switch)){
   MAX7456_WriteString(screenBuffer,((Settings[L_MW_HEADINGPOSITIONROW]-1)*30) + Settings[L_MW_HEADINGPOSITIONCOL]);
   
   
@@ -542,7 +545,7 @@ void displayHeading(void)
 
 void displayHeadingGraph(void)
 {
- if(!(MwSensorActive&mode_osd_switch)  || (!GPS_fix)){
+  if(!(MwSensorActive&mode_osd_switch)  || (!GPS_fix)){
   if(Settings[L_MW_HEADINGGRAPHPOSDSPL]){
     int xx;
     xx = MwHeading * 2;
@@ -551,7 +554,7 @@ void displayHeadingGraph(void)
     uint16_t pos = ((Settings[L_MW_HEADINGGRAPHPOSROW]-1)*30) + Settings[L_MW_HEADINGGRAPHPOSCOL];
     memcpy_P(screen+pos, headGraph+xx, 5);
     screenBuffer[0] = SYM_HEADING_POINTER;
-    screenBuffer[1] = 0;
+    screenBuffer[1] = 0; 
     MAX7456_WriteString(screenBuffer,((Settings[L_MW_HEADINGGRAPHPOSROW]-1)*30) + Settings[L_MW_HEADINGGRAPHPOSCOL]-LINE+2);
   }
  }
@@ -599,7 +602,7 @@ void displayFontScreen(void) {
 
 void displayGPSPosition(void)
 {
- if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]-10)){ 
+  if(!(MwSensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]-10)){ 
   if(Settings[S_COORDINATES]){
     if(Settings[L_MW_GPS_LATPOSITIONDSPL]){
         screenBuffer[0] = SYM_LAT;
@@ -637,11 +640,12 @@ void displayGPSPosition(void)
    
 void displayNumberOfSat(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ 
   if(Settings[L_GPS_NUMSATPOSITIONDSPL]){
     screenBuffer[0] = SYM_SAT;
     screenBuffer[1] = SYM_SAT_1;
     itoa(GPS_numSat,screenBuffer+2,10);
+    if(!(MwSensorActive&mode_osd_switch)){
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_NUMSATPOSITIONROW]-1)*30) + Settings[L_GPS_NUMSATPOSITIONCOL]);
   }  
  }
@@ -649,7 +653,7 @@ void displayNumberOfSat(void)
 
 void displayGPS_speed(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+ 
   if(Settings[L_SPEEDPOSITIONDSPL]){
 
     if(!armed) GPS_speed=0;
@@ -665,6 +669,7 @@ void displayGPS_speed(void)
     screenBuffer[0]=SYM_SPEED;
     screenBuffer[1]=SYM_SPEED_1;
     itoa(xx,screenBuffer+2,10);
+    if(!(MwSensorActive&mode_osd_switch)){
     MAX7456_WriteString(screenBuffer,((Settings[L_SPEEDPOSITIONROW]-1)*30) + Settings[L_SPEEDPOSITIONCOL]);
    }
  }
@@ -729,7 +734,7 @@ void displayClimbRate(void)
 
 void displayDistanceToHome(void)
 {
-  if(!(MwSensorActive&mode_osd_switch) || GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)){
+  
   if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
 
     if (GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100) && !BlinkAlarm) 
@@ -744,6 +749,7 @@ void displayDistanceToHome(void)
       distanceMAX = dist;  
     screenBuffer[0] = SYM_LOS;
     itoa(dist, screenBuffer+1, 10);
+    if(!(MwSensorActive&mode_osd_switch) || GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)){
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_DISTANCETOHOMEPOSROW]-1)*30) + Settings[L_GPS_DISTANCETOHOMEPOSCOL]);
     
     
@@ -753,7 +759,7 @@ void displayDistanceToHome(void)
 
 void displayDirectionToHome(void)
 {
- if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1) ||  GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)))){
+ 
   if(Settings[L_GPS_DIRECTIONTOHOMEPOSDSPL]){
     if(!GPS_fix)
       return;      
@@ -766,6 +772,7 @@ void displayDirectionToHome(void)
     screenBuffer[0] = SYM_ARROW_SOUTH + d;
     screenBuffer[1] = SYM_ARROW_SOUTH_1 + d;
     screenBuffer[2] = 0;
+    if(!(MwSensorActive&mode_osd_switch) || (rssi<=(Settings[S_RSSI_ALARM]) || (voltage <=(Settings[S_VOLTAGEMIN]+1) ||  GPS_distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)))){
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_DIRECTIONTOHOMEPOSROW]-1)*30) + Settings[L_GPS_DIRECTIONTOHOMEPOSCOL]); 
   }  
  }
@@ -773,7 +780,7 @@ void displayDirectionToHome(void)
 
 void displayAngleToHome(void)
 {
- if(!(MwSensorActive&mode_osd_switch)){
+
   if(Settings[L_GPS_ANGLETOHOMEPOSDSPL]){
 
     if(GPS_distanceToHome <= 2 && !BlinkAlarm)
@@ -782,6 +789,7 @@ void displayAngleToHome(void)
     ItoaPadded(GPS_directionToHome,screenBuffer,3,0);
     screenBuffer[3] = SYM_DEGREES;
     screenBuffer[4] = 0;
+     if(!(MwSensorActive&mode_osd_switch)){
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_ANGLETOHOMEPOSROW]-1)*30) + Settings[L_GPS_ANGLETOHOMEPOSCOL]);
     }
   }
