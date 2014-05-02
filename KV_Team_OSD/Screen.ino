@@ -90,7 +90,7 @@ uint8_t FindNull(void)
 }
 
 
-/*void displayTemperature(void)        // WILL WORK ONLY WITH Rushduino V1.2      //Lets see about complains on this function (during two major releases)  before remove...
+/*void displayTemperature(void)        // WILL WORK ONLY WITH Rushduino V1.2     
 {
  if(!(MwSensorActive&mode_osd_switch)){  // mode_osd_switch=0 --> Display, =1 --> Hide
   if(Settings[L_TEMPERATUREPOSDSPL]){
@@ -222,48 +222,81 @@ void displayCallsign(void)
 
 void displayHorizon(int rollAngle, int pitchAngle)
 {
-   if(!(MwSensorActive&mode_osd_switch)){
     if(Settings[L_HORIZONPOSITIONDSPL]){
       uint16_t position = ((Settings[L_HORIZONPOSITIONROW]-1)*30) + Settings[L_HORIZONPOSITIONCOL];
-      
-      if(pitchAngle>750) pitchAngle=750;
-      if(pitchAngle<-750) pitchAngle=-750;
-      if(rollAngle>750) rollAngle=750;
-      if(rollAngle<-750) rollAngle=-750;
-      
-for(int X=0; X<=4; X++) {
+ 
+for(int X=0; X<=1; X++) {
         int Y = (rollAngle * (2-X)) / 64;                   
         Y -= pitchAngle / 8;
-        Y += -5; //5
-        if(Y >= 0 && Y <= 55) {                                        // Top Ladder
+        Y += -5; 
+        if(Y >= 10 && Y <= 50) {                            
           uint16_t pos = position + LINE+LINE*(Y/9) + 4 - 2*LINE + X;
            screen[pos] = SYM_AH_BAR_0+(Y%9);
              if(Y>=9 && (Y%9) == 0)
                screen[pos-LINE] = SYM_AH_BAR_9;
   }
-}      
-for(int X=0; X<=8; X++) {
+}        
+
+for(int X=0; X<=1; X++) {
+        int Y = (rollAngle * (-1-X)) / 64;                   
+        Y -= pitchAngle / 8;
+        Y += -5; 
+        if(Y >= 10 && Y <= 50) {                                       
+          uint16_t pos = position + LINE+LINE*(Y/9) + 7 - 2*LINE + X;
+           screen[pos] = SYM_AH_BAR_0+(Y%9);
+             if(Y>=9 && (Y%9) == 0)
+               screen[pos-LINE] = SYM_AH_BAR_9;
+  }
+}        
+
+for(int X=0; X<=2; X++) {
         int Y = (rollAngle * (4-X)) / 64;                   
         Y -= pitchAngle / 8;
         Y += 41;
-        if(Y >= 0 && Y <= 65) {                                        // AH
-          uint16_t pos = position + LINE*(Y/9) + 2 - 2*LINE + X;
+        if(Y >= 15 && Y <= 60) {                                        
+          uint16_t pos = position + LINE*(Y/9) + 3 - 2*LINE + X;
            screen[pos] = SYM_AH_BAR_0+(Y%9);
              if(Y>=9 && (Y%9) == 0)
                screen[pos-LINE] = SYM_AH_BAR_9;
   }
 }
-for(int X=0; X<=4; X++) {
+
+for(int X=0; X<=2; X++) {
+        int Y = (rollAngle * (0-X)) / 64;                   
+        Y -= pitchAngle / 8;
+        Y += 41;
+        if(Y >= 15 && Y <= 60) {                                      
+          uint16_t pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
+           screen[pos] = SYM_AH_BAR_0+(Y%9);
+             if(Y>=9 && (Y%9) == 0)
+               screen[pos-LINE] = SYM_AH_BAR_9;
+  }
+}
+  
+for(int X=0; X<=1; X++) {
         int Y = (rollAngle * (2-X)) / 64;                   
         Y -= pitchAngle / 8;
         Y += 78;
-        if(Y >= 0 && Y <= 60) {                                        // Bot Ladder
+        if(Y >= 17 && Y <= 60) {                                      
           uint16_t pos = position + LINE*(Y/9) + 4 - 2*LINE + X;
            screen[pos] = SYM_AH_BAR_0+(Y%9);
              if(Y>=9 && (Y%9) == 0)
                screen[pos-LINE] = SYM_AH_BAR_9;
   }
 }
+
+for(int X=0; X<=1; X++) {
+        int Y = (rollAngle * (-1-X)) / 64;                   
+        Y -= pitchAngle / 8;
+        Y += 78;
+        if(Y >= 17 && Y <= 60) {                            
+          uint16_t pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
+           screen[pos] = SYM_AH_BAR_0+(Y%9);
+             if(Y>=9 && (Y%9) == 0)
+               screen[pos-LINE] = SYM_AH_BAR_9;
+  }
+}
+
       if(Settings[L_HORIZONCENTERREFDSPL]){  
         //Draw center screen
         screen[position+2*LINE+6] =   SYM_AH_CENTER;
@@ -296,8 +329,7 @@ for(int X=0; X<=4; X++) {
        }
      }
    }
- }
- 
+
 void displayVoltage(void)
 {
   if(Settings[L_VOLTAGEPOSITIONDSPL]){

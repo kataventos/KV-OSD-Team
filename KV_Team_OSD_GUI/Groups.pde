@@ -116,7 +116,8 @@ G_GPS = GroupcontrolP5.addGroup("G_GPS")
                 G_GPS.captionLabel()
                 .toUpperCase(false)
                 .align(controlP5.CENTER,controlP5.CENTER)
-                ;        
+                ;  
+                //G_GPS.hide();      
 G_Board = GroupcontrolP5.addGroup("G_Board")
                 .setPosition(XBoard,YBoard+15)
                 .setWidth(Col1Width)
