@@ -1,19 +1,17 @@
 
-//   KV Team OSD GUI
-//   http://code.google.com/p/rush-osd-development/
-//   Copyright (C) January 2014 (KV Team OSD)   
-//   This program is free software: you can redistribute it and/or modify
-//   it under the terms of the GNU General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   any later version. see http://www.gnu.org/licenses/  
 
-              /*********************************************************************/
-              /*                           KV_OSD_Team                             */
-              /*                                                                   */
-              /*    KATAVENTOS                ITAIN                 CARLONB        */
-              /*     POWER67                 LIAM2317             NEVERLANDED      */
-              /*********************************************************************/
 
+/*
+   KV Team OSD GUI V2.3 May 2014
+   http://code.google.com/p/rush-osd-development/
+
+
+   Copyright (C) May 2014 (KV Team OSD)   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   any later version. see http://www.gnu.org/licenses/  
+*/
 
 import processing.serial.Serial; // serial library
 import controlP5.*; // controlP5 library
@@ -124,6 +122,7 @@ String[] ConfigHelp = {
   "PWM",
   "PWM Divider",
   "Minim Volt WARNING",
+  "Battery Cells",
   "Divider Ratio",
   "Input", //MW ADC  
   "Divider Ratio",
@@ -174,6 +173,7 @@ String[] ConfigNames = {
   "PWM",
   "PWM Divider",
   "Minim Volt WARNING",
+  "Battery Cells",
   "Divider Ratio",
   "Input", //MW ADC  
   "Divider Ratio",
@@ -229,31 +229,32 @@ int[] ConfigRanges = {
 1,   // S_PWMRSSI                   5
 8,   // S_PWMRSSIDIVIDER            6
 215, // S_VOLTAGEMIN                7
-110, // S_DIVIDERRATIO              8
-1,   // S_MAINVOLTAGE_VBAT          9
-110, // S_VIDDIVIDERRATIO           10
-1,   // S_VIDVOLTAGE_VBAT           11 
-1,   // S_BOARDTYPE                 12
-1,   // S_DISPLAYGPS                13
-1,   // S_COORDINATES               14
-1,   // S_HEADING360                15
-1,   // S_UNITSYSTEM                16
-1,   // S_VIDEOSIGNALTYPE           17
-1,   // S_RESETSTATISTICS           18
-1,   // S_ENABLEADC                 19
-10,  // S_BLINKINGHZ                20
-1,   // S_MWAMPERAGE                21
-60,  // S_CURRSENSSENSITIVITY       22
-2,   // S_CURRSENSOFFSET_H          23
-255, // S_CURRSENSOFFSET_L          24
-8,   // S_CLIMB_RATE_ALARM          25
-250, // S_VOLUME_DIST_MAX           26
-250, // S_VOLUME_ALT_MAX            27
-100,  // S_VOLUME_ALT_MIN            28
-110, // S_VIDVOLTAGEMIN             29
-75,  // S_PITCH_WARNING             30
+6,   // S_BATCELLS                  8
+110, // S_DIVIDERRATIO              9
+1,   // S_MAINVOLTAGE_VBAT          10
+110, // S_VIDDIVIDERRATIO           11
+1,   // S_VIDVOLTAGE_VBAT           12 
+1,   // S_BOARDTYPE                 13
+1,   // S_DISPLAYGPS                14
+1,   // S_COORDINATES               15
+1,   // S_HEADING360                16
+1,   // S_UNITSYSTEM                17
+1,   // S_VIDEOSIGNALTYPE           18
+1,   // S_RESETSTATISTICS           19
+1,   // S_ENABLEADC                 20
+10,  // S_BLINKINGHZ                21
+1,   // S_MWAMPERAGE                22
+60,  // S_CURRSENSSENSITIVITY       23
+2,   // S_CURRSENSOFFSET_H          24
+255, // S_CURRSENSOFFSET_L          25
+8,   // S_CLIMB_RATE_ALARM          26
+250, // S_VOLUME_DIST_MAX           27
+250, // S_VOLUME_ALT_MAX            28
+100,  // S_VOLUME_ALT_MIN           29
+110, // S_VIDVOLTAGEMIN             30
+75,  // S_PITCH_WARNING             31
 
-0,   // S_CALLSIGN                  31
+0,   // S_CALLSIGN                  32
 
 
  255,      //Call sign 10 chars 32 to 41
@@ -268,7 +269,7 @@ int[] ConfigRanges = {
  255,
 
 };
-
+/*
 int[] ItemLocationPAL = {
   // ROW= Row position on screen (255= no action)
 // COL= Column position on screen (255= no action)
@@ -483,7 +484,7 @@ int[] ItemLocationNTSC = {
 10,  // L_CALLSIGNPOSITIONCOL
 1,   // L_CALLSIGNPOSITIONDSPL
 };
-  
+  */
 
 PFont font8,font9,font10,font11,font12,font15;
 
@@ -614,7 +615,8 @@ RSSIWarning(GetSetting("S_RSSI_ALARM"), 5,5*17, G_RSSI);
 // Voltage  ------------------------------------------------------------------------
 CreateItem(GetSetting("S_MAINVOLTAGE_VBAT"), 5,0*17, G_Voltage);
 BuildRadioButton(GetSetting("S_MAINVOLTAGE_VBAT"),  5,0*17, G_Voltage, "ADC","MWii");
-BattWarningItem(GetSetting("S_VOLTAGEMIN"), 5,2*17, G_Voltage);
+BattWarningItem(GetSetting("S_VOLTAGEMIN"), 5,1*17, G_Voltage);
+BattCellItem(GetSetting("S_BATCELLS"), 5,2*17, G_Voltage);
 CreateItem(GetSetting("S_DIVIDERRATIO"), 5,3*17, G_Voltage);
 
 // Video Voltage  -------------------------------------------------------------------
