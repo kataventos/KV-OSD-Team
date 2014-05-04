@@ -9,7 +9,7 @@
 // Degrees Icon for HEADING/DIRECTION HOME
 #define SYM_DEGREES 0XBC
 
-// Direction arrows 
+// Direction arrows
 #define SYM_ARROW_SOUTH 0X60
 #define SYM_ARROW_SOUTH_1 0X61
 #define SYM_HEADING_POINTER 0X99
@@ -27,14 +27,14 @@
 #define SYM_HOLD 0X8A
 #define SYM_G_HOME 0X9A
 
-// Sensor´s Presence
+// SensorÂ´s Presence
 #define SYM_ACC 0X02
 #define SYM_MAG 0X12
 #define SYM_BAR 0X13
 #define SYM_GPS 0X03
 #define SYM_CHECK 0XBD
 
-// Sensor´s Active
+// SensorÂ´s Active
 #define SYM_ACC_ON 0XA0
 #define SYM_MAG_ON 0XA1
 #define SYM_BAR_ON 0XA2
@@ -75,7 +75,7 @@
 #define SYM_POS_CLIMB1 0XB1
 #define SYM_POS_CLIMB2 0XB2
 #define SYM_POS_CLIMB3 0XB3
-#define SYM_NEG_CLIMB3 0XB4 
+#define SYM_NEG_CLIMB3 0XB4
 #define SYM_NEG_CLIMB2 0XB5
 #define SYM_NEG_CLIMB1 0XB6
 #define SYM_NEG_CLIMB 0XB7
@@ -110,11 +110,11 @@
 #define SYM_BATT_1 0X95
 #define SYM_BATT_EMPTY 0X96
 
-// Batt Icon´s
+// Batt IconÂ´s
 #define SYM_MAIN_BATT 0X97
 #define SYM_VID_BAT 0X98
 
-// Voltage and amperage 
+// Voltage and amperage
 #define SYM_VOLTS 0XC9
 #define SYM_AMPS 0XC8
 //#define SYM_CURRENT 0XA4
@@ -133,11 +133,11 @@
 #define SYM_ON 0X9B
 #define SYM_FLY 0X9C
 
-// Throttle 
+// Throttle
 #define SYM_THR_POINTER_DIV_HIGH 0X0A
-#define SYM_THR_POINTER_DIV_LOW 0X0B  
-#define SYM_THR_POINTER_TOP 0X09  
-#define SYM_THR_POINTER_4 0X08  
+#define SYM_THR_POINTER_DIV_LOW 0X0B
+#define SYM_THR_POINTER_TOP 0X09
+#define SYM_THR_POINTER_4 0X08
 #define SYM_THR_POINTER_3 0X1B
 #define SYM_THR_POINTER_2 0X1A
 #define SYM_THR_POINTER_1 0X19
@@ -182,7 +182,6 @@
 
 //Vertical Speed
 #define SYM_VSPEED 0X9F
-
 
 
 
