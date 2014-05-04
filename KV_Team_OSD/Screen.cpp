@@ -188,81 +188,114 @@ void displayCallsign(void)
 
 void displayHorizon(int rollAngle, int pitchAngle)
 {
-   if(!(MW_STATUS.sensorActive&mode_osd_switch)){
-    if(Settings[L_HORIZONPOSITIONDSPL]){
-      uint16_t position = ((Settings[L_HORIZONPOSITIONROW]-1)*30) + Settings[L_HORIZONPOSITIONCOL];
-      
-      if(pitchAngle>750) pitchAngle=750;
-      if(pitchAngle<-750) pitchAngle=-750;
-      if(rollAngle>750) rollAngle=750;
-      if(rollAngle<-750) rollAngle=-750;
-      
-for(int X=0; X<=4; X++) {
-        int Y = (rollAngle * (2-X)) / 64;                   
-        Y -= pitchAngle / 8;
-        Y += -5; //5
-        if(Y >= 0 && Y <= 55) {                                        // Top Ladder
-          uint16_t pos = position + LINE+LINE*(Y/9) + 4 - 2*LINE + X;
-           screen[pos] = SYM_AH_BAR_0+(Y%9);
-             if(Y>=9 && (Y%9) == 0)
-               screen[pos-LINE] = SYM_AH_BAR_9;
-  }
-}      
-for(int X=0; X<=8; X++) {
-        int Y = (rollAngle * (4-X)) / 64;                   
-        Y -= pitchAngle / 8;
-        Y += 41;
-        if(Y >= 0 && Y <= 65) {                                        // AH
-          uint16_t pos = position + LINE*(Y/9) + 2 - 2*LINE + X;
-           screen[pos] = SYM_AH_BAR_0+(Y%9);
-             if(Y>=9 && (Y%9) == 0)
-               screen[pos-LINE] = SYM_AH_BAR_9;
-  }
+	if(Settings[L_HORIZONPOSITIONDSPL]){
+		uint16_t position = ((Settings[L_HORIZONPOSITIONROW]-1)*30) + Settings[L_HORIZONPOSITIONCOL];
+		
+		for(int X=0; X<=1; X++) {
+			int Y = (rollAngle * (2-X)) / 64;
+			Y -= pitchAngle / 8;
+			Y += -5;
+			if(Y >= 10 && Y <= 50) {
+				uint16_t pos = position + LINE+LINE*(Y/9) + 4 - 2*LINE + X;
+				screen[pos] = SYM_AH_BAR_0+(Y%9);
+				if(Y>=9 && (Y%9) == 0)
+				screen[pos-LINE] = SYM_AH_BAR_9;
+			}
+		}
+
+		for(int X=0; X<=1; X++) {
+			int Y = (rollAngle * (-1-X)) / 64;
+			Y -= pitchAngle / 8;
+			Y += -5;
+			if(Y >= 10 && Y <= 50) {
+				uint16_t pos = position + LINE+LINE*(Y/9) + 7 - 2*LINE + X;
+				screen[pos] = SYM_AH_BAR_0+(Y%9);
+				if(Y>=9 && (Y%9) == 0)
+				screen[pos-LINE] = SYM_AH_BAR_9;
+			}
+		}
+
+		for(int X=0; X<=2; X++) {
+			int Y = (rollAngle * (4-X)) / 64;
+			Y -= pitchAngle / 8;
+			Y += 41;
+			if(Y >= 15 && Y <= 60) {
+				uint16_t pos = position + LINE*(Y/9) + 3 - 2*LINE + X;
+				screen[pos] = SYM_AH_BAR_0+(Y%9);
+				if(Y>=9 && (Y%9) == 0)
+				screen[pos-LINE] = SYM_AH_BAR_9;
+			}
+		}
+
+		for(int X=0; X<=2; X++) {
+			int Y = (rollAngle * (0-X)) / 64;
+			Y -= pitchAngle / 8;
+			Y += 41;
+			if(Y >= 15 && Y <= 60) {
+				uint16_t pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
+				screen[pos] = SYM_AH_BAR_0+(Y%9);
+				if(Y>=9 && (Y%9) == 0)
+				screen[pos-LINE] = SYM_AH_BAR_9;
+			}
+		}
+		
+		for(int X=0; X<=1; X++) {
+			int Y = (rollAngle * (2-X)) / 64;
+			Y -= pitchAngle / 8;
+			Y += 78;
+			if(Y >= 17 && Y <= 60) {
+				uint16_t pos = position + LINE*(Y/9) + 4 - 2*LINE + X;
+				screen[pos] = SYM_AH_BAR_0+(Y%9);
+				if(Y>=9 && (Y%9) == 0)
+				screen[pos-LINE] = SYM_AH_BAR_9;
+			}
+		}
+
+		for(int X=0; X<=1; X++) {
+			int Y = (rollAngle * (-1-X)) / 64;
+			Y -= pitchAngle / 8;
+			Y += 78;
+			if(Y >= 17 && Y <= 60) {
+				uint16_t pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
+				screen[pos] = SYM_AH_BAR_0+(Y%9);
+				if(Y>=9 && (Y%9) == 0)
+				screen[pos-LINE] = SYM_AH_BAR_9;
+			}
+		}
+
+		if(Settings[L_HORIZONCENTERREFDSPL]){
+			//Draw center screen
+			screen[position+2*LINE+6] =   SYM_AH_CENTER;
+			screen[position+2*LINE+1] =   SYM_AH_LEFT;
+			screen[position+2*LINE+11] =  SYM_AH_RIGHT;
+		}
+		if(Settings[L_HORIZONSIDEREFDSPL]){
+			// Draw AH sides
+			screen[position+0*LINE +11] = SYM_AH_UP_15DG_L;
+			screen[position+1*LINE +11] = SYM_AH_UP_5_10DG_L;
+			screen[position+0*LINE +1] = SYM_AH_UP_15DG_R;
+			screen[position+1*LINE +1] = SYM_AH_UP_5_10DG_R;
+			screen[position+4*LINE +11] = SYM_AH_DOWN_15DG_L;
+			screen[position+3*LINE +11] = SYM_AH_DOWN_5_10DG_L;
+			screen[position+4*LINE +1] = SYM_AH_DOWN_15DG_R;
+			screen[position+3*LINE +1] = SYM_AH_DOWN_5_10DG_R;
+		}
+		pitchAngle=pitchAngle/10;
+		if(pitchAngle>= Settings[S_PITCH_WARNING]  || pitchAngle <=- Settings[S_PITCH_WARNING]) {    // Warn alarm set to 30Â°
+			if(BlinkAlarm){    // Flashing synchro with other alarms
+				screen[position+4] = SYM_WARN;     // Position: center/top of AH rectangle
+				screen[position+5] = SYM_WARN_1;
+				screen[position+6] = SYM_WARN_2;
+				itoa(pitchAngle, screenBuffer, 10);                // Display angle next to warning
+				uint8_t xx = FindNull();
+				screenBuffer[xx++] = SYM_DEGREES;
+				screenBuffer[xx] = 0;
+				MAX7456_WriteString(screenBuffer, position+7);     // Position: center/top of AH rectangle
+			}
+		}
+	}
 }
-for(int X=0; X<=4; X++) {
-        int Y = (rollAngle * (2-X)) / 64;                   
-        Y -= pitchAngle / 8;
-        Y += 78;
-        if(Y >= 0 && Y <= 60) {                                        // Bot Ladder
-          uint16_t pos = position + LINE*(Y/9) + 4 - 2*LINE + X;
-           screen[pos] = SYM_AH_BAR_0+(Y%9);
-             if(Y>=9 && (Y%9) == 0)
-               screen[pos-LINE] = SYM_AH_BAR_9;
-  }
-}
-      if(Settings[L_HORIZONCENTERREFDSPL]){  
-        //Draw center screen
-        screen[position+2*LINE+6] =   SYM_AH_CENTER;
-        screen[position+2*LINE+1] =   SYM_AH_LEFT;
-        screen[position+2*LINE+11] =  SYM_AH_RIGHT;
-}
-     if(Settings[L_HORIZONSIDEREFDSPL]){                
-        // Draw AH sides              
-        screen[position+0*LINE +11] = SYM_AH_UP_15DG_L;
-          screen[position+1*LINE +11] = SYM_AH_UP_5_10DG_L;
-            screen[position+0*LINE +1] = SYM_AH_UP_15DG_R;
-              screen[position+1*LINE +1] = SYM_AH_UP_5_10DG_R;
-                screen[position+4*LINE +11] = SYM_AH_DOWN_15DG_L;
-                  screen[position+3*LINE +11] = SYM_AH_DOWN_5_10DG_L;
-                    screen[position+4*LINE +1] = SYM_AH_DOWN_15DG_R;
-                      screen[position+3*LINE +1] = SYM_AH_DOWN_5_10DG_R;   
-       }
-       pitchAngle=pitchAngle/10;
-       if(pitchAngle>= Settings[S_PITCH_WARNING]  || pitchAngle <=- Settings[S_PITCH_WARNING]) {    // Warn alarm set to 30°
-       if(BlinkAlarm){    // Flashing synchro with other alarms
-        screen[position+4] = SYM_WARN;     // Position: center/top of AH rectangle
-        screen[position+5] = SYM_WARN_1;
-        screen[position+6] = SYM_WARN_2;  
-        itoa(pitchAngle, screenBuffer, 10);                // Display angle next to warning
-        uint8_t xx = FindNull();
-        screenBuffer[xx++] = SYM_DEGREES;
-        screenBuffer[xx] = 0;
-        MAX7456_WriteString(screenBuffer, position+7);     // Position: center/top of AH rectangle
-          }
-       }
-     }
-   }
- }
+
  
 void displayVoltage(void)
 {
@@ -418,19 +451,18 @@ void displayAmperage(void)
 
 void displaypMeterSum(void)
 {
- if(!(MW_STATUS.sensorActive&mode_osd_switch)){
+
   if(Settings[L_PMETERSUMPOSITIONDSPL]){    
     screenBuffer[0]=SYM_CURRENT;
     screenBuffer[1]=0;
     itoa(amperagesum,screenBuffer+1,10);
-    MAX7456_WriteString(screenBuffer,((Settings[L_PMETERSUMPOSITIONROW]-1)*30) + Settings[L_PMETERSUMPOSITIONCOL]);
-  }
+	 if(!(MW_STATUS.sensorActive&mode_osd_switch))
+		MAX7456_WriteString(screenBuffer,((Settings[L_PMETERSUMPOSITIONROW]-1)*30) + Settings[L_PMETERSUMPOSITIONCOL]);
  }
 }
 
 void displayRSSI(void)
 {
- if(!(MW_STATUS.sensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]+5)){
   if(Settings[L_RSSIPOSITIONDSPL]){
     if (rssi <=(Settings[S_RSSI_ALARM]) && !BlinkAlarm){
       screenBuffer[0] = SYM_RSSI;
@@ -442,14 +474,15 @@ void displayRSSI(void)
     uint8_t xx = FindNull();
     screenBuffer[xx++] = '%';
     screenBuffer[xx] = 0;
-    MAX7456_WriteString(screenBuffer,((Settings[L_RSSIPOSITIONROW]-1)*30) + Settings[L_RSSIPOSITIONCOL]);
-    }
+	if(!(MW_STATUS.sensorActive&mode_osd_switch) || rssi<=(Settings[S_RSSI_ALARM]+5))
+		MAX7456_WriteString(screenBuffer,((Settings[L_RSSIPOSITIONROW]-1)*30) + Settings[L_RSSIPOSITIONCOL]);
+  
   }
 }
 
 void displayHeading(void)
 {
- if(!(MW_STATUS.sensorActive&mode_osd_switch)){
+
   if(Settings[L_MW_HEADINGPOSITIONDSPL]){
       int16_t heading = MW_ATT.Heading;
       if (Settings[S_HEADING360]) {
@@ -468,10 +501,8 @@ void displayHeading(void)
         screenBuffer[4]=SYM_DEGREES;
         screenBuffer[5]=0;
       }
-  MAX7456_WriteString(screenBuffer,((Settings[L_MW_HEADINGPOSITIONROW]-1)*30) + Settings[L_MW_HEADINGPOSITIONCOL]);
-  
-  
-  }
+	if(!(MW_STATUS.sensorActive&mode_osd_switch))
+	MAX7456_WriteString(screenBuffer,((Settings[L_MW_HEADINGPOSITIONROW]-1)*30) + Settings[L_MW_HEADINGPOSITIONCOL]);
  }
 }
 
@@ -518,7 +549,7 @@ void displayIntro(char position)
       for(int X=0; X<10; X++) {
           screenBuffer[X] = char(Settings[S_CS0 + X]);
       }
-   if (BlinkAlarm)
+   if (!BlinkAlarm)
    MAX7456_WriteString(screenBuffer, position+130+LINE+LINE+LINE+LINE+LINE+LINE+LINE+LINE);;     // Call Sign on the beginning of the transmission (blink at sel freq)  
    }
 }
@@ -572,19 +603,17 @@ void displayGPSPosition(void)
    
 void displayNumberOfSat(void)
 {
- if(!(MW_STATUS.sensorActive&mode_osd_switch)){
   if(Settings[L_GPS_NUMSATPOSITIONDSPL]){
     screenBuffer[0] = SYM_SAT;
     screenBuffer[1] = SYM_SAT_1;
     itoa(GPS.numSat,screenBuffer+2,10);
+	if(!(MW_STATUS.sensorActive&mode_osd_switch))
     MAX7456_WriteString(screenBuffer,((Settings[L_GPS_NUMSATPOSITIONROW]-1)*30) + Settings[L_GPS_NUMSATPOSITIONCOL]);
-  }  
  }
 }
 
 void displayGPS_speed(void)
 {
- if(!(MW_STATUS.sensorActive&mode_osd_switch)){
   if(Settings[L_SPEEDPOSITIONDSPL]){
 
     if(!armed) GPS.speed=0;
@@ -600,8 +629,9 @@ void displayGPS_speed(void)
     screenBuffer[0]=SYM_SPEED;
     screenBuffer[1]=SYM_SPEED_1;
     itoa(xx,screenBuffer+2,10);
-    MAX7456_WriteString(screenBuffer,((Settings[L_SPEEDPOSITIONROW]-1)*30) + Settings[L_SPEEDPOSITIONCOL]);
-   }
+	if(!(MW_STATUS.sensorActive&mode_osd_switch))
+		MAX7456_WriteString(screenBuffer,((Settings[L_SPEEDPOSITIONROW]-1)*30) + Settings[L_SPEEDPOSITIONCOL]);
+
  }
 }
 
@@ -615,8 +645,8 @@ void displayAltitude(void)
       altitude = MW_ALT.Altitude/100;         // cm to mt
     if(armed && allSec>5 && altitude > altitudeMAX)
       altitudeMAX = altitude;
-    if(!(MW_STATUS.sensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*2) || flyTime > 30 && altitude < (Settings[S_VOLUME_ALT_MIN])){
-    if(altitude >= (Settings[S_VOLUME_ALT_MAX]*2) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
+    if(!(MW_STATUS.sensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*10) || flyTime > 30 && altitude < (Settings[S_VOLUME_ALT_MIN])){
+    if(altitude >= (Settings[S_VOLUME_ALT_MAX]*10) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
     return;
     screenBuffer[0]=SYM_ALT;
     itoa(altitude,screenBuffer+1,10);
@@ -673,7 +703,6 @@ void displayDebug1(int16_t x) //SJa
 
 void displayDistanceToHome(void)
 {
-  if(!(MW_STATUS.sensorActive&mode_osd_switch) || GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100)){
   if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
 
     if (GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100) && !BlinkAlarm) 
@@ -688,10 +717,8 @@ void displayDistanceToHome(void)
       distanceMAX = dist;  
     screenBuffer[0] = SYM_LOS;
     itoa(dist, screenBuffer+1, 10);
-    MAX7456_WriteString(screenBuffer,((Settings[L_GPS_DISTANCETOHOMEPOSROW]-1)*30) + Settings[L_GPS_DISTANCETOHOMEPOSCOL]);
-    
-    
-    }
+	if(!(MW_STATUS.sensorActive&mode_osd_switch) || GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100))
+		MAX7456_WriteString(screenBuffer,((Settings[L_GPS_DISTANCETOHOMEPOSROW]-1)*30) + Settings[L_GPS_DISTANCETOHOMEPOSCOL]);
   }
 }
 
@@ -717,7 +744,6 @@ void displayDirectionToHome(void)
 
 void displayAngleToHome(void)
 {
- if(!(MW_STATUS.sensorActive&mode_osd_switch)){
   if(Settings[L_GPS_ANGLETOHOMEPOSDSPL]){
 
     if(GPS.distanceToHome <= 2 && !BlinkAlarm)
@@ -726,8 +752,8 @@ void displayAngleToHome(void)
     ItoaPadded(GPS.directionToHome,screenBuffer,3,0);
     screenBuffer[3] = SYM_DEGREES;
     screenBuffer[4] = 0;
-    MAX7456_WriteString(screenBuffer,((Settings[L_GPS_ANGLETOHOMEPOSROW]-1)*30) + Settings[L_GPS_ANGLETOHOMEPOSCOL]);
-    }
+	if(!(MW_STATUS.sensorActive&mode_osd_switch))
+		MAX7456_WriteString(screenBuffer,((Settings[L_GPS_ANGLETOHOMEPOSROW]-1)*30) + Settings[L_GPS_ANGLETOHOMEPOSCOL]);
   }
 }
 

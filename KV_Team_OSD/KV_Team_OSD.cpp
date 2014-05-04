@@ -501,7 +501,11 @@ void loop()
 
   if((currentMillis - previous_millis_low) >= lo_speed_cycle)  // 10 Hz (Executed every 100ms)
   {
-    previous_millis_low = currentMillis;    
+    previous_millis_low = currentMillis;
+	
+	tenthSec++;
+	TempBlinkAlarm++;
+	Blink10hz=!Blink10hz;    
     
 	if(!fontMode)
       blankserialRequest(MSP_ATTITUDE);
@@ -514,9 +518,6 @@ void loop()
   {
     previous_millis_high = currentMillis;   
 
-    tenthSec++;
-    TempBlinkAlarm++;
-    Blink10hz=!Blink10hz;
     calculateTrip();      // Speed integration on 50msec
     if (!Settings[S_MWAMPERAGE]) calculateAmperage();  // Amperage and amperagesum integration on 50msec
     
@@ -571,7 +572,7 @@ void loop()
 
     //MAX7456_DrawScreen();
     
-    if( allSec < 6 ){
+    if( allSec < 3 ){
       displayIntro(KVTeamVersionPosition);
       lastCallSign = onTime;
     }  
@@ -655,7 +656,7 @@ void loop()
   }
 
  
-  if(tenthSec >= 20)     // this execute 1 time a second
+  if(tenthSec >= 10)     // this execute 1 time a second
   {
     onTime++;
     

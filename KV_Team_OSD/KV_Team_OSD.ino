@@ -17,3 +17,5 @@ http://code.google.com/p/rush-osd-development/
               /*    KATAVENTOS                ITAIN                 CARLONB        */
               /*     POWER67                 LIAM2317             NEVERLANDED      */
               /*********************************************************************/
+              
+// .cpp / .h code structure rearrangement and optimization by INT77

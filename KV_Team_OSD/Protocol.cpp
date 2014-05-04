@@ -382,7 +382,7 @@ void handleRawRC() {
 
 				if(configPage == 3 && COL == 3) {
 					if(ROW==1) Settings[S_VOLTAGEMIN]--;
-					if(ROW==2) Settings[S_TEMPERATUREMAX]--;
+					//if(ROW==2) Settings[S_TEMPERATUREMAX]--;
 					if(ROW==3) {
 						Settings[S_BLINKINGHZ]--;
 						if (Settings[S_BLINKINGHZ] <1) Settings[S_BLINKINGHZ]=1;
@@ -477,7 +477,7 @@ void handleRawRC() {
 
 				if(configPage == 3 && COL == 3) {
 					if(ROW==1) Settings[S_VOLTAGEMIN]++;
-					if(ROW==2) Settings[S_TEMPERATUREMAX]++;
+					//if(ROW==2) Settings[S_TEMPERATUREMAX]++;
 					if(ROW==3) {
 						Settings[S_BLINKINGHZ]++;
 						if (Settings[S_BLINKINGHZ] >10) Settings[S_BLINKINGHZ]=10;
