@@ -1,16 +1,9 @@
-
-
-
 /*
    KV Team OSD GUI V2.3 May 2014
    http://code.google.com/p/rush-osd-development/
-
-
-   Copyright (C) May 2014 (KV Team OSD)   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   any later version. see http://www.gnu.org/licenses/  
+  
+   Work released under the Creative Commons Attribution NonCommercial ShareAlike 3.0 Unported License.
+   http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
 */
 
 import processing.serial.Serial; // serial library
