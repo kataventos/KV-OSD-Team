@@ -197,5 +197,5 @@
 
 	//void initFontMode();
 	//int16_t getNextCharToRequest();
-	
+				
 #endif /* KV_TEAM_OSD_H_ */

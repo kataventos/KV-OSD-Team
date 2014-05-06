@@ -349,17 +349,8 @@ void calculateRssi(void)
 
 void setup()
 {
-//---- override UBRR with MWC settings
-  //uint8_t h = ((F_CPU  / 4 / (115200) -1) / 2) >> 8;
-  //uint8_t l = ((F_CPU  / 4 / (115200) -1) / 2);
-  //UCSR0A  |= (1<<U2X0); UBRR0H = h; UBRR0L = l; 
-//---
-  //Serial.flush();
-  
-  //delay(500);
   SerialOpen(0,115200);
   SerialFlush(0);
-  
   
   //PWM RSSI
   pinMode(PWMrssiPin, INPUT);
@@ -488,13 +479,13 @@ void loop()
   if (Settings[S_PWMRSSI] && !Settings[S_MWRSSI]){
 	rssiADC = pulseIn(PWMrssiPin, HIGH,15000)/Settings[S_PWMRSSIDIVIDER]; // Reading W/time out (microseconds to wait for pulse to start: 15000=0.015sec)
     }
-  /* 
+   
   // Blink Basic Sanity Test Led at 1hz - this stuff introduces strange behavior on my system
   if(tenthSec>10)
     digitalWrite(7,HIGH);
   else
     digitalWrite(7,LOW);
-*/
+
 
   //---------------  Start Timed Service Routines  ---------------------------------------
   unsigned long currentMillis = millis();

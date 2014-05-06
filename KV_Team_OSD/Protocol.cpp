@@ -5,7 +5,7 @@
 #include "KV_Team_OSD.h"
 #include "Serial.h"
 
-void (* resetFunc)(void)=0;
+//void (* resetFunc)(void)=0x0000;
 
 static uint8_t checksum[UART_NUMBER];
 //static uint8_t indRX[UART_NUMBER];
@@ -615,7 +615,7 @@ void serialMSPCheck()
       }
     }
     if(cmd == OSD_RESET) {
-    resetFunc();
+		//resetFunc();
     }
     if(cmd == OSD_SERIAL_SPEED) {
     

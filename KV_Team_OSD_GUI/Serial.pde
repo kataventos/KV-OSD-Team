@@ -183,6 +183,7 @@ void BounceSerial(){
   
 }  
 
+
 void RESTART(){
   toggleMSP_Data = true;
   for (int txTimes = 0; txTimes<2; txTimes++) {
@@ -191,9 +192,13 @@ void RESTART(){
     tailSerialReply();
   }
   toggleMSP_Data = false;
+  CloseMode = 1;
+  ClosePort();
   delay(1500);
   READ();
-}  
+} 
+
+
 
 public void READ(){
   
