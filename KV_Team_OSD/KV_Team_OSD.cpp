@@ -21,16 +21,17 @@
 static const uint8_t rssiSample=30;
 
 //General use variables
-uint8_t tenthSec=0;
-uint8_t TempBlinkAlarm=0;                       // Temporary for blink alarm
-uint8_t BlinkAlarm=0;                           // This is turning on and off at selected freq. (alarm)
-uint8_t Blink10hz=0;                            // This is turning on and off at 10hz
-uint16_t lastCallSign=0;                         // callsign_timer
+int tenthSec=0;
+int TempBlinkAlarm=0;                       // Temporary for blink alarm
+int BlinkAlarm=0;                           // This is turning on and off at selected freq. (alarm)
+int Blink10hz=0;                            // This is turning on and off at 10hz
+int lastCallSign=0;                         // callsign_timer
 uint8_t rssiTimer=0;
 uint8_t accCalibrationTimer=0;
 uint8_t magCalibrationTimer=0;
 uint8_t eepromWriteTimer=0;
 
+//unsigned int allSec=0;
 int16_t allSec=0;
 
 // Config status and cursor location
@@ -91,8 +92,8 @@ uint8_t previousarmedstatus=0;  // for statistics after disarming
 GPS_t GPS;
 
 //For Current Throttle
-uint16_t LowT = 1100;
-uint16_t HighT = 1900;
+int LowT = 1100;
+int HighT = 1900;
 
 // For Time
 uint16_t onTime=0;
@@ -107,16 +108,16 @@ const char headGraph[] PROGMEM = {
 
 // For Amperage
 float amperageADC =0;
-int16_t amperage_Int=0;
+int amperage_Int=0;
 float amperage = 0;                // its the real value x10
 float amperagesum = 0;
 
 // Rssi
-int16_t rssi =0;
-int16_t rssiADC=0;
-int16_t rssiMin;
-int16_t rssiMax;
-int16_t rssi_Int=0;
+int rssi =0;
+int rssiADC=0;
+int rssiMin;
+int rssiMax;
+int rssi_Int=0;
 
 
 // For Voltage
@@ -312,10 +313,10 @@ static const char KVTeamVersionPosition = 35;
 
 
 //-------------- Timed Service Routine vars (No need Metro.h library)
-uint16_t previous_millis_low=0;
-uint16_t previous_millis_high =0;
-uint8_t hi_speed_cycle = 50;
-uint8_t lo_speed_cycle = 100;
+unsigned long previous_millis_low=0;
+unsigned long previous_millis_high =0;
+int hi_speed_cycle = 50;
+int lo_speed_cycle = 100;
 //----------------
 
 
@@ -460,7 +461,7 @@ void loop()
       rssiADC = analogRead(rssiPin)/4;  // RSSI Readings, rssiADC=0 to 1023/4 (avoid a number > 255)
     }
     if (!Settings[S_MWAMPERAGE]) {
-      int16_t currsensOffSet=(Settings[S_CURRSENSOFFSET_L] | (Settings[S_CURRSENSOFFSET_H] << 8));  // Read OffSetH/L
+      int currsensOffSet=(Settings[S_CURRSENSOFFSET_L] | (Settings[S_CURRSENSOFFSET_H] << 8));  // Read OffSetH/L
       amperageADC = analogRead(amperagePin);
       if (amperageADC > currsensOffSet) amperageADC=((amperageADC-currsensOffSet)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; // [A] Positive Current flow (512...1023) or Unidir (0...1023)
       else amperageADC=((currsensOffSet-amperageADC)*4.8828)/Settings[S_CURRSENSSENSITIVITY]; // [A] Negative Current flow (0...512)
@@ -487,7 +488,7 @@ void loop()
 
 
   //---------------  Start Timed Service Routines  ---------------------------------------
-  uint16_t currentMillis = millis();
+  unsigned long currentMillis = millis();
 
   if((currentMillis - previous_millis_low) >= lo_speed_cycle)  // 10 Hz (Executed every 100ms)
   {
@@ -495,8 +496,8 @@ void loop()
 	
 	tenthSec++;
 	TempBlinkAlarm++;
-	Blink10hz=!Blink10hz;
-	
+	Blink10hz=!Blink10hz;    
+    
 	if(!fontMode)
       blankserialRequest(MSP_ATTITUDE);
       

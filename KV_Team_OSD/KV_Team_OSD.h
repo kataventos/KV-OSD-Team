@@ -36,14 +36,15 @@
 	extern const unsigned char temperatureUnitAdd[];
 	
 	//General use variables
-	extern uint8_t TempBlinkAlarm;                       // Temporary for blink alarm
-	extern uint8_t BlinkAlarm;                           // This is turning on and off at selected freq. (alarm)
-	extern uint8_t Blink10hz;                            // This is turning on and off at 10hz
-	extern uint16_t lastCallSign;                         // callsign_timer
+	extern int TempBlinkAlarm;                       // Temporary for blink alarm
+	extern int BlinkAlarm;                           // This is turning on and off at selected freq. (alarm)
+	extern int Blink10hz;                            // This is turning on and off at 10hz
+	extern int lastCallSign;                         // callsign_timer
 	extern uint8_t rssiTimer;
 	extern uint8_t accCalibrationTimer;
 	extern uint8_t magCalibrationTimer;
 	extern uint8_t eepromWriteTimer;
+	//extern unsigned int allSec;
 	extern int16_t allSec;
 
 	// Config status and cursor location
@@ -58,8 +59,8 @@
 	extern uint8_t retransmitQueue;
 	
 	//For Current Throttle
-	extern uint16_t LowT;
-	extern uint16_t HighT;
+	extern int LowT;
+	extern int HighT;
 
 	// For Time
 	extern uint16_t onTime;
@@ -70,16 +71,16 @@
 	
 	// For Amperage
 	extern float amperageADC;
-	extern int16_t amperage_Int;
+	extern int amperage_Int;
 	extern float amperage;                // its the real value x10
 	extern float amperagesum;
 
 	// Rssi
-	extern int16_t rssi;
-	extern int16_t rssiADC;
-	extern int16_t rssiMin;
-	extern int16_t rssiMax;
-	extern int16_t rssi_Int;
+	extern int rssi;
+	extern int rssiADC;
+	extern int rssiMin;
+	extern int rssiMax;
+	extern int rssi_Int;
 
 	// For Voltage
 	extern uint16_t voltage;                      // its the value x10
@@ -196,6 +197,5 @@
 
 	//void initFontMode();
 	//int16_t getNextCharToRequest();
-	void resetFunc();
-			
+				
 #endif /* KV_TEAM_OSD_H_ */
