@@ -562,7 +562,7 @@ void loop()
 
     //MAX7456_DrawScreen();
     
-    if( allSec < 3 ){
+    if( allSec < 6 ){
       displayIntro(KVTeamVersionPosition);
       lastCallSign = onTime;
     }  
