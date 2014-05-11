@@ -337,11 +337,11 @@ void checkEEPROM(void)
 void writeEEPROM(void)
 {
 	// For Settings
-	for(int en=0;en<EEPROM_SETTINGS;en++){
+	for(uint16_t en=0;en<EEPROM_SETTINGS;en++){
 		if (EEPROM.read(en) != Settings[en]) EEPROM.write(en,Settings[en]);
 	}
 	// For Position of items on screen
-	for(int en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++){
+	for(uint16_t en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++){
 		if (EEPROM.read(en+EEPROM_SETTINGS+1) != Settings[en+EEPROM_SETTINGS+1]) EEPROM.write(en+EEPROM_SETTINGS+1,Settings[en+EEPROM_SETTINGS+1]);
 	}
 }
@@ -349,11 +349,11 @@ void writeEEPROM(void)
 void readEEPROM(void)
 {
 	// For Settings
-	for(int en=0;en<EEPROM_SETTINGS;en++){
+	for(uint16_t en=0;en<EEPROM_SETTINGS;en++){
 		Settings[en] = EEPROM.read(en);
 	}
 	// For Position of items on screen
-	for(int en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++){
+	for(uint16_t en=0;en<EEPROM_ITEM_LOCATION-EEPROM_SETTINGS;en++){
 		Settings[en+EEPROM_SETTINGS+1] = EEPROM.read(en+EEPROM_SETTINGS+1);
 	}
 }

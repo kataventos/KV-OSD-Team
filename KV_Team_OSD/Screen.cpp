@@ -6,7 +6,7 @@
 #include "Screen.h"
 
 
-char *ItoaPadded(int val, char *str, uint8_t bytes, uint8_t decimalpos)  {
+char *ItoaPadded(int16_t val, char *str, uint8_t bytes, uint8_t decimalpos)  {
   uint8_t neg = 0;
   if(val < 0) {
     neg = 1;
@@ -101,7 +101,7 @@ uint8_t FindNull(void)
 {
  if(!(MW_STATUS.sensorActive&mode_osd_switch)){  // mode_osd_switch=0 --> Display, =1 --> Hide
   if(Settings[L_TEMPERATUREPOSDSPL]){
-    int xxx;
+    int16_t xxx;
     if (Settings[S_UNITSYSTEM])
       xxx = temperature*1.8+32;       //Fahrenheit conversion for imperial system.
     else
@@ -177,7 +177,7 @@ void displayCallsign(void)
 {
   if(!(MW_STATUS.sensorActive&mode_osd_switch)){
     if(Settings[L_CALLSIGNPOSITIONDSPL] || Settings[S_CALLSIGN]){
-        for(int X=0; X<10; X++) {
+        for(int16_t X=0; X<10; X++) {
             screenBuffer[X] = char(Settings[S_CS0 + X]);
        }   
         screenBuffer[10] = 0;
@@ -186,77 +186,81 @@ void displayCallsign(void)
   }
 }
 
-void displayHorizon(int rollAngle, int pitchAngle)
+void displayHorizon(int16_t rollAngle, int16_t pitchAngle)
 {
+	uint8_t X;
+	int16_t Y;
+	uint16_t pos;
+	
 	if(Settings[L_HORIZONPOSITIONDSPL]){
 		uint16_t position = ((Settings[L_HORIZONPOSITIONROW]-1)*30) + Settings[L_HORIZONPOSITIONCOL];
 		
-		for(int X=0; X<=1; X++) {
-			int Y = (rollAngle * (2-X)) / 64;
+		for(X=0; X<=1; X++) {
+			Y = (rollAngle * (2-X)) / 64;
 			Y -= pitchAngle / 8;
 			Y += -5;
 			if(Y >= 10 && Y <= 50) {
-				uint16_t pos = position + LINE+LINE*(Y/9) + 4 - 2*LINE + X;
+				pos = position + LINE+LINE*(Y/9) + 4 - 2*LINE + X;
 				screen[pos] = SYM_AH_BAR_0+(Y%9);
 				if(Y>=9 && (Y%9) == 0)
 				screen[pos-LINE] = SYM_AH_BAR_9;
 			}
 		}
 
-		for(int X=0; X<=1; X++) {
-			int Y = (rollAngle * (-1-X)) / 64;
+		for(X=0; X<=1; X++) {
+			Y = (rollAngle * (-1-X)) / 64;
 			Y -= pitchAngle / 8;
 			Y += -5;
 			if(Y >= 10 && Y <= 50) {
-				uint16_t pos = position + LINE+LINE*(Y/9) + 7 - 2*LINE + X;
+				pos = position + LINE+LINE*(Y/9) + 7 - 2*LINE + X;
 				screen[pos] = SYM_AH_BAR_0+(Y%9);
 				if(Y>=9 && (Y%9) == 0)
 				screen[pos-LINE] = SYM_AH_BAR_9;
 			}
 		}
 
-		for(int X=0; X<=2; X++) {
-			int Y = (rollAngle * (4-X)) / 64;
+		for(X=0; X<=2; X++) {
+			Y = (rollAngle * (4-X)) / 64;
 			Y -= pitchAngle / 8;
 			Y += 41;
 			if(Y >= 15 && Y <= 60) {
-				uint16_t pos = position + LINE*(Y/9) + 3 - 2*LINE + X;
+				pos = position + LINE*(Y/9) + 3 - 2*LINE + X;
 				screen[pos] = SYM_AH_BAR_0+(Y%9);
 				if(Y>=9 && (Y%9) == 0)
 				screen[pos-LINE] = SYM_AH_BAR_9;
 			}
 		}
 
-		for(int X=0; X<=2; X++) {
-			int Y = (rollAngle * (0-X)) / 64;
+		for(X=0; X<=2; X++) {
+			Y = (rollAngle * (0-X)) / 64;
 			Y -= pitchAngle / 8;
 			Y += 41;
 			if(Y >= 15 && Y <= 60) {
-				uint16_t pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
+				pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
 				screen[pos] = SYM_AH_BAR_0+(Y%9);
 				if(Y>=9 && (Y%9) == 0)
 				screen[pos-LINE] = SYM_AH_BAR_9;
 			}
 		}
 		
-		for(int X=0; X<=1; X++) {
-			int Y = (rollAngle * (2-X)) / 64;
+		for(X=0; X<=1; X++) {
+			Y = (rollAngle * (2-X)) / 64;
 			Y -= pitchAngle / 8;
 			Y += 78;
 			if(Y >= 17 && Y <= 60) {
-				uint16_t pos = position + LINE*(Y/9) + 4 - 2*LINE + X;
+				pos = position + LINE*(Y/9) + 4 - 2*LINE + X;
 				screen[pos] = SYM_AH_BAR_0+(Y%9);
 				if(Y>=9 && (Y%9) == 0)
 				screen[pos-LINE] = SYM_AH_BAR_9;
 			}
 		}
 
-		for(int X=0; X<=1; X++) {
-			int Y = (rollAngle * (-1-X)) / 64;
+		for(X=0; X<=1; X++) {
+			Y = (rollAngle * (-1-X)) / 64;
 			Y -= pitchAngle / 8;
 			Y += 78;
 			if(Y >= 17 && Y <= 60) {
-				uint16_t pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
+				pos = position + LINE*(Y/9) + 7 - 2*LINE + X;
 				screen[pos] = SYM_AH_BAR_0+(Y%9);
 				if(Y>=9 && (Y%9) == 0)
 				screen[pos-LINE] = SYM_AH_BAR_9;
@@ -315,12 +319,12 @@ void displayVoltage(void)
       
     if(Settings[L_MAINBATLEVEVOLUTIONDSPL]){
       // For battery evolution display
-      int BATTEV1 =Settings[S_BATCELLS] * 35;
-      int BATTEV2 =Settings[S_BATCELLS] * 36;
-      int BATTEV3 =Settings[S_BATCELLS] * 37;
-      int BATTEV4 =Settings[S_BATCELLS] * 38;
-      int BATTEV5 =Settings[S_BATCELLS] * 40;
-      int BATTEV6 = Settings[S_BATCELLS] * 41;
+      int16_t BATTEV1 =Settings[S_BATCELLS] * 35;
+      int16_t BATTEV2 =Settings[S_BATCELLS] * 36;
+      int16_t BATTEV3 =Settings[S_BATCELLS] * 37;
+      int16_t BATTEV4 =Settings[S_BATCELLS] * 38;
+      int16_t BATTEV5 =Settings[S_BATCELLS] * 40;
+      int16_t BATTEV6 = Settings[S_BATCELLS] * 41;
   
       if (voltage < BATTEV1) screenBuffer[0]=SYM_BATT_EMPTY;
       else if (voltage < BATTEV2) screenBuffer[0]=SYM_BATT_1;
@@ -368,7 +372,7 @@ void displayCurrentThrottle(void)
   if(Settings[L_CURRENTTHROTTLEPOSITIONDSPL]){
     if (MwRcData[THROTTLESTICK] > HighT) HighT = MwRcData[THROTTLESTICK] -5;
     if (MwRcData[THROTTLESTICK] < LowT) LowT = MwRcData[THROTTLESTICK];      // Calibrate high and low throttle settings  --defaults set in GlobalVariables.h 1100-1900
-  int CurThrottle = map(MwRcData[THROTTLESTICK],LowT,HighT,0,100);
+  int16_t CurThrottle = map(MwRcData[THROTTLESTICK],LowT,HighT,0,100);
     screenBuffer[2]=0;
           if(CurThrottle >95) screenBuffer[0] = SYM_THR_POINTER_TOP;
            else if(CurThrottle > 90) screenBuffer[0] = SYM_THR_POINTER_4;
@@ -510,7 +514,7 @@ void displayHeadingGraph(void)
 {
  if(!(MW_STATUS.sensorActive&mode_osd_switch)  || (!GPS.fix)){
   if(Settings[L_MW_HEADINGGRAPHPOSDSPL]){
-    int xx;
+    int16_t xx;
     xx = MW_ATT.Heading * 2;
     xx = xx + 440 -36;
     xx = xx / 90;
@@ -546,7 +550,7 @@ void displayIntro(char position)
   
   MAX7456_WriteString_P(message9, position+120+LINE+LINE+LINE+LINE+LINE+LINE+LINE+LINE);
   if(Settings[L_CALLSIGNPOSITIONDSPL]){
-      for(int X=0; X<10; X++) {
+      for(int16_t X=0; X<10; X++) {
           screenBuffer[X] = char(Settings[S_CS0 + X]);
       }
    if (!BlinkAlarm)
@@ -618,7 +622,7 @@ void displayGPS_speed(void)
 
     if(!armed) GPS.speed=0;
   
-    int xx;
+    int16_t xx;
     if(!Settings[S_UNITSYSTEM])
       xx = GPS.speed * 0.036;           // From MWii cm/sec to Km/h
     else
@@ -759,7 +763,7 @@ void displayAngleToHome(void)
 
 void displayCursor(void)
 {
-  int cursorpos;
+  int16_t cursorpos;
 
   if(ROW==10){
     if(COL==4) COL=3;
@@ -1047,7 +1051,7 @@ void displayConfigScreen(void)
 
   if(configPage==8)
   {
-    int screenrow,screencol,displayOn;
+    int16_t screenrow,screencol,displayOn;
     MAX7456_WriteString_P(configMsg80, LINE02+6);       // "8/9 SCREEN ITEM POS"
     
     MAX7456_WriteString_P(configMsg76, LINE04+7);       // "VIDEO SYSTEM"
@@ -1082,7 +1086,7 @@ void displayConfigScreen(void)
 
   if(configPage==9)
   {
-    int xx;
+    int16_t xx;
     MAX7456_WriteString_P(configMsg90, 38);
 
     MAX7456_WriteString_P(configMsg91, ROLLT);
