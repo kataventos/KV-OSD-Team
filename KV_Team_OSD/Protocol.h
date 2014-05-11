@@ -79,5 +79,6 @@
 	void setMspRequests();
 	void blankserialRequest(uint8_t requestMSP);
 	void serialMSPreceive();
-		
+	void resetFunc();
+	
 #endif /* PROTOCOL_H_ */

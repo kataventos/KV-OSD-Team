@@ -6,7 +6,7 @@
 	void displayMode(void);
 	void displayArmed(void);
 	void displayCallsign(void);
-	void displayHorizon(int rollAngle, int pitchAngle);
+	void displayHorizon(int16_t rollAngle, int16_t pitchAngle);
 	void displayVoltage(void);
 	void displayVidVoltage(void);
 	void displayCurrentThrottle(void);

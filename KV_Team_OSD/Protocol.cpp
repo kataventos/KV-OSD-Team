@@ -15,7 +15,6 @@ static uint8_t serialBuffer[SERIALBUFFERSIZE]; // this hold the incoming string 
 
 static uint8_t receiverIndex;
 static uint8_t dataSize;
-//uint8_t cmdMSP;
 static uint8_t rcvChecksum;
 static uint8_t readIndex;
 
@@ -94,13 +93,13 @@ void s_struct_w(uint8_t *cb,uint8_t siz) {
 }
 
 int16_t getNextCharToRequest() {
-	if(nextCharToRequest != lastCharToRequest) { // Not at last char
+	if(nextCharToRequest != lastCharToRequest) {	// Not at last char
 		if(retransmitQueue & 0x02) {                // Missed char at curr-6. Need retransmit!
 			return nextCharToRequest-6;
 		}
 
 		if((retransmitQueue & 0x11) == 0x10) {      // Missed char at curr-3. First chance retransmit
-			retransmitQueue |= 0x01;                  // Mark first chance as used
+			retransmitQueue |= 0x01;                // Mark first chance as used
 			return nextCharToRequest-3;
 		}
 
@@ -129,24 +128,6 @@ int16_t getNextCharToRequest() {
 
 void fontSerialRequest() {
 	int16_t cindex = getNextCharToRequest();
-	/*uint8_t txCheckSum;
-	uint8_t txSize;
-	Serial.write('$');
-	Serial.write('M');
-	Serial.write('<');
-	txCheckSum=0;
-	txSize=3;
-	Serial.write(txSize);
-	txCheckSum ^= txSize;
-	Serial.write(MSP_OSD);
-	txCheckSum ^= MSP_OSD;
-	Serial.write(OSD_GET_FONT);
-	txCheckSum ^= OSD_GET_FONT;
-	Serial.write(cindex);
-	txCheckSum ^= cindex;
-	Serial.write(cindex>>8);
-	txCheckSum ^= cindex>>8;
-	Serial.write(txCheckSum);*/
 	headSerialReply(3);
 	serialize8(OSD_GET_FONT);
 	serialize16(cindex);
@@ -230,54 +211,12 @@ void saveExit()
 	//uint8_t txSize;
 
 	if (configPage==1){
-		/*Serial.write('$');
-		Serial.write('M');
-		Serial.write('<');
-		txCheckSum=0;
-		txSize=30;
-		Serial.write(txSize);
-		txCheckSum ^= txSize;
-		Serial.write(MSP_SET_PID);
-		txCheckSum ^= MSP_SET_PID;
-		for(uint8_t i=0; i<PIDITEMS; i++) {
-			Serial.write(conf.pid[i].P8);
-			txCheckSum ^= conf.pid[i].P8;
-			Serial.write(conf.pid[i].I8);
-			txCheckSum ^= conf.pid[i].I8;
-			Serial.write(conf.pid[i].D8);
-			txCheckSum ^= conf.pid[i].D8;
-		}
-		Serial.write(txCheckSum);*/
 		cmdMSP[0] = MSP_SET_PID;
 		s_struct((uint8_t*)&conf.pid[0].P8,3*PIDITEMS);
 		tailSerialReply();
 	}
 
 	if (configPage==2){
-		/*Serial.write('$');
-		Serial.write('M');
-		Serial.write('<');
-		txCheckSum=0;
-		txSize=7;
-		Serial.write(txSize);
-		txCheckSum ^= txSize;
-		Serial.write(MSP_SET_RC_TUNING);
-		txCheckSum ^= MSP_SET_RC_TUNING;
-		Serial.write(conf.rcRate8);
-		txCheckSum ^= conf.rcRate8;
-		Serial.write(conf.rcExpo8);
-		txCheckSum ^= conf.rcExpo8;
-		Serial.write(conf.rollPitchRate);
-		txCheckSum ^= conf.rollPitchRate;
-		Serial.write(conf.yawRate);
-		txCheckSum ^= conf.yawRate;
-		Serial.write(conf.dynThrPID);
-		txCheckSum ^= conf.dynThrPID;
-		Serial.write(conf.thrMid8);
-		txCheckSum ^= conf.thrMid8;
-		Serial.write(conf.thrExpo8);
-		txCheckSum ^= conf.thrExpo8;
-		Serial.write(txCheckSum);*/
 		cmdMSP[0] = MSP_SET_RC_TUNING;
 		s_struct((uint8_t*)&conf.rcRate8,7);
 		tailSerialReply();
@@ -561,24 +500,6 @@ void serialMSPCheck()
   if (cmdMSP[0] == MSP_OSD) {
     uint8_t cmd = read8();
     if(cmd == OSD_READ_CMD) {
-      /*uint8_t txCheckSum, txSize;
-      serialize8('$');
-      serialize8('M');
-      serialize8('<');
-      txCheckSum=0;
-      txSize = EEPROM_SETTINGS + 1;
-      serialize8(txSize);
-      txCheckSum ^= txSize;
-      serialize8(MSP_OSD);
-      txCheckSum ^= MSP_OSD;
-      serialize8(cmd);
-      txCheckSum ^= cmd;
-      for(uint8_t i=0; i<EEPROM_SETTINGS; i++) {
-			serialize8(Settings[i]);
-			txCheckSum ^= Settings[i];
-      }
-      serialize8(txCheckSum);
-	  UartSendData(0);*/
 	  headSerialReply(EEPROM_SETTINGS + 1);
 	  serialize8(cmd);
 	  for(uint8_t i=0; i<EEPROM_SETTINGS; i++) serialize8(Settings[i]);
@@ -586,7 +507,7 @@ void serialMSPCheck()
     }
 
     if (cmd == OSD_WRITE_CMD) {
-      for(int en=0;en<EEPROM_SETTINGS; en++){
+      for(uint16_t en=0;en<EEPROM_SETTINGS; en++){
 			uint8_t inSetting = read8();
 			if (inSetting != Settings[en])
 			EEPROM.write(en,inSetting);
@@ -614,13 +535,13 @@ void serialMSPCheck()
 	   //fontCharacterReceived(c);
       }
     }
-    if(cmd == OSD_RESET) {
-		//resetFunc();
+/*    if(cmd == OSD_RESET) {
+		//resetFunc(); // not a good practice to do jmp 0 ...
     }
     if(cmd == OSD_SERIAL_SPEED) {
     
     }
-                    
+  */                  
   }
 
   if (cmdMSP[0]==MSP_IDENT)
@@ -631,94 +552,54 @@ void serialMSPCheck()
 
   if (cmdMSP[0]==MSP_STATUS)
   {
-  //  cycleTime=read16();
-  //  I2CError=read16();
- //   MwSensorPresent = read16();
- //   MWsensorActive = read32();
 	r_struct((uint8_t*)&MW_STATUS,10);
-    armed = (MW_STATUS.sensorActive & mode_armed) != 0;
+	armed = (MW_STATUS.sensorActive & mode_armed) != 0;
   }
 
   if (cmdMSP[0]==MSP_RAW_IMU)
   {
- //   for(uint8_t i=0;i<3;i++)
-//      MwAccSmooth[i] = read16();
-	    r_struct((uint8_t*)&MW_IMU,18);
+	r_struct((uint8_t*)&MW_IMU,18);
   }
 
   if (cmdMSP[0]==MSP_RC)
   {
- //   for(uint8_t i=0;i<8;i++)
-//      MwRcData[i] = read16();
 	r_struct((uint8_t*)&MwRcData,16);
     handleRawRC();
   }
 
   if (cmdMSP[0]==MSP_RAW_GPS)
   {
-    //GPS_fix=read8();
-    //GPS_numSat=read8();
-    //GPS_latitude = read32();
-    //GPS_longitude = read32();
-    //GPS_altitude = read16();
-    //GPS_speed = read16();
-    //GPS_ground_course = read16();
 	r_struct((uint8_t*)&GPS,16);
   }
 
   if (cmdMSP[0]==MSP_COMP_GPS)
   {
-    //GPS_distanceToHome=read16();
-    //GPS_directionToHome=read16();
 	r_struct((uint8_t*)&GPS.distanceToHome,4);
   }
 
   if (cmdMSP[0]==MSP_ATTITUDE)
   {
-    //for(uint8_t i=0;i<2;i++)
-		//MW_ATT.Angle[i] = read16();
-		//MW_ATT.Heading = read16();
-		//read16();
 		r_struct((uint8_t*)&MW_ATT,6);
   }
 
   if (cmdMSP[0]==MSP_ALTITUDE)
   {
-    //MwAltitude =read32();
-    //MwVario = read16();
-    //MwSonarAlt = read16();
 	r_struct((uint8_t*)&MW_ALT,8);
   }
 
   if (cmdMSP[0]==MSP_ANALOG)
   {
-    //MwVBat=read8();
-    //pMeterSum=read16();
-    //MwRssi = read16();
-    //MWAmperage = read16(); 
 	r_struct((uint8_t*)&MW_ANALOG,7);
   }
 
   if (cmdMSP[0]==MSP_RC_TUNING)
   {
-    //rcRate8 = read8();
-    //rcExpo8 = read8();
-    //rollPitchRate = read8();
-    //yawRate = read8();
-    //dynThrPID = read8();
-    //thrMid8 = read8();
-    //thrExpo8 = read8();
 	r_struct((uint8_t*)&conf.rcRate8,7);
     modeMSPRequests &=~ REQ_MSP_RC_TUNING;
   }
 
   if (cmdMSP[0]==MSP_PID)
   {
-    /*for(uint8_t i=0; i<PIDITEMS; i++) { //PIDITEMS = 10
-      P8[i] = read8();
-      I8[i] = read8();
-      D8[i] = read8();
-    }*/
 	r_struct((uint8_t*)&conf.pid[0].P8,3*PIDITEMS);
     modeMSPRequests &=~ REQ_MSP_PID;
   }
