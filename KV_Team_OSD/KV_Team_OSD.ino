@@ -8,5 +8,3 @@
  http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
 */
 
-              
-// .cpp / .h code structure rearrangement and optimization by INT77
