@@ -136,7 +136,7 @@ float trip=0;
 uint16_t flyingTime=0;
 
 // For Intro
-const char message0[] PROGMEM = "KV_OSD_TEAM_2.3";
+const char message0[] PROGMEM = "KV_OSD_TEAM_2.3.2";
 const char message5[] PROGMEM = "MW VER:";
 const char message6[] PROGMEM = "MENU:THRT MIDDLE";
 const char message7[] PROGMEM = "YAW RIGHT";
@@ -223,8 +223,7 @@ const char configMsg97[] PROGMEM = "MAX TEMP";
 // Variables for items pos change on screen
 //-----------------------------------------------------------
 int8_t screenitemselect=0; // pointer for item text strings
-int8_t screen_pos_item_pointer=EEPROM_SETTINGS+1;  // pointer for first item display/row/col positions
-#define MAXSCREENITEMS 26 // 28 w/ GPS alt & Temperature
+int8_t screen_pos_item_pointer=EEPROM_SETTINGS+1;  // pointer for first item display/row/col positions 
 
 // Strings for item select on screen
 //-----------------------------------------------------------

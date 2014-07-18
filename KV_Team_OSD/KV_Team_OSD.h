@@ -176,7 +176,7 @@
 	//-----------------------------------------------------------
 	extern int8_t screenitemselect; // pointer for item text strings
 	extern int8_t screen_pos_item_pointer;  // 0; // pointer for first item display/row/col positions
-	
+        	
 	extern PROGMEM const char *item_table[];
 	
 	// POSITION OF EACH CHARACTER OR LOGO IN THE MAX7456

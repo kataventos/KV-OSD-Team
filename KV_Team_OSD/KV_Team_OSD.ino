@@ -1,5 +1,5 @@
 /*
- KV Team OSD V2.3rev_1 July 2014
+ KV Team OSD V2.3rev_2 July 2014
  http://code.google.com/p/rush-osd-development/
 
  This work is a Software adaptation of Rushduino OSD http://code.google.com/p/rushduino-osd/ 

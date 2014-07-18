@@ -52,7 +52,7 @@ static const uint8_t EEPROM_DEFAULT[EEPROM_SETTINGS] = {
 25,  // S_VOLUME_ALT_MAX            29   //   "     "       "   (Altitude Max "    "    "   x2  )  "     "   "   50m
 0,   // S_VOLUE_ALT_MIN             30   //   "     "       "   (Altitude Min "    "    "   ___    "     "   "    0m
 105, // S_VIDVOLTAGEMIN             31
-30,  // S_PITCH_WARNING             32   // Warning message at given angle in degrees positive and negative (default 30°)
+30,  // S_PITCH_WARNING             32   // Warning message at given angle in degrees positive and negative (default 30ï¿½)
 
 0,   //S_CALLSIGN                   32   // TEXT CONFIGURATION ONLY (On by default using L_CALLSIGNPOSITIONDSPL)
 
