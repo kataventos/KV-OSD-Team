@@ -618,18 +618,19 @@ void displayNumberOfSat(void)
 
 void displayGPS_speed(void)
 {
-  if(Settings[L_SPEEDPOSITIONDSPL]){
+//  if(Settings[L_SPEEDPOSITIONDSPL]){
 
-    if(!armed) GPS.speed=0;
-  
-    int16_t xx;
-    if(!Settings[S_UNITSYSTEM])
-      xx = GPS.speed * 0.036;           // From MWii cm/sec to Km/h
-    else
-      xx = GPS.speed * 0.02236932;      // (0.036*0.62137)  From MWii cm/sec to mph 
-    if(xx > speedMAX)
-      speedMAX = xx;
-      
+  if(!armed) GPS.speed=0;
+
+  int16_t xx;
+  if(!Settings[S_UNITSYSTEM])
+    xx = GPS.speed * 0.036;           // From MWii cm/sec to Km/h
+  else
+    xx = GPS.speed * 0.02236932;      // (0.036*0.62137)  From MWii cm/sec to mph 
+  if(xx > speedMAX)
+    speedMAX = xx;
+    
+  if(Settings[L_SPEEDPOSITIONDSPL]){      
     screenBuffer[0]=SYM_SPEED;
     screenBuffer[1]=SYM_SPEED_1;
     itoa(xx,screenBuffer+2,10);
@@ -642,20 +643,21 @@ void displayGPS_speed(void)
 void displayAltitude(void)
 {
     int16_t altitude;
-    if(Settings[L_MW_ALTITUDEPOSITIONDSPL]){
+//    if(Settings[L_MW_ALTITUDEPOSITIONDSPL]){
     if(Settings[S_UNITSYSTEM])
       altitude = MW_ALT.Altitude*0.032808;    // cm to feet
     else
       altitude = MW_ALT.Altitude/100;         // cm to mt
     if(armed && allSec>5 && altitude > altitudeMAX)
       altitudeMAX = altitude;
-    if(!(MW_STATUS.sensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*10) || flyTime > 30 && altitude < (Settings[S_VOLUME_ALT_MIN])){
-    if(altitude >= (Settings[S_VOLUME_ALT_MAX]*10) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
-    return;
-    screenBuffer[0]=SYM_ALT;
-    itoa(altitude,screenBuffer+1,10);
-    MAX7456_WriteString(screenBuffer,((Settings[L_MW_ALTITUDEPOSITIONROW]-1)*30) + Settings[L_MW_ALTITUDEPOSITIONCOL]);
-    }
+    if(Settings[L_MW_ALTITUDEPOSITIONDSPL]){
+      if(!(MW_STATUS.sensorActive&mode_osd_switch) || altitude >= (Settings[S_VOLUME_ALT_MAX]*10) || flyTime > 30 && altitude < (Settings[S_VOLUME_ALT_MIN])){
+      if(altitude >= (Settings[S_VOLUME_ALT_MAX]*10) && !BlinkAlarm || flyTime > 60 && altitude < (Settings[S_VOLUME_ALT_MIN]) && !BlinkAlarm)
+      return;
+      screenBuffer[0]=SYM_ALT;
+      itoa(altitude,screenBuffer+1,10);
+      MAX7456_WriteString(screenBuffer,((Settings[L_MW_ALTITUDEPOSITIONROW]-1)*30) + Settings[L_MW_ALTITUDEPOSITIONCOL]);
+      }
   }
 }
 
@@ -707,18 +709,20 @@ void displayDebug1(int16_t x) //SJa
 
 void displayDistanceToHome(void)
 {
+//  if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
+
+  if (GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100) && !BlinkAlarm) 
+    return;
+
+  int16_t dist;
+  if(Settings[S_UNITSYSTEM])
+    dist = GPS.distanceToHome * 3.2808;           // mt to feet
+  else
+    dist = GPS.distanceToHome;                    // mt
+  if(dist > distanceMAX)
+    distanceMAX = dist;  
+
   if(Settings[L_GPS_DISTANCETOHOMEPOSDSPL]){
-
-    if (GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100) && !BlinkAlarm) 
-      return;
-
-    int16_t dist;
-    if(Settings[S_UNITSYSTEM])
-      dist = GPS.distanceToHome * 3.2808;           // mt to feet
-    else
-      dist = GPS.distanceToHome;                    // mt
-    if(dist > distanceMAX)
-      distanceMAX = dist;  
     screenBuffer[0] = SYM_LOS;
     itoa(dist, screenBuffer+1, 10);
 	if(!(MW_STATUS.sensorActive&mode_osd_switch) || GPS.distanceToHome >= (Settings[S_VOLUME_DIST_MAX]*100))
