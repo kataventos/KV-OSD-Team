@@ -238,7 +238,7 @@ int[] ConfigRanges = {
 1,   // S_ENABLEADC                 20
 10,  // S_BLINKINGHZ                21
 1,   // S_MWAMPERAGE                22
-60,  // S_CURRSENSSENSITIVITY       23
+100,  // S_CURRSENSSENSITIVITY       23
 2,   // S_CURRSENSOFFSET_H          24
 255, // S_CURRSENSOFFSET_L          25
 8,   // S_CLIMB_RATE_ALARM          26
